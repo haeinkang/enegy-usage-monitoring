@@ -1,7 +1,13 @@
 import React, { useEffect } from 'react';
 import * as api from '../../services'
 
-function EneryUsageMonitoring(props: {}) {
+function EneryUsageMonitoring() {
+
+  useEffect(() => {
+    getGas();
+    getWtspl();
+    getElec();
+  }, [])
 
   const getGas = async () => {
     try {
@@ -38,13 +44,6 @@ function EneryUsageMonitoring(props: {}) {
     }
   }
 
-  useEffect(() => {
-    getGas()
-    getWtspl()
-    getElec()
-  }, [getGas, getWtspl, getElec])
-
-  
   return (
     <div>
       EneryUsageMonitoring
