@@ -7,16 +7,17 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  params: {
+    serviceKey: process.env.REACT_APP_SERVICE_KEY,  
+    returnType: 'json', // 데이터 타입  
+  } 
 });
-
 
 
 export const getGas = async (params: any) => {
   try {
     const response = await api.get('getGas', {
       params: {
-        serviceKey: process.env.REACT_APP_SERVICE_KEY,  
-        returnType: 'json', // 데이터 타입  
         ...params,
       } 
     });
