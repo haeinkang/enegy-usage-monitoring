@@ -3,12 +3,6 @@ import * as api from '../../services'
 
 function EneryUsageMonitoring(props: {}) {
 
-  useEffect(() => {
-    getGas()
-    getWtspl()
-    getElec()
-  }, [])
-
   const getGas = async () => {
     try {
       const res = await api.getGas({
@@ -44,7 +38,13 @@ function EneryUsageMonitoring(props: {}) {
     }
   }
 
+  useEffect(() => {
+    getGas()
+    getWtspl()
+    getElec()
+  }, [getGas, getWtspl, getElec])
 
+  
   return (
     <div>
       EneryUsageMonitoring

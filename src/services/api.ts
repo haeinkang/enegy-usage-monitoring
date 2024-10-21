@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { ApiRequestParams, ApiResponse, ApiResponseBody } from '../types';
 
 // Axios 인스턴스 생성
 const api = axios.create({
@@ -16,61 +17,64 @@ const api = axios.create({
 
 /**
  * 가스 사용량 통계
- * @param params 
- * @returns 
  */
-export const getGas = async (params: any) => { 
+export const getGas = async (params: ApiRequestParams): Promise<ApiResponse<ApiResponseBody>> => { 
   try {
-    const response = await api.get('getGas', {
+    const response = await api.get<ApiResponse<ApiResponseBody>>(
+      'getGas', {
       params: {
         ...params,
       } 
     });
+
     return response.data;
 
   } catch (error) {
-    console.error("API 호출 에러:", error);
+    console.error("getGas API 호출 에러:", error);
     throw error;
   }
 };
+
 
 /**
  * 수도 사용량 통계
- * @param params 
- * @returns 
  */
-export const getWtspl = async (params: any) => {
+export const getWtspl = async (params: ApiRequestParams): Promise<ApiResponse<ApiResponseBody>> => { 
   try {
-    const response = await api.get('getWtspl', {
+    const response = await api.get<ApiResponse<ApiResponseBody>>(
+      'getWtspl', {
       params: {
         ...params,
       } 
     });
+
     return response.data;
 
   } catch (error) {
-    console.error("API 호출 에러:", error);
+    console.error("getWtspl API 호출 에러:", error);
     throw error;
   }
 };
+
+
 
 
 /**
  * 전기 사용량 통계
- * @param params 
- * @returns 
  */
-export const getElec = async (params: any) => {
+export const getElec = async (params: ApiRequestParams): Promise<ApiResponse<ApiResponseBody>> => { 
   try {
-    const response = await api.get('getElec', {
+    const response = await api.get<ApiResponse<ApiResponseBody>>(
+      'getElec', {
       params: {
         ...params,
       } 
     });
+
     return response.data;
 
   } catch (error) {
-    console.error("API 호출 에러:", error);
+    console.error("getElec API 호출 에러:", error);
     throw error;
   }
 };
