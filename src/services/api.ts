@@ -8,15 +8,61 @@ const api = axios.create({
     'Content-Type': 'application/json',
   },
   params: {
-    serviceKey: process.env.REACT_APP_SERVICE_KEY,  
+    serviceKey: process.env.REACT_APP_SERVICE_KEY, // Open API 서비스키
     returnType: 'json', // 데이터 타입  
   } 
 });
 
 
-export const getGas = async (params: any) => {
+/**
+ * 가스 사용량 통계
+ * @param params 
+ * @returns 
+ */
+export const getGas = async (params: any) => { 
   try {
     const response = await api.get('getGas', {
+      params: {
+        ...params,
+      } 
+    });
+    return response.data;
+
+  } catch (error) {
+    console.error("API 호출 에러:", error);
+    throw error;
+  }
+};
+
+/**
+ * 수도 사용량 통계
+ * @param params 
+ * @returns 
+ */
+export const getWtspl = async (params: any) => {
+  try {
+    const response = await api.get('getWtspl', {
+      params: {
+        ...params,
+      } 
+    });
+    return response.data;
+
+  } catch (error) {
+    console.error("API 호출 에러:", error);
+    throw error;
+  }
+};
+
+
+/**
+ * 전기 사용량 통계
+ * @param params 
+ * @returns 
+ */
+export const getElec = async (params: any) => {
+  try {
+    const response = await api.get('getElec', {
       params: {
         ...params,
       } 

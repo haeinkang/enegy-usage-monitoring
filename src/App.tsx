@@ -1,11 +1,15 @@
 import React from 'react';
-import EneryUsageMonitoring from './pages/EneryUsageMonitoring';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { EneryUsageMonitoring, NotFound } from './pages';
 
 function App() {
   return (
-    <div>
-      <EneryUsageMonitoring />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<EneryUsageMonitoring />} />
+        <Route path="*" element={<NotFound />} /> 
+      </Routes>
+    </Router>
   );
 }
 
