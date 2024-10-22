@@ -46,7 +46,7 @@ function EneryUsageMonitoring() {
 
   return (
     <div>
-      EneryUsageMonitoring
+      {/* EneryUsageMonitoring */}
     </div>
   );
 }
