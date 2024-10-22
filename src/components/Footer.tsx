@@ -10,16 +10,28 @@ import ProfileImage from '../assets/img/profile.jpg';
 const Footer = () => {
   return (
     <Wrapper>
-      
-      <Grid container alignItems='flex-start'>
-        <Grid size={6}>
-          <Grid display="flex" justifyContent="center" alignItems="center" size="grow" gap={1}> 
-            <Avatar src={ProfileImage} sx={{ width: 56, height: 56 }} />
-            <div className='my-name'>Haein Kang</div>
+      <Grid container justifyContent="center" alignItems='flex-start' spacing={30}>
+        <Grid gap={10}>
+          <Grid display="flex"  justifyContent="center" alignItems="flex-start" size="grow" gap={2}> 
+            <Avatar src={ProfileImage} sx={{ width: 70, height: 70 }} />
+
+            <Grid container flexDirection="column" gap={2}>
+              <div className='my-name'>
+                Haein Kang
+              </div>
+              <Typography className='job' variant="caption" gutterBottom>
+                {/* Front Developer */}
+                저는 '월급루팡'이라는 단어를 가장 싫어하는,<br />
+                주도적으로 일하는 프론트엔드 개발자입니다.<br />
+                단순히 주어진 업무에만 그치지 않고,<br />
+                프로젝트의 가치를 극대화할 수 있는 방법을<br />
+                지속적으로 고민하며, 능동적으로 개선해 나갑니다.
+              </Typography>
+            </Grid>
           </Grid>
         </Grid>
         
-        <Grid size={3} container flexDirection='column' gap={2}>
+        <Grid container flexDirection='column' gap={2}>
           <Typography variant="subtitle1" gutterBottom>
             Skills
           </Typography>
@@ -31,13 +43,15 @@ const Footer = () => {
           </Grid>
           <Grid display="flex" alignItems="center" size="grow" gap={1}>
             JavaScript
+          </Grid><Grid display="flex" alignItems="center" size="grow" gap={1}>
+            ES6+
           </Grid>
           <Grid display="flex" alignItems="center" size="grow" gap={1}>
             CSS
           </Grid>
         </Grid>
 
-        <Grid size={3} container flexDirection='column' gap={2}>
+        <Grid container flexDirection='column' gap={2}>
           <Typography variant="subtitle1" gutterBottom>
             Contact me
           </Typography>
@@ -78,18 +92,7 @@ const Wrapper = styled.div`
     font-size: large;
     font-weight: bolder;
   }
-`;
-
-const SocialLinks = styled.div`
-  display: flex;
-  justify-content: center;
-  margin: 10px 0;
-  a {
-    margin: 0 15px;
-    text-decoration: none;
-    color: inherit;
-    &:hover {
-      color: #1976d2;  /* 링크 hover 시 색상 변경 */
-    }
+  .job {
+    color: var(--subtext-color);
   }
 `;
