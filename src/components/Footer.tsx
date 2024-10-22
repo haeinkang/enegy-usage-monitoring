@@ -11,23 +11,30 @@ const Footer = () => {
   return (
     <Wrapper>
       <Grid container justifyContent="center" alignItems='flex-start' spacing={30}>
+        
         <Grid gap={10}>
-          <Grid display="flex"  justifyContent="center" alignItems="flex-start" size="grow" gap={2}> 
+          <Grid size="auto" display="flex" justifyContent="center" alignItems="center" gap={2}> 
             <Avatar src={ProfileImage} sx={{ width: 70, height: 70 }} />
+            <div className='my-name'>Haein Kang</div>
+          </Grid>
+        </Grid>
 
-            <Grid container flexDirection="column" gap={2}>
-              <div className='my-name'>
-                Haein Kang
-              </div>
-              <Typography className='job' variant="caption" gutterBottom>
-                {/* Front Developer */}
-                저는 '월급루팡'이라는 단어를 가장 싫어하는,<br />
-                주도적으로 일하는 프론트엔드 개발자입니다.<br />
-                단순히 주어진 업무에만 그치지 않고,<br />
-                프로젝트의 가치를 극대화할 수 있는 방법을<br />
-                지속적으로 고민하며, 능동적으로 개선해 나갑니다.
-              </Typography>
-            </Grid>
+        <Grid container flexDirection='column' gap={2}>
+          <Typography variant="subtitle1" gutterBottom>
+            Career
+          </Typography>
+
+          <Grid container flexDirection="column" gap={1}>
+            <div>Xiilab (2019.11 - 2023.11) </div>
+            <Typography className='job' variant="caption" gutterBottom>
+              저는 AI 머신러닝을 위한 GPU 관리 솔루션을 제공하는 <br />
+              (주) 씨이랩에서 프론트엔드 개발자로 근무하며, <br />
+              GPU 예약 시스템 최적화와 리소스 모니터링 UI 개선을 <br />
+              통해 사용자 경험과 성능을 크게 향상시켰습니다. <br />
+              특히 중복 예약 문제를 해결해 프로세스 효율성을 <br />
+              41.66% 개선했으며, 컴포넌트 재사용과 UI 최적화를 <br />
+              통해 개발 생산성을 높였습니다.
+            </Typography>
           </Grid>
         </Grid>
         
@@ -35,20 +42,11 @@ const Footer = () => {
           <Typography variant="subtitle1" gutterBottom>
             Skills
           </Typography>
-          <Grid display="flex" alignItems="center" size="grow" gap={1}>
-            React
-          </Grid>
-          <Grid display="flex" alignItems="center" size="grow" gap={1}>
-            TypeScript
-          </Grid>
-          <Grid display="flex" alignItems="center" size="grow" gap={1}>
-            JavaScript
-          </Grid><Grid display="flex" alignItems="center" size="grow" gap={1}>
-            ES6+
-          </Grid>
-          <Grid display="flex" alignItems="center" size="grow" gap={1}>
-            CSS
-          </Grid>
+          <div>React</div>
+          <div>TypeScript</div>
+          <div>JavaScript</div>
+          <div>ES6+</div>
+          <div>CSS</div>
         </Grid>
 
         <Grid container flexDirection='column' gap={2}>
@@ -96,3 +94,23 @@ const Wrapper = styled.div`
     color: var(--subtext-color);
   }
 `;
+
+
+{/* <Grid gap={10}>
+          <Grid display="flex"  justifyContent="center" alignItems="flex-start" size="grow" gap={2}> 
+            <Avatar src={ProfileImage} sx={{ width: 70, height: 70 }} />
+
+            <Grid container flexDirection="column" gap={2}>
+              <div className='my-name'>
+                Haein Kang
+              </div>
+              <Typography className='job' variant="caption" gutterBottom>
+                저는 '월급루팡'이라는 단어를 가장 싫어하는,<br />
+                주도적으로 일하는 프론트엔드 개발자입니다.<br />
+                단순히 주어진 업무에만 그치지 않고,<br />
+                프로젝트의 가치를 극대화할 수 있는 방법을<br />
+                지속적으로 고민하며, 능동적으로 개선해 나갑니다.
+              </Typography>
+            </Grid>
+          </Grid>
+        </Grid> */}
