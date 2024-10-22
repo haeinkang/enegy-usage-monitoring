@@ -1,6 +1,5 @@
 import React from 'react';
-import Grid from '@mui/material/Grid2';
-import { Avatar, Link, Typography } from '@mui/material';
+import { Grid, Avatar, Link, Typography } from '@mui/material';
 import styled from 'styled-components';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
@@ -10,21 +9,19 @@ import ProfileImage from '../assets/img/profile.jpg';
 const Footer = () => {
   return (
     <Wrapper>
-      <Grid container justifyContent="center" alignItems='flex-start' spacing={30}>
-        
-        <Grid gap={10}>
-          <Grid size="auto" display="flex" justifyContent="center" alignItems="center" gap={2}> 
-            <Avatar src={ProfileImage} sx={{ width: 70, height: 70 }} />
-            <div className='my-name'>Haein Kang</div>
-          </Grid>
+      <Grid container justifyContent="center" alignItems='flex-start'>
+
+        <Grid item xs={4} container justifyContent="center" alignItems="center" gap={2}>
+          <Avatar src={ProfileImage} sx={{ width: 70, height: 70 }} />
+          <div className='my-name'>Haein Kang</div>
         </Grid>
 
-        <Grid container flexDirection='column' gap={2}>
+        <Grid item xs={3} container flexDirection='column' gap={2}>
           <Typography variant="subtitle1" gutterBottom>
             Career
           </Typography>
 
-          <Grid container flexDirection="column" gap={1}>
+          <Grid item container flexDirection="column" gap={1}>
             <div>Xiilab (2019.11 - 2023.11) </div>
             <Typography className='job' variant="caption" gutterBottom>
               저는 AI 머신러닝을 위한 GPU 관리 솔루션을 제공하는 <br />
@@ -38,7 +35,7 @@ const Footer = () => {
           </Grid>
         </Grid>
         
-        <Grid container flexDirection='column' gap={2}>
+        <Grid item xs={2} container flexDirection='column' gap={2}>
           <Typography variant="subtitle1" gutterBottom>
             Skills
           </Typography>
@@ -49,24 +46,24 @@ const Footer = () => {
           <div>CSS</div>
         </Grid>
 
-        <Grid container flexDirection='column' gap={2}>
+        <Grid item xs={3} container flexDirection='column' gap={2}>
           <Typography variant="subtitle1" gutterBottom>
             Contact me
           </Typography>
 
-          <Grid display="flex" alignItems="center" size="grow" gap={1}>
+          <Grid item container alignItems="center" gap={1}>
             <GitHubIcon fontSize='small' />
             <Link href="https://github.com/haeinkang/carbon-usage-monitoring" color="inherit" underline="hover">
               {'github.com/haeinkang'}
             </Link>
           </Grid>
 
-          <Grid display="flex" alignItems="center" size="grow" gap={1}>
+          <Grid item container alignItems="center" gap={1}>
             <EmailIcon fontSize='small' />
             haein.kang7@gmail.com
           </Grid>
 
-          <Grid display="flex" alignItems="center" size="grow" gap={1}>
+          <Grid item container alignItems="center" gap={1}>
             <PhoneAndroidIcon fontSize='small'/>
             010-9282-0794
           </Grid>
@@ -97,7 +94,7 @@ const Wrapper = styled.div`
 
 
 {/* <Grid gap={10}>
-          <Grid display="flex"  justifyContent="center" alignItems="flex-start" size="grow" gap={2}> 
+          <Grid container  justifyContent="center" alignItems="flex-start" gap={2}> 
             <Avatar src={ProfileImage} sx={{ width: 70, height: 70 }} />
 
             <Grid container flexDirection="column" gap={2}>
