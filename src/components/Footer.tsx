@@ -1,6 +1,6 @@
 import React from 'react';
 import Grid from '@mui/material/Grid2';
-import { Avatar, Link } from '@mui/material';
+import { Avatar, Link, Typography } from '@mui/material';
 import styled from 'styled-components';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
@@ -11,7 +11,7 @@ const Footer = () => {
   return (
     <Wrapper>
       
-      <Grid container alignItems="center">
+      <Grid container alignItems='flex-start'>
         <Grid size={6}>
           <Grid display="flex" justifyContent="center" alignItems="center" size="grow" gap={1}> 
             <Avatar src={ProfileImage} sx={{ width: 56, height: 56 }} />
@@ -19,7 +19,29 @@ const Footer = () => {
           </Grid>
         </Grid>
         
-        <Grid container flexDirection='column' size={6}  gap={2}>
+        <Grid size={3} container flexDirection='column' gap={2}>
+          <Typography variant="subtitle1" gutterBottom>
+            Skills
+          </Typography>
+          <Grid display="flex" alignItems="center" size="grow" gap={1}>
+            React
+          </Grid>
+          <Grid display="flex" alignItems="center" size="grow" gap={1}>
+            TypeScript
+          </Grid>
+          <Grid display="flex" alignItems="center" size="grow" gap={1}>
+            JavaScript
+          </Grid>
+          <Grid display="flex" alignItems="center" size="grow" gap={1}>
+            CSS
+          </Grid>
+        </Grid>
+
+        <Grid size={3} container flexDirection='column' gap={2}>
+          <Typography variant="subtitle1" gutterBottom>
+            Contact me
+          </Typography>
+
           <Grid display="flex" alignItems="center" size="grow" gap={1}>
             <GitHubIcon fontSize='small' />
             <Link href="https://github.com/haeinkang/carbon-usage-monitoring" color="inherit" underline="hover">
