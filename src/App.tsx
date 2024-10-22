@@ -1,16 +1,38 @@
 import React from 'react';
+import styled from 'styled-components'
+import { Header, Footer } from './components'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { EneryUsageMonitoring, NotFound } from './pages';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: '#1976d2',
+    },
+  },
+});
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<EneryUsageMonitoring />} />
-        <Route path="*" element={<NotFound />} /> 
-      </Routes>
-    </Router>
+    <Wrapper>
+      <Router>
+        <Routes>
+          <Route path="/" element={<EneryUsageMonitoring />} />
+          <Route path="*" element={<NotFound />} /> 
+        </Routes>
+      </Router>
+      <ThemeProvider theme={darkTheme}>
+        <Header />
+        <Footer />
+      </ThemeProvider>
+    </Wrapper>
   );
 }
 
 export default App;
+
+const Wrapper = styled.div`
+  width: 100%;
+`;
