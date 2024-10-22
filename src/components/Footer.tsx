@@ -81,7 +81,7 @@ export default Footer;
 
 const Wrapper = styled.div`
   width: 100%;
-  padding: 30px;
+  padding: 30px 0;
   background-color: var(--light-gray);
   font-family: "Comfortaa", sans-serif;
   font-size: small;
