@@ -17,14 +17,16 @@ const darkTheme = createTheme({
 function App() {
   return (
     <Wrapper>
+      <ThemeProvider theme={darkTheme}>
+      <Header />
+      
       <Router>
         <Routes>
           <Route path="/" element={<EneryUsageMonitoring />} />
           <Route path="*" element={<NotFound />} /> 
         </Routes>
       </Router>
-      <ThemeProvider theme={darkTheme}>
-        <Header />
+
         <Footer />
       </ThemeProvider>
     </Wrapper>
