@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import * as api from '../../services'
-import GEOChart from './GEOChart'
-import BmapChart from './BmapChart'
+import EchartsExtGmap from './EchartsExtGmap'
 import GmapChart from './GmapChart'
 import type { EChartsOption, ECharts, SetOptionOpts } from "echarts";
 import type { CSSProperties } from "react";
@@ -123,9 +122,8 @@ function EneryUsageMonitoring() {
 
   return (
     <div style={{ width: '100%', height: '80vh'}}>
-      {/* <BmapChart /> */}
-      {/* <GEOChart /> */}
-      <GmapChart />
+      <EchartsExtGmap />
+      {/* <GmapChart /> */}
     </div>
   );
 }
