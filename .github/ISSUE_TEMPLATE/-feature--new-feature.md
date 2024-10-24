@@ -1,5 +1,5 @@
 ---
-name: New Feature
+name: "[Feature] New Feature"
 about: 어떤 기능을 추가하려고 하는지 설명해주세요.
 title: ''
 labels: ''
