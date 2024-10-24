@@ -28,6 +28,7 @@ function EneryUsageMonitoring() {
 
       const convertedData: ConvertData[] =  _(items) 
         .filter(o => typeof lclgvCoords[o.lclgvNm] === 'object')
+        .orderBy('avgUseQnt', 'desc')
         .map(o => {
           const coord = lclgvCoords[o.lclgvNm];
           return { 
@@ -69,7 +70,7 @@ function EneryUsageMonitoring() {
     <div style={{ width: '100%', height: '80vh'}}>
       {loading 
         ? <div>loading ... </div>
-        : <EchartsExtGmap data={data} convertData={convertData} />}
+        : <EchartsExtGmap data={convertData} />}
     </div>
   );
 }

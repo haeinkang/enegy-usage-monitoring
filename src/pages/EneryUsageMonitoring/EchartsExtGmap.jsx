@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as echarts from 'echarts';
 import 'echarts-extension-gmap';
+import { slice } from 'lodash'
 
-const EchartsExtGmap = ({ data, convertData }) => {
+const EchartsExtGmap = ({ data }) => {
   const chartRef = useRef(null);
   const [googleLoaded, setGoogleLoaded] = useState(false);
 
@@ -105,13 +106,13 @@ const EchartsExtGmap = ({ data, convertData }) => {
         },
         series: [
           {
-            name: '전기',
+            name: '가스 평균 사용량',
             type: 'scatter',
             coordinateSystem: 'gmap',
-            data: convertData,
-            // symbolSize: function (val) {
-            //   return val[2] / 10;
-            // },
+            data,
+            symbolSize: function (val) {
+              return val[2] / 10;
+            },
             encode: {
               value: 2
             },
@@ -130,10 +131,10 @@ const EchartsExtGmap = ({ data, convertData }) => {
             name: 'Top 5',
             type: 'effectScatter',
             coordinateSystem: 'gmap',
-            data: [],
-            // symbolSize: function (val) {
-            //   return val[2] / 10;
-            // },
+            data: slice(data, 0, 10),
+            symbolSize: function (val) {
+              return val[2] / 10;
+            },
             encode: {
               value: 2
             },
@@ -163,7 +164,7 @@ const EchartsExtGmap = ({ data, convertData }) => {
       chart.setOption(option);
 
     }
-  }, [googleLoaded, data, convertData]);
+  }, [googleLoaded, data]);
 
   return (
     <div
