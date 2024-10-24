@@ -1,4 +1,5 @@
 :root {
+  --bg-black: rgb(16, 15, 15);
   --light-gray: rgb(239, 239, 239);
-  --subtext-color: rgb(130 130 130);
+  --subtext-color: rgb(160, 160, 160);
 }
