@@ -39,69 +39,275 @@ const EchartsExtGmap = ({ data }) => {
           trigger: 'item'
         },
         gmap: {
-          mapId: '739af084373f96fe',
+          // mapId: '739af084373f96fe',
           center: [127.7669, 35.9078],
-          zoom: 7,
+          zoom: 7.4,
           renderOnMoving: true,
           echartsLayerZIndex: 2019,
           roam: true,
-          // styles: [
-          //   {
-          //     featureType: 'water',
-          //     elementType: 'geometry',
-          //     stylers: [{color: '#004358'}]
-          //   },
-          //   {
-          //     featureType: 'landscape',
-          //     elementType: 'geometry',
-          //     stylers: [{color: '#1f8a70'}]
-          //   },
-          //   {
-          //     featureType: 'poi',
-          //     elementType: 'geometry',
-          //     stylers: [{color: '#1f8a70'}]
-          //   },
-          //   {
-          //     featureType: 'road.highway',
-          //     elementType: 'geometry',
-          //     stylers: [{color: '#fd7400'}]
-          //   },
-          //   {
-          //     featureType: 'road.arterial',
-          //     elementType: 'geometry',
-          //     stylers: [{color: '#1f8a70'}, {lightness: -20}]
-          //   },
-          //   {
-          //     featureType: 'road.local',
-          //     elementType: 'geometry',
-          //     stylers: [{color: '#1f8a70'}, {lightness: -17}]
-          //   },
-          //   {
-          //     elementType: 'labels.text.stroke',
-          //     stylers: [{color: '#ffffff'}, {visibility: 'on'}, {weight: 0.9}]
-          //   },
-          //   {
-          //     elementType: 'labels.text.fill',
-          //     stylers: [{visibility: 'on'}, {color: '#ffffff'}]
-          //   },
-          //   {
-          //     featureType: 'poi',
-          //     elementType: 'labels',
-          //     stylers: [{visibility: 'simplified'}]
-          //   },
-          //   {elementType: 'labels.icon', stylers: [{visibility: 'off'}]},
-          //   {
-          //     featureType: 'transit',
-          //     elementType: 'geometry',
-          //     stylers: [{color: '#1f8a70'}, {lightness: -10}]
-          //   },
-          //   {},
-          //   {
-          //     featureType: 'administrative',
-          //     elementType: 'geometry',
-          //     stylers: [{color: '#1f8a70'}, {weight: 0.7}]
-          //   }
-          // ] 
+          styles: [
+            {
+              "elementType": "geometry",
+              "stylers": [
+                {
+                  "color": "#242f3e"
+                }
+              ]
+            },
+            {
+              "elementType": "labels.text.fill",
+              "stylers": [
+                {
+                  "color": "#746855"
+                }
+              ]
+            },
+            {
+              "elementType": "labels.text.stroke",
+              "stylers": [
+                {
+                  "color": "#242f3e"
+                }
+              ]
+            },
+            {
+              "featureType": "administrative",
+              "elementType": "geometry",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "administrative.land_parcel",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "administrative.locality",
+              "elementType": "labels.text.fill",
+              "stylers": [
+                {
+                  "color": "#d59563"
+                }
+              ]
+            },
+            {
+              "featureType": "administrative.neighborhood",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "poi",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "poi",
+              "elementType": "labels.text",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "poi",
+              "elementType": "labels.text.fill",
+              "stylers": [
+                {
+                  "color": "#d59563"
+                }
+              ]
+            },
+            {
+              "featureType": "poi.park",
+              "elementType": "geometry",
+              "stylers": [
+                {
+                  "color": "#263c3f"
+                }
+              ]
+            },
+            {
+              "featureType": "poi.park",
+              "elementType": "labels.text.fill",
+              "stylers": [
+                {
+                  "color": "#6b9a76"
+                }
+              ]
+            },
+            {
+              "featureType": "road",
+              "elementType": "geometry",
+              "stylers": [
+                {
+                  "color": "#38414e"
+                }
+              ]
+            },
+            {
+              "featureType": "road",
+              "elementType": "geometry.stroke",
+              "stylers": [
+                {
+                  "color": "#212a37"
+                }
+              ]
+            },
+            {
+              "featureType": "road",
+              "elementType": "labels",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "road",
+              "elementType": "labels.icon",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "road",
+              "elementType": "labels.text.fill",
+              "stylers": [
+                {
+                  "color": "#9ca5b3"
+                }
+              ]
+            },
+            {
+              "featureType": "road.arterial",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "road.highway",
+              "elementType": "geometry",
+              "stylers": [
+                {
+                  "color": "#746855"
+                }
+              ]
+            },
+            {
+              "featureType": "road.highway",
+              "elementType": "geometry.stroke",
+              "stylers": [
+                {
+                  "color": "#1f2835"
+                }
+              ]
+            },
+            {
+              "featureType": "road.highway",
+              "elementType": "labels",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "road.highway",
+              "elementType": "labels.text.fill",
+              "stylers": [
+                {
+                  "color": "#f3d19c"
+                }
+              ]
+            },
+            {
+              "featureType": "road.local",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "transit",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "transit",
+              "elementType": "geometry",
+              "stylers": [
+                {
+                  "color": "#2f3948"
+                }
+              ]
+            },
+            {
+              "featureType": "transit.station",
+              "elementType": "labels.text.fill",
+              "stylers": [
+                {
+                  "color": "#d59563"
+                }
+              ]
+            },
+            {
+              "featureType": "water",
+              "elementType": "geometry",
+              "stylers": [
+                {
+                  "color": "#17263c"
+                }
+              ]
+            },
+            {
+              "featureType": "water",
+              "elementType": "labels.text",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "water",
+              "elementType": "labels.text.fill",
+              "stylers": [
+                {
+                  "color": "#515c6d"
+                }
+              ]
+            },
+            {
+              "featureType": "water",
+              "elementType": "labels.text.stroke",
+              "stylers": [
+                {
+                  "color": "#17263c"
+                }
+              ]
+            }
+          ]
           
         },
         series: [
@@ -111,7 +317,7 @@ const EchartsExtGmap = ({ data }) => {
             coordinateSystem: 'gmap',
             data,
             symbolSize: function (val) {
-              return val[2] / 10;
+              return val[2] / 8;
             },
             encode: {
               value: 2
@@ -120,6 +326,9 @@ const EchartsExtGmap = ({ data }) => {
               formatter: '{b}',
               position: 'right',
               show: false
+            },
+            itemStyle: {
+              color: '#98FF98',
             },
             emphasis: {
               label: {
@@ -133,7 +342,7 @@ const EchartsExtGmap = ({ data }) => {
             coordinateSystem: 'gmap',
             data: slice(data, 0, 10),
             symbolSize: function (val) {
-              return val[2] / 10;
+              return val[2] / 8;
             },
             encode: {
               value: 2
@@ -148,9 +357,9 @@ const EchartsExtGmap = ({ data }) => {
               show: true
             },
             itemStyle: {
-              color: '#FF6F61',
+              color: '#FF5733',
               shadowBlur: 30,
-              shadowColor: '#FF6F61'
+              shadowColor: '#FF2400'
             },
             emphasis: {
               scale: true
