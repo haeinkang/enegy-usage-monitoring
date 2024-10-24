@@ -54,32 +54,35 @@ function EneryUsageMonitoring() {
       if(res) {
         const origin = [...res.data.response.body.items]
 
-        const groupedBySido = _.groupBy(origin, 'sidoName'); // sidoName으로 그룹화
+        const groupedBySido = _.groupBy(origin, o => `${o.sidoName} ${o.stationName}`); // sidoName으로 그룹화
+        console.log(groupedBySido)
 
-        const avg = _.map(groupedBySido, (items, sidoName) => {
-          // 유효한 pm10Value 값들만 추출
-          const validPm10Values = items
-            .map(item => parsePm10Value(item.pm10Value))
-            .filter(value => value !== null);
+        console.log(_(groupedBySido).keys().slice(0).value())
 
-          // 평균값 계산
-          const avgPm10Value = _.mean(validPm10Values);
+        // const avg = _.map(groupedBySido, (items, sidoName) => {
+        //   // 유효한 pm10Value 값들만 추출
+        //   const validPm10Values = items
+        //     .map(item => parsePm10Value(item.pm10Value))
+        //     .filter(value => value !== null);
 
-          return {
-            sidoName,
-            avgPm10Value: avgPm10Value || 0 // 평균값이 없으면 0으로 처리
-          };
-        });
-        console.log(avg)
+        //   // 평균값 계산
+        //   const avgPm10Value = _.mean(validPm10Values);
 
-        const pm10Data = _(avg)
-          .map(o => {
-            const coord = sidoCoords[o.sidoName]
-            return [...coord, o.avgPm10Value]
-          })
-          .value()
+        //   return {
+        //     sidoName,
+        //     avgPm10Value: avgPm10Value || 0 // 평균값이 없으면 0으로 처리
+        //   };
+        // });
+        // console.log(avg)
+
+        // const pm10Data = _(avg)
+        //   .map(o => {
+        //     const coord = sidoCoords[o.sidoName]
+        //     return [...coord, o.avgPm10Value]
+        //   })
+        //   .value()
         
-        setPm10(pm10Data)
+        setPm10([])
       }
 
     } catch(e) {
