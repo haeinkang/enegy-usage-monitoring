@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ApiRequestParams, ApiResponse, ApiResponseBody } from '../types';
+import { ApiResponse, ApiResponseBody, LclgvCoords } from '../types';
 
 // Axios 인스턴스 생성
 const api = axios.create({
@@ -9,6 +9,8 @@ const api = axios.create({
     'Content-Type': 'application/json',
   },
   params: {
+    pageNo: 1, // 페이지번호
+    numOfRows: 300, // 한 페이지 결과 수   
     serviceKey: process.env.REACT_APP_SERVICE_KEY, // Open API 서비스키
     returnType: 'json', // 데이터 타입  
   } 
@@ -18,20 +20,15 @@ const api = axios.create({
 /**
  * 가스 사용량 통계
  */
-export const getGas = async (params: ApiRequestParams): Promise<ApiResponse<ApiResponseBody>> => { 
+export const getGas = async (): Promise<ApiResponse<ApiResponseBody>> => { 
   try {
-    const response = await api.get<ApiResponse<ApiResponseBody>>(
-      'getGas', {
-      params: {
-        ...params,
-      } 
-    });
+    const response = await api.get<ApiResponse<ApiResponseBody>>('getGas');
 
     return response.data;
 
-  } catch (error) {
-    console.error("getGas API 호출 에러:", error);
-    throw error;
+  } catch (e) {
+    console.error("getGas API 호출 에러:", e);
+    throw e;
   }
 };
 
@@ -39,20 +36,15 @@ export const getGas = async (params: ApiRequestParams): Promise<ApiResponse<ApiR
 /**
  * 수도 사용량 통계
  */
-export const getWtspl = async (params: ApiRequestParams): Promise<ApiResponse<ApiResponseBody>> => { 
+export const getWtspl = async (): Promise<ApiResponse<ApiResponseBody>> => { 
   try {
-    const response = await api.get<ApiResponse<ApiResponseBody>>(
-      'getWtspl', {
-      params: {
-        ...params,
-      } 
-    });
+    const response = await api.get<ApiResponse<ApiResponseBody>>('getWtspl');
 
     return response.data;
 
-  } catch (error) {
-    console.error("getWtspl API 호출 에러:", error);
-    throw error;
+  } catch (e) {
+    console.error("getWtspl API 호출 에러:", e);
+    throw e;
   }
 };
 
@@ -62,19 +54,28 @@ export const getWtspl = async (params: ApiRequestParams): Promise<ApiResponse<Ap
 /**
  * 전기 사용량 통계
  */
-export const getElec = async (params: ApiRequestParams): Promise<ApiResponse<ApiResponseBody>> => { 
+export const getElec = async (): Promise<ApiResponse<ApiResponseBody>> => { 
   try {
-    const response = await api.get<ApiResponse<ApiResponseBody>>(
-      'getElec', {
-      params: {
-        ...params,
-      } 
-    });
+    const response = await api.get<ApiResponse<ApiResponseBody>>('getElec');
 
     return response.data;
 
-  } catch (error) {
-    console.error("getElec API 호출 에러:", error);
-    throw error;
+  } catch (e) {
+    console.error("getElec API 호출 에러:", e);
+    throw e;
   }
 };
+
+
+/** 지자체별 위도, 경도 가져오기 */
+export const fetchLclgvCoords = async (): Promise<LclgvCoords> => {
+  try {
+    const res = await fetch('/json/lclgv-coords.json'); 
+    const data: LclgvCoords = await res.json();
+    return data
+  } catch (error) {
+    console.error("Error fetching the JSON file:", error);
+    return {}
+  }
+};
+

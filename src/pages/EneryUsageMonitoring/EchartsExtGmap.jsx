@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as echarts from 'echarts';
 import 'echarts-extension-gmap';
-import gmapStyling from '../../assets/gamp_styling.json'
 
-const EchartsExtGmap = () => {
+const EchartsExtGmap = ({ data, convertData }) => {
   const chartRef = useRef(null);
   const [googleLoaded, setGoogleLoaded] = useState(false);
 
@@ -23,6 +22,12 @@ const EchartsExtGmap = () => {
 
   useEffect(() => {
     if (googleLoaded && chartRef.current) {
+      // 이미 초기화된 차트 인스턴스가 있는지 확인하고 삭제
+      if (echarts.getInstanceByDom(chartRef.current)) {
+        echarts.dispose(chartRef.current);
+      }
+
+
       // ECharts 인스턴스 생성
       const chart = echarts.init(chartRef.current);
 
@@ -39,63 +44,63 @@ const EchartsExtGmap = () => {
           renderOnMoving: true,
           echartsLayerZIndex: 2019,
           roam: true,
-          styles: [
-            {
-              featureType: 'water',
-              elementType: 'geometry',
-              stylers: [{color: '#004358'}]
-            },
-            {
-              featureType: 'landscape',
-              elementType: 'geometry',
-              stylers: [{color: '#1f8a70'}]
-            },
-            {
-              featureType: 'poi',
-              elementType: 'geometry',
-              stylers: [{color: '#1f8a70'}]
-            },
-            {
-              featureType: 'road.highway',
-              elementType: 'geometry',
-              stylers: [{color: '#fd7400'}]
-            },
-            {
-              featureType: 'road.arterial',
-              elementType: 'geometry',
-              stylers: [{color: '#1f8a70'}, {lightness: -20}]
-            },
-            {
-              featureType: 'road.local',
-              elementType: 'geometry',
-              stylers: [{color: '#1f8a70'}, {lightness: -17}]
-            },
-            {
-              elementType: 'labels.text.stroke',
-              stylers: [{color: '#ffffff'}, {visibility: 'on'}, {weight: 0.9}]
-            },
-            {
-              elementType: 'labels.text.fill',
-              stylers: [{visibility: 'on'}, {color: '#ffffff'}]
-            },
-            {
-              featureType: 'poi',
-              elementType: 'labels',
-              stylers: [{visibility: 'simplified'}]
-            },
-            {elementType: 'labels.icon', stylers: [{visibility: 'off'}]},
-            {
-              featureType: 'transit',
-              elementType: 'geometry',
-              stylers: [{color: '#1f8a70'}, {lightness: -10}]
-            },
-            {},
-            {
-              featureType: 'administrative',
-              elementType: 'geometry',
-              stylers: [{color: '#1f8a70'}, {weight: 0.7}]
-            }
-          ] 
+          // styles: [
+          //   {
+          //     featureType: 'water',
+          //     elementType: 'geometry',
+          //     stylers: [{color: '#004358'}]
+          //   },
+          //   {
+          //     featureType: 'landscape',
+          //     elementType: 'geometry',
+          //     stylers: [{color: '#1f8a70'}]
+          //   },
+          //   {
+          //     featureType: 'poi',
+          //     elementType: 'geometry',
+          //     stylers: [{color: '#1f8a70'}]
+          //   },
+          //   {
+          //     featureType: 'road.highway',
+          //     elementType: 'geometry',
+          //     stylers: [{color: '#fd7400'}]
+          //   },
+          //   {
+          //     featureType: 'road.arterial',
+          //     elementType: 'geometry',
+          //     stylers: [{color: '#1f8a70'}, {lightness: -20}]
+          //   },
+          //   {
+          //     featureType: 'road.local',
+          //     elementType: 'geometry',
+          //     stylers: [{color: '#1f8a70'}, {lightness: -17}]
+          //   },
+          //   {
+          //     elementType: 'labels.text.stroke',
+          //     stylers: [{color: '#ffffff'}, {visibility: 'on'}, {weight: 0.9}]
+          //   },
+          //   {
+          //     elementType: 'labels.text.fill',
+          //     stylers: [{visibility: 'on'}, {color: '#ffffff'}]
+          //   },
+          //   {
+          //     featureType: 'poi',
+          //     elementType: 'labels',
+          //     stylers: [{visibility: 'simplified'}]
+          //   },
+          //   {elementType: 'labels.icon', stylers: [{visibility: 'off'}]},
+          //   {
+          //     featureType: 'transit',
+          //     elementType: 'geometry',
+          //     stylers: [{color: '#1f8a70'}, {lightness: -10}]
+          //   },
+          //   {},
+          //   {
+          //     featureType: 'administrative',
+          //     elementType: 'geometry',
+          //     stylers: [{color: '#1f8a70'}, {weight: 0.7}]
+          //   }
+          // ] 
           
         },
         series: [
@@ -103,18 +108,10 @@ const EchartsExtGmap = () => {
             name: '전기',
             type: 'scatter',
             coordinateSystem: 'gmap',
-            data: [
-              [128.8991, 37.7563, 46],
-              [127.1891, 37.2362, 120],
-              [126.6313, 37.4752, 146],
-              [129.0714, 35.1731, 218],
-              [126.9971, 37.5503, 245], 
-              [126.5662, 33.3786, 553],
-              [128.3509, 36.1172, 899],
-            ],
-            symbolSize: function (val) {
-              return val[2] / 10;
-            },
+            data: convertData,
+            // symbolSize: function (val) {
+            //   return val[2] / 10;
+            // },
             encode: {
               value: 2
             },
@@ -133,16 +130,10 @@ const EchartsExtGmap = () => {
             name: 'Top 5',
             type: 'effectScatter',
             coordinateSystem: 'gmap',
-            data: [
-              [126.6313, 37.4752, 146],
-              [129.0714, 35.1731, 218],
-              [126.9971, 37.5503, 245], 
-              [126.5662, 33.3786, 553],
-              [128.3509, 36.1172, 899],
-            ],
-            symbolSize: function (val) {
-              return val[2] / 10;
-            },
+            data: [],
+            // symbolSize: function (val) {
+            //   return val[2] / 10;
+            // },
             encode: {
               value: 2
             },
@@ -172,7 +163,7 @@ const EchartsExtGmap = () => {
       chart.setOption(option);
 
     }
-  }, [googleLoaded]);
+  }, [googleLoaded, data, convertData]);
 
   return (
     <div
@@ -183,3 +174,18 @@ const EchartsExtGmap = () => {
 };
 
 export default EchartsExtGmap;
+
+
+// /** 위도 경도 값 구하기 */
+  // const fetchCoordinates = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       `https://maps.googleapis.com/maps/api/geocode/json?address=${'충남 서천군'}&key=${GOOGLE_API_KEY}`
+  //     );
+
+  //     console.log(response)
+      
+  //   } catch (error) {
+  //   }
+    
+  // };
