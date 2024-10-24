@@ -18,13 +18,91 @@ const api = axios.create({
 
 
 /**
+ * 시도명을 검색조건으로 하여 
+ * 시도별 측정소목록에 대한 
+ * 일반 항목과 CAI최종 실시간 측정값과 지수 정보 조회 기능을 
+ * 제공하는 시도별 실시간 측정정보 조회
+ */
+export const getCtprvnRltmMesureDnsty = async () => {
+  try {
+    const res = await api.get<any>(
+      'http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty',
+      {
+        params: {
+          numOfRows: 661,
+          pageNo: 1,
+          sidoName:	'전국',		// 시도 이름(전국, 서울, 부산, 대구, 인천, 광주, 대전, 울산, 경기, 강원, 충북, 충남, 전북, 전남, 경북, 경남, 제주, 세종)
+          ver: '1.0'	// 버전별 상세 결과 참고
+        }
+      }
+    );
+    
+    return res
+  } catch(e) {
+
+  }
+}
+
+/** 
+ * 통보코드와 통보시간으로 예보정보와 발생 원인 정보를 조회하는 대기질(미세먼지/오존) 예보통보 조회
+ */
+export const getMinuDustFrcstDspth = async () => {
+  try {
+    const res = await api.get<any>(
+      'http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMinuDustFrcstDspth',
+      {
+        params: {
+          serviceKey: process.env.REACT_APP_SERVICE_KEY,
+          returnType: 'json',
+          numOfRows: 100,
+          pageNo: 1,
+          // searchDate: '2020-11-14', // 통보시간 검색(조회 날짜 입력이 없을 경우 한달동안 예보통보 발령 날짜의 리스트 정보를 확인)
+          InformCode: 'PM10' // 통보코드검색(PM10, PM25, O3)
+        }
+      }
+    );
+
+  } catch(e) {
+
+  }
+}
+
+/** 
+ * 시도별 실시간 평균정보 조회 
+ */
+export const getCtprvnMesureLIst = async () => {
+  try {
+    const res = await api.get<any>(
+      'http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnMesureLIst',
+      {
+        params: {
+          serviceKey: process.env.REACT_APP_SERVICE_KEY,
+          returnType: 'json',
+          numOfRows: 100,
+          pageNo: 1,
+          itemCode: 'CO', // (SO2, CO, O3, NO2, PM10, PM25)
+          dataGubun: 'DAILY', // 요청 자료 구분(시간평균 : HOUR, 일평균 : DAILY)
+          searchCondition: 'MONTH' // 요청 데이터기간 (일주일 : WEEK, 한달 : MONTH)
+        }
+      }
+    );
+
+  } catch(e) {
+
+  }
+}
+
+
+
+
+/**
  * 가스 사용량 통계
  */
 export const getGas = async (): Promise<ApiResponse<ApiResponseBody>> => { 
   try {
-    const response = await api.get<ApiResponse<ApiResponseBody>>('getGas');
+    const res = await api.get<ApiResponse<ApiResponseBody>>('getGas');
 
-    return response.data;
+    return res.data;
 
   } catch (e) {
     console.error("getGas API 호출 에러:", e);
@@ -38,9 +116,9 @@ export const getGas = async (): Promise<ApiResponse<ApiResponseBody>> => {
  */
 export const getWtspl = async (): Promise<ApiResponse<ApiResponseBody>> => { 
   try {
-    const response = await api.get<ApiResponse<ApiResponseBody>>('getWtspl');
+    const res = await api.get<ApiResponse<ApiResponseBody>>('getWtspl');
 
-    return response.data;
+    return res.data;
 
   } catch (e) {
     console.error("getWtspl API 호출 에러:", e);
@@ -56,9 +134,9 @@ export const getWtspl = async (): Promise<ApiResponse<ApiResponseBody>> => {
  */
 export const getElec = async (): Promise<ApiResponse<ApiResponseBody>> => { 
   try {
-    const response = await api.get<ApiResponse<ApiResponseBody>>('getElec');
+    const res = await api.get<ApiResponse<ApiResponseBody>>('getElec');
 
-    return response.data;
+    return res.data;
 
   } catch (e) {
     console.error("getElec API 호출 에러:", e);

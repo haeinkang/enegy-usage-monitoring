@@ -3,7 +3,7 @@ import * as echarts from 'echarts';
 import 'echarts-extension-gmap';
 import { slice } from 'lodash'
 
-const EchartsExtGmap = ({ data }) => {
+const EchartsExtGmap = ({ data, pm10Data }) => {
   const chartRef = useRef(null);
   const [googleLoaded, setGoogleLoaded] = useState(false);
 
@@ -310,6 +310,17 @@ const EchartsExtGmap = ({ data }) => {
           ]
           
         },
+        visualMap: {
+          show: false,
+          top: 'top',
+          min: 0,
+          max: 300,
+          seriesIndex: 2,
+          calculable: true,
+          inRange: {
+            color: ['green', 'orange', 'yellow', 'red']
+          }
+        },
         series: [
           {
             name: '가스 평균 사용량',
@@ -337,7 +348,7 @@ const EchartsExtGmap = ({ data }) => {
             }
           },
           {
-            name: 'Top 5',
+            name: 'Top 10',
             type: 'effectScatter',
             coordinateSystem: 'gmap',
             data: slice(data, 0, 10),
@@ -365,6 +376,13 @@ const EchartsExtGmap = ({ data }) => {
               scale: true
             },
             zlevel: 1
+          }, 
+          {
+            type: 'heatmap',
+            coordinateSystem: 'gmap',
+            data: pm10Data, // [ [경도, 위도, 1], ... ]
+            pointSize: 90,
+            blurSize: 6
           }
         ],
       };
@@ -373,7 +391,7 @@ const EchartsExtGmap = ({ data }) => {
       chart.setOption(option);
 
     }
-  }, [googleLoaded, data]);
+  }, [googleLoaded, data, pm10Data]);
 
   return (
     <div
