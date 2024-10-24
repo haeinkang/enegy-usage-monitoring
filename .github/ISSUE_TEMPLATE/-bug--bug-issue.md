@@ -1,5 +1,5 @@
 ---
-name: "[Bug] Bug Issue"
+name: "[bug] Bug Issue"
 about: 발생한 버그에 대한 설명을 적어주세요.
 title: ''
 labels: ''
