@@ -16,30 +16,15 @@ export interface ApiResponseHeader {
   resultCode: string;
 }
 
-export interface ApiResponseBody {
+export interface ApiResponseBody<T> {
+  /** UsageByLclgv */
+  items: T[]; 
   /** 한 페이지 결과 수 */
   numOfRows: number;
-  items: UsageByLclgv[];
   /** 응답 결과 수 */
   totalCount: number;
   /** 페이지 번호 */
   pageNo: number;
 }
 
-/** 지자체별 평균 사용량 */
-export interface UsageByLclgv { 
-  /** 평균 사용량 */
-  avgUseQnt: number;
-  /** 지자체명 */
-  lclgvNm: string;
-  /** 해당 년도 */
-  rlvtYr: string;
-}
 
-/** [위도, 경도] */
-export type GeoCoord = [number, number];
-
-/** 지자체별 위도,경도 */
-export interface LclgvCoords {
-  [lclgvNm: string]: GeoCoord;
-}

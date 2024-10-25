@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { ApiResponse, ApiResponseBody, LclgvCoords } from '../types';
+import { } from '../types';
 
 // Axios 인스턴스 생성
 const api = axios.create({
-  baseURL: process.env.REACT_APP_BASE_URL, // 기본 API URL 설정
+  baseURL: `${process.env.REACT_APP_BASE_URL}/ArpltnInforInqireSvc`, // 기본 API URL 설정
   timeout: 3000, // 타임아웃 시간 설정 (ms)
   headers: {
     'Content-Type': 'application/json',
@@ -25,8 +25,7 @@ const api = axios.create({
  */
 export const getCtprvnRltmMesureDnsty = async () => {
   try {
-    const res = await api.get<any>(
-      'http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty',
+    const res = await api.get<any>('getCtprvnRltmMesureDnsty',
       {
         params: {
           numOfRows: 661,
@@ -48,8 +47,7 @@ export const getCtprvnRltmMesureDnsty = async () => {
  */
 export const getMinuDustFrcstDspth = async () => {
   try {
-    const res = await api.get<any>(
-      'http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMinuDustFrcstDspth',
+    const res = await api.get<any>('getMinuDustFrcstDspth',
       {
         params: {
           serviceKey: process.env.REACT_APP_SERVICE_KEY,
@@ -72,8 +70,7 @@ export const getMinuDustFrcstDspth = async () => {
  */
 export const getCtprvnMesureLIst = async () => {
   try {
-    const res = await api.get<any>(
-      'http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnMesureLIst',
+    const res = await api.get<any>('getCtprvnMesureLIst',
       {
         params: {
           serviceKey: process.env.REACT_APP_SERVICE_KEY,
@@ -93,79 +90,4 @@ export const getCtprvnMesureLIst = async () => {
 }
 
 
-
-
-/**
- * 가스 사용량 통계
- */
-export const getGas = async (): Promise<ApiResponse<ApiResponseBody>> => { 
-  try {
-    const res = await api.get<ApiResponse<ApiResponseBody>>('getGas');
-
-    return res.data;
-
-  } catch (e) {
-    console.error("getGas API 호출 에러:", e);
-    throw e;
-  }
-};
-
-
-/**
- * 수도 사용량 통계
- */
-export const getWtspl = async (): Promise<ApiResponse<ApiResponseBody>> => { 
-  try {
-    const res = await api.get<ApiResponse<ApiResponseBody>>('getWtspl');
-
-    return res.data;
-
-  } catch (e) {
-    console.error("getWtspl API 호출 에러:", e);
-    throw e;
-  }
-};
-
-
-
-
-/**
- * 전기 사용량 통계
- */
-export const getElec = async (): Promise<ApiResponse<ApiResponseBody>> => { 
-  try {
-    const res = await api.get<ApiResponse<ApiResponseBody>>('getElec');
-
-    return res.data;
-
-  } catch (e) {
-    console.error("getElec API 호출 에러:", e);
-    throw e;
-  }
-};
-
-
-/** 지자체별 위도, 경도 가져오기 */
-export const fetchLclgvCoords = async (): Promise<LclgvCoords> => {
-  try {
-    const res = await fetch('/json/lclgv-coords.json'); 
-    const data: LclgvCoords = await res.json();
-    return data
-  } catch (error) {
-    console.error("Error fetching the JSON file:", error);
-    return {}
-  }
-};
-
-/** 행정구역(시,구,군) 가져오기 */
-export const fetchCityDists = async (): Promise<{ [key: string]: string }> => {
-  try {
-    const res = await fetch('/json/city-districts.json'); 
-    const data: { [key: string]: string } = await res.json();
-    return data
-  } catch (error) {
-    console.error("Error fetching the JSON file:", error);
-    return {}
-  }
-};
 

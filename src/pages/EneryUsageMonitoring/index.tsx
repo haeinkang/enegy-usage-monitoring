@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import * as api from '../../services'
 import EchartsExtGmap from './EchartsExtGmap'
-import { UsageByLclgv, Data, ConvertData, ApiResponse, ApiResponseBody, GeoCoord} from '../../types'
+import { LclgvCoords, UsageByLclgv, Data, ConvertData, ApiResponse, ApiResponseBody, GeoCoord, EnerygyUsageApiRes} from '../../types'
 import _, { map } from 'lodash'
 
 
@@ -78,8 +78,8 @@ function EneryUsageMonitoring() {
 
   const getGas = async () => {
     try {
-      const { body: { items } }: ApiResponse<ApiResponseBody> = await api.getGas()
-      const lclgvCoords  = await api.fetchLclgvCoords();
+      const { body: { items } }: EnerygyUsageApiRes = await api.getGas()
+      const lclgvCoords: LclgvCoords = await api.fetchLclgvCoords();
 
       const formattedData = map(items, o => ({
         name: o.lclgvNm, 

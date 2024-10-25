@@ -1,4 +1,4 @@
-import { GeoCoord } from './api'
+import { GeoCoord } from '.'
 
 /**
  * ECharts data 타입

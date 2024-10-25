@@ -334,7 +334,7 @@ const EchartsExtGmap = ({ data, pm10Data }) => {
             coordinateSystem: 'gmap',
             data,
             symbolSize: function (val) {
-              return val[2] / 8;
+              return val[2] / 10;
             },
             encode: {
               value: 2
@@ -359,7 +359,7 @@ const EchartsExtGmap = ({ data, pm10Data }) => {
             coordinateSystem: 'gmap',
             data: slice(data, 0, 10),
             symbolSize: function (val) {
-              return val[2] / 8;
+              return val[2] / 10;
             },
             encode: {
               value: 2
