@@ -4,10 +4,6 @@ export interface ApiRequestParams {
   rlvtYr?: string;
   lclgvNm?: string;
 }
-export interface ApiResponse<T> {
-  header: ApiResponseHeader;
-  body: T;
-}
 
 export interface ApiResponseHeader {
   /** 응답 메시지 */
@@ -17,7 +13,6 @@ export interface ApiResponseHeader {
 }
 
 export interface ApiResponseBody<T> {
-  /** UsageByLclgv */
   items: T[]; 
   /** 한 페이지 결과 수 */
   numOfRows: number;

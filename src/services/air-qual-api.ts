@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { } from '../types';
+import { AirQualByRegApiRes } from '../types';
 
 // Axios 인스턴스 생성
 const api = axios.create({
@@ -23,9 +23,9 @@ const api = axios.create({
  * 일반 항목과 CAI최종 실시간 측정값과 지수 정보 조회 기능을 
  * 제공하는 시도별 실시간 측정정보 조회
  */
-export const getCtprvnRltmMesureDnsty = async () => {
+export const getCtprvnRltmMesureDnsty = async (): Promise<AirQualByRegApiRes> => {
   try {
-    const res = await api.get<any>('getCtprvnRltmMesureDnsty',
+    const res = await api.get<AirQualByRegApiRes>('getCtprvnRltmMesureDnsty',
       {
         params: {
           numOfRows: 661,
@@ -36,41 +36,20 @@ export const getCtprvnRltmMesureDnsty = async () => {
       }
     );
     
-    return res
+    return res.data;
   } catch(e) {
-
-  }
-}
-
-/** 
- * 통보코드와 통보시간으로 예보정보와 발생 원인 정보를 조회하는 대기질(미세먼지/오존) 예보통보 조회
- */
-export const getMinuDustFrcstDspth = async () => {
-  try {
-    const res = await api.get<any>('getMinuDustFrcstDspth',
-      {
-        params: {
-          serviceKey: process.env.REACT_APP_SERVICE_KEY,
-          returnType: 'json',
-          numOfRows: 100,
-          pageNo: 1,
-          // searchDate: '2020-11-14', // 통보시간 검색(조회 날짜 입력이 없을 경우 한달동안 예보통보 발령 날짜의 리스트 정보를 확인)
-          InformCode: 'PM10' // 통보코드검색(PM10, PM25, O3)
-        }
-      }
-    );
-
-  } catch(e) {
-
+    console.error("getCtprvnRltmMesureDnsty API 호출 에러:", e);
+    throw e;
   }
 }
 
 /** 
  * 시도별 실시간 평균정보 조회 
  */
-export const getCtprvnMesureLIst = async () => {
+export const getCtprvnMesureLIst = async (): Promise<AirQualByRegApiRes> => {
   try {
-    const res = await api.get<any>('getCtprvnMesureLIst',
+    const res = await api.get<AirQualByRegApiRes>(
+      'getCtprvnMesureLIst',
       {
         params: {
           serviceKey: process.env.REACT_APP_SERVICE_KEY,
@@ -83,9 +62,10 @@ export const getCtprvnMesureLIst = async () => {
         }
       }
     );
-
+    return res.data;
   } catch(e) {
-
+    console.error("getCtprvnMesureLIst API 호출 에러:", e);
+    throw e;
   }
 }
 

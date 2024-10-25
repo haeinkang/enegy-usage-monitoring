@@ -1,7 +1,16 @@
-import { ApiResponse, ApiResponseBody } from ".";
+import { ApiResponseHeader, ApiResponseBody } from ".";
 
-/** 에너지 사용량 API 응답값 */
-export type AirQualByRegionApiRes = ApiResponse<ApiResponseBody<AirQualByRegion>>;
+
+/** 시도별 대기질 API 응답값 타입 별칭 */
+export type AirQualByRegApiRes = AirQualByRegApiResponse<ApiResponseBody<AirQualByRegion>>;
+
+/** 시도별 대기질 API 응답값 */
+export interface AirQualByRegApiResponse<T> {
+  response: {
+    header: ApiResponseHeader;
+    body: T;
+  }
+}
 
 /** 시도별 대기질 정보 */
 export interface AirQualByRegion { 
