@@ -157,3 +157,15 @@ export const fetchLclgvCoords = async (): Promise<LclgvCoords> => {
   }
 };
 
+/** 행정구역(시,구,군) 가져오기 */
+export const fetchCityDists = async (): Promise<{ [key: string]: string }> => {
+  try {
+    const res = await fetch('/json/city-districts.json'); 
+    const data: { [key: string]: string } = await res.json();
+    return data
+  } catch (error) {
+    console.error("Error fetching the JSON file:", error);
+    return {}
+  }
+};
+
