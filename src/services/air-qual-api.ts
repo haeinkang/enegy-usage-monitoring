@@ -10,7 +10,6 @@ const api = axios.create({
   },
   params: {
     pageNo: 1, // 페이지번호
-    numOfRows: 300, // 한 페이지 결과 수   
     serviceKey: process.env.REACT_APP_SERVICE_KEY, // Open API 서비스키
     returnType: 'json', // 데이터 타입  
   } 
