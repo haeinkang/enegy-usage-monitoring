@@ -1,4 +1,4 @@
-import { ApiResponseHeader, ApiResponseBody } from ".";
+import { ApiResponseHeader, ApiResponseBody, GeoCoord } from ".";
 
 /** 에너지 사용량 API 응답값 타입 별칭 */
 export type EnerygyUsageApiRes = EnerygyUsageApiResponse<ApiResponseBody<UsageByLclgv>>;
@@ -18,9 +18,6 @@ export interface UsageByLclgv {
   /** 해당 년도 */
   rlvtYr: string;
 }
-
-/** [경도, 경도] */
-export type GeoCoord = [number, number];
 
 /** 지자체별 위도,경도 정보 */
 export interface LclgvCoords {
