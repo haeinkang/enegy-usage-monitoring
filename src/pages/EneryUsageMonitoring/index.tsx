@@ -1,25 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import * as api from '../../services'
 import EchartsExtGmap from './EchartsExtGmap'
-import { AirQualByRegMerics, AirQualByRegion, LclgvCoords, UsageByLclgv, ConvertData, GeoCoord, EnerygyUsageApiRes, AirQualByLclgvNumeric} from '../../types'
+import { AirQualByRegMerics, LclgvCoords, UsageByLclgv, ConvertData, GeoCoord, EnerygyUsageApiRes, AirQualByLclgvNumeric} from '../../types'
 import _, { map } from 'lodash'
-import { stringToFloat } from '../../utils'
 
 function EneryUsageMonitoring() {
-  const [loading, setLoading] = useState<boolean>(false)
-
+  const [loading, setLoading] = useState<boolean>(true)
   const [avgGasUsage, setAvgGasUsage] = useState<UsageByLclgv[]>([]);
   const [convertData, setConvertData] = useState<ConvertData[]>([]);
-
-
   const [avgAirQualBylclgv, setAvgAirQualBylclgv] = useState<AirQualByLclgvNumeric[]>([]);
-  useEffect(() => {
-    getGas();
-    getWtspl();
-    getElec();
 
-    getCtprvnRltmMesureDnsty()
+  useEffect(() => {
+    initData();
   }, [])
+
+  const initData = async () => {
+    await getGas();
+    await getWtspl();
+    await getElec();
+    await getCtprvnRltmMesureDnsty()
+    setLoading(false)
+  }
   
 
   const getCtprvnRltmMesureDnsty = async () => {

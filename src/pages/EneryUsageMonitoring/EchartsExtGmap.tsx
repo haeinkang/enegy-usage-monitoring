@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as echarts from 'echarts';
 import 'echarts-extension-gmap';
 import { slice, map } from 'lodash'
-import { name } from 'echarts-extension-gmap';
 import { ConvertData, AirQualByLclgvNumeric, GeoCoord} from '../../types'
 
 interface iProps {
