@@ -138,7 +138,7 @@ const EchartsExtGmap = ({ data, airQualData }: iProps) => {
             type: 'heatmap',
             coordinateSystem: 'gmap',
             data: heatmapData,
-            pointSize: 30,
+            pointSize: 40,
             blurSize: 0, 
             label: {
               formatter: '{b}',
