@@ -3,7 +3,7 @@ import * as echarts from 'echarts';
 import 'echarts-extension-gmap';
 import { slice, map } from 'lodash'
 import { name } from 'echarts-extension-gmap';
-import { ConvertData, AirQualByLclgvNumeric} from '../../types'
+import { ConvertData, AirQualByLclgvNumeric, GeoCoord} from '../../types'
 
 interface iProps {
   data: ConvertData[];
@@ -48,7 +48,7 @@ const EchartsExtGmap = ({ data, airQualData }: iProps) => {
         const coord = Array.isArray(o.coord) ? o.coord : [0, 0];
         return { 
           name: o.lclgvNm, 
-          value: [...coord, o['khaiValue']]
+          value: [...coord, o['pm10Value']]
         }
       })
 
@@ -84,9 +84,9 @@ const EchartsExtGmap = ({ data, airQualData }: iProps) => {
             type: 'scatter',
             coordinateSystem: 'gmap',
             data,
-            // symbolSize: function (val) {
-            //   return val[2] / 10;
-            // },
+            symbolSize: function (val: [...GeoCoord, number]) {
+              return val[2] / 10;
+            },
             encode: {
               value: 2
             },
@@ -109,9 +109,9 @@ const EchartsExtGmap = ({ data, airQualData }: iProps) => {
             type: 'effectScatter',
             coordinateSystem: 'gmap',
             data: slice(data, 0, 10),
-            // symbolSize: function (val) {
-            //   return val[2] / 10;
-            // },
+            symbolSize: function (val: [...GeoCoord, number]) {
+              return val[2] / 10;
+            },
             encode: {
               value: 2
             },
