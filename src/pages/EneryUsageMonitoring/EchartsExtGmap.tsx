@@ -1,15 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as echarts from 'echarts';
 import 'echarts-extension-gmap';
 import { slice, map } from 'lodash'
-import { ConvertData, AirQualByLclgvNumeric, GeoCoord} from '../../types'
+import { EnergyUsageByLclgv, ConvertData, AirQualByLclgvNumeric, GeoCoord} from '../../types'
 
 interface iProps {
-  data: ConvertData[];
+  energyUsage: EnergyUsageByLclgv[];
   airQualData: AirQualByLclgvNumeric[];
 }
 
-const EchartsExtGmap = ({ data, airQualData }: iProps) => {
+const EchartsExtGmap = ({ energyUsage, airQualData }: iProps) => {
   const chartRef = useRef(null);
   const [googleLoaded, setGoogleLoaded] = useState(false);
 
@@ -36,7 +36,7 @@ const EchartsExtGmap = ({ data, airQualData }: iProps) => {
 
 
       // ECharts 인스턴스 생성
-      const chart = echarts.init(chartRef.current);
+      const chart = echarts.init(chartRef.current, 'dark');
 
       
 
@@ -60,8 +60,9 @@ const EchartsExtGmap = ({ data, airQualData }: iProps) => {
         },
         gmap: {
           mapId: '739af084373f96fe',
-          center: [127.7669, 35.9078],
-          zoom: 7.4,
+          center: [126.7594, 37.4237],
+          // center: [127.7669, 35.9078],
+          zoom: 10,
           renderOnMoving: true,
           echartsLayerZIndex: 2019,
           roam: true,
@@ -71,7 +72,7 @@ const EchartsExtGmap = ({ data, airQualData }: iProps) => {
           top: 'top',
           min: 0,
           max: 300,
-          seriesIndex: 2,
+          seriesIndex: 0,
           calculable: true,
           inRange: {
             color: ['blue', 'green', 'yellow', 'orange', 'red']
@@ -79,72 +80,74 @@ const EchartsExtGmap = ({ data, airQualData }: iProps) => {
         },
         series: [
           {
-            name: '가스 평균 사용량',
-            type: 'scatter',
-            coordinateSystem: 'gmap',
-            data,
-            symbolSize: function (val: [...GeoCoord, number]) {
-              return val[2] / 10;
-            },
-            encode: {
-              value: 2
-            },
-            label: {
-              formatter: '{b}',
-              position: 'right',
-              show: false
-            },
-            itemStyle: {
-              color: '#98FF98',
-            },
-            emphasis: {
-              label: {
-                show: true
-              }
-            }
-          },
-          {
-            name: 'Top 10',
-            type: 'effectScatter',
-            coordinateSystem: 'gmap',
-            data: slice(data, 0, 10),
-            symbolSize: function (val: [...GeoCoord, number]) {
-              return val[2] / 10;
-            },
-            encode: {
-              value: 2
-            },
-            showEffectOn: 'render',
-            rippleEffect: {
-              brushType: 'stroke'
-            },
-            label: {
-              formatter: '{b}',
-              position: 'right',
-              show: true
-            },
-            itemStyle: {
-              color: '#FF5733',
-              shadowBlur: 30,
-              shadowColor: '#FF2400'
-            },
-            emphasis: {
-              scale: true
-            },
-            zlevel: 1
-          }, 
-          {
             type: 'heatmap',
             coordinateSystem: 'gmap',
             data: heatmapData,
-            pointSize: 40,
-            blurSize: 0, 
+            pointSize: 120,
+            blurSize: 1, 
             label: {
               formatter: '{b}',
               position: 'right',
               show: true
             },
-          }
+          },
+          ...createPieSeries(),
+          // {
+          //   name: '에너지 평균 사용량',
+          //   type: 'scatter',
+          //   coordinateSystem: 'gmap',
+          //   data: energyUsage,
+          //   symbolSize: function (val: [...GeoCoord, number]) {
+          //     return val[2] / 10;
+          //   },
+          //   encode: {
+          //     value: 2
+          //   },
+          //   label: {
+          //     formatter: '{b}',
+          //     position: 'right',
+          //     show: false
+          //   },
+          //   itemStyle: {
+          //     color: '#98FF98',
+          //   },
+          //   emphasis: {
+          //     label: {
+          //       show: true
+          //     }
+          //   }
+          // },
+          // {
+          //   name: 'Top 10',
+          //   type: 'effectScatter',
+          //   coordinateSystem: 'gmap',
+          //   data: slice(energyUsage, 0, 10),
+          //   symbolSize: function (val: [...GeoCoord, number]) {
+          //     return val[2] / 10;
+          //   },
+          //   encode: {
+          //     value: 2
+          //   },
+          //   showEffectOn: 'render',
+          //   rippleEffect: {
+          //     brushType: 'stroke'
+          //   },
+          //   label: {
+          //     formatter: '{b}',
+          //     position: 'right',
+          //     show: true
+          //   },
+          //   itemStyle: {
+          //     color: '#FF5733',
+          //     shadowBlur: 30,
+          //     shadowColor: '#FF2400'
+          //   },
+          //   emphasis: {
+          //     scale: true
+          //   },
+          //   zlevel: 1
+          // }, 
+        
         ],
       };
 
@@ -152,7 +155,43 @@ const EchartsExtGmap = ({ data, airQualData }: iProps) => {
       chart.setOption(option);
 
     }
-  }, [googleLoaded, data, airQualData]);
+  }, [googleLoaded, energyUsage, airQualData]);
+
+
+  const createPieSeries = () => 
+    map(energyUsage, item => ({
+      name: item.lclgvNm,
+      type: 'pie',
+      coordinateSystem: 'gmap',
+      /**
+       * {a}시리즈 이름, {b}데이터 항목 이름, {c}데이터 값, {d}백분율.
+       */
+      tooltip: {
+        trigger: 'item',
+        formatter: function (params: any) {          
+          const value = params.name === '가스' ? params.value / 39 : params.value / 3.6 ;
+          const unit = params.name === '가스' ? 'm³' : 'kWh'      
+          return `${params.seriesName} <br/>${params.name}: ${value} ${unit} (${params.percent}%)`;
+        } 
+      },
+      label: {
+        show: true,
+        position: 'inner',
+        fontSize: 14
+      },
+      labelLine: {
+        show: false
+      },
+      animationDuration: 0,
+      radius: (item.gas + item.water + item.elec)/50,
+      center: item.coord,
+      data: [
+        { name: '가스', value: item.gas * 39 },
+        // { name: '물', value: item.water },
+        { name: '전기', value: item.elec * 3.6 }
+      ]
+    }))
+  
 
   return (
     <div

@@ -105,7 +105,10 @@ export interface AirQualByRegion {
   no2Grade: string;
 }
 
-/** 지표값을 number로 변환한 지자체별 대기질 정보 */
+/** 지자체별 대기질 정보
+ *  + 지표값을 number로 변환
+ *  + 지자체의 [경도, 위도] 정보 추가  
+ */
 export interface AirQualByLclgvNumeric { 
   /**
    * 지자체명
@@ -113,7 +116,7 @@ export interface AirQualByLclgvNumeric {
    */
   lclgvNm: string;
   /**
-   * 지자체 [경도, 위도]
+   * 지자체의 [경도, 위도]
    */
   coord: GeoCoord;
   /** 

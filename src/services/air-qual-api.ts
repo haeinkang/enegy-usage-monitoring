@@ -43,21 +43,23 @@ export const getCtprvnRltmMesureDnsty = async (): Promise<AirQualByRegApiRes> =>
 }
 
 /** 
- * 시도별 실시간 평균정보 조회 
+ * 측정소명과 측정데이터 기간(일,한달,3개월)으로 
+ * 해당 측정소의 일반항목 측정정보를 제공하는 
+ * 측정소별 실시간 측정정보조회
  */
 export const getCtprvnMesureLIst = async (): Promise<AirQualByRegApiRes> => {
   try {
     const res = await api.get<AirQualByRegApiRes>(
-      'getCtprvnMesureLIst',
+      'getMsrstnAcctoRltmMesureDnsty',
       {
         params: {
-          serviceKey: process.env.REACT_APP_SERVICE_KEY,
-          returnType: 'json',
           numOfRows: 100,
-          pageNo: 1,
           itemCode: 'CO', // (SO2, CO, O3, NO2, PM10, PM25)
-          dataGubun: 'DAILY', // 요청 자료 구분(시간평균 : HOUR, 일평균 : DAILY)
-          searchCondition: 'MONTH' // 요청 데이터기간 (일주일 : WEEK, 한달 : MONTH)
+          dataGubun: 'HOUR', // 요청 자료 구분(시간평균 : HOUR, 일평균 : DAILY)
+          searchCondition: 'WEEK', // 요청 데이터기간 (일주일 : WEEK, 한달 : MONTH)
+          stationName: '종로구', // 측정소 이름 (종로구)
+          dataTerm: '1MONTH', // 요청 데이터기간(1일: DAILY, 1개월: MONTH, 3개월: 3MONTH)
+          ver: '1.4'// 오퍼레이션 버전
         }
       }
     );

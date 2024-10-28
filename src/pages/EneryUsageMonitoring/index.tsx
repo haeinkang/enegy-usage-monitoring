@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import * as api from '../../services'
 import EchartsExtGmap from './EchartsExtGmap'
-import { AirQualByRegMerics, LclgvCoords, UsageByLclgv, ConvertData, GeoCoord, EnerygyUsageApiRes, AirQualByLclgvNumeric} from '../../types'
-import _, { map } from 'lodash'
+import Top5DualChart from './Top5DualChart'
+import { AirQualByRegMerics, LclgvCoords, EnergyUsageByLclgv, AirQualByLclgvNumeric} from '../../types'
+import _, { map, find, includes } from 'lodash'
+import { Card, CardContent, Typography } from '@mui/material';
 
 function EneryUsageMonitoring() {
   const [loading, setLoading] = useState<boolean>(true)
-  const [avgGasUsage, setAvgGasUsage] = useState<UsageByLclgv[]>([]);
-  const [convertData, setConvertData] = useState<ConvertData[]>([]);
+  const [energyUsage, setEnergyUsage] = useState<EnergyUsageByLclgv[]>([]);
   const [avgAirQualBylclgv, setAvgAirQualBylclgv] = useState<AirQualByLclgvNumeric[]>([]);
 
   useEffect(() => {
@@ -15,9 +16,7 @@ function EneryUsageMonitoring() {
   }, [])
 
   const initData = async () => {
-    await getGas();
-    await getWtspl();
-    await getElec();
+    await getEnergyUsageByLclgv();
     await getCtprvnRltmMesureDnsty()
     setLoading(false)
   }
@@ -75,59 +74,114 @@ function EneryUsageMonitoring() {
     }
   }
 
+  const getEnergyUsageByLclgv = async () => {
+    try {
+      const [gasRes, wtRes, elecRes] = await Promise.all([getGas(), getWtspl(), getElec()]);
+      const lclgvCoords: LclgvCoords = await api.fetchLclgvCoords();
+      
+      const gasData = map(gasRes, 
+        ({ lclgvNm, rlvtYr, avgUseQnt }) => 
+        ({ lclgvNm, rlvtYr, gas: avgUseQnt })
+      ) 
+
+      const wtData = map(wtRes, 
+        ({ lclgvNm, rlvtYr, avgUseQnt }) => 
+        ({ lclgvNm, rlvtYr, water: avgUseQnt })
+      )
+
+      const elecData = map(elecRes, 
+        ({ lclgvNm, rlvtYr, avgUseQnt }) => 
+        ({ lclgvNm, rlvtYr, elec: avgUseQnt })
+      )
+      
+      // 세 배열을 합치고 `lclgvNm`과 `rlvtYr` 기준으로 그룹화
+      const res =_([...gasData, ...wtData, ...elecData])
+        .filter(item => 
+          includes(item.lclgvNm, '경기')
+          || includes(item.lclgvNm, '인천')
+        )
+        .groupBy(item => `${item.lclgvNm}-${item.rlvtYr}`)
+        .map((items) => items.reduce(
+          (acc, item) => ({ 
+            ...acc, 
+            ...item, 
+            coord: lclgvCoords[item.lclgvNm] 
+          }), {} as Partial<EnergyUsageByLclgv>)
+        ) 
+        .filter(item => 
+          item.gas !== undefined 
+          && item.water !== undefined 
+          && item.elec !== undefined
+        )
+        .value() as EnergyUsageByLclgv[]
+
+      console.log(res)
+
+      setEnergyUsage(res)
+
+    } catch(e) {
+
+    }
+  }
+
   const getGas = async () => {
     try {
-      const { body: { items } }: EnerygyUsageApiRes = await api.getGas()
-      const lclgvCoords: LclgvCoords = await api.fetchLclgvCoords();
-
-      const formattedData = map(items, o => ({
-        name: o.lclgvNm, 
-        value: o.avgUseQnt
-      }))
-
-      const convertedData: ConvertData[] =  _(items) 
-        .filter(o => typeof lclgvCoords[o.lclgvNm] === 'object')
-        .orderBy('avgUseQnt', 'desc')
-        .map(o => {
-          const coord = lclgvCoords[o.lclgvNm];
-          return { 
-            name: o.lclgvNm,
-            value: [...coord, o.avgUseQnt] as [...GeoCoord, number]
-          } 
-        })
-        .value()
-      
-      setAvgGasUsage(items)
-      setConvertData(convertedData)
+      const res = await api.getGas();
+      return res.body.items;
     } catch (error) {
       console.error(error);
+      return [];
     }
   }
 
   const getWtspl = async () => {
     try {
       const res = await api.getWtspl()
-  
+      return res.body.items;
     } catch (error) {
       console.error(error);
+      return [];
     }
   }
   const getElec = async () => {
     try {
       const res = await api.getElec()
-  
+      return res.body.items;
     } catch (error) {
       console.error(error);
+      return [];
     }
   }
 
   return (
     <div style={{ width: '100%', height: '80vh'}}>
+      <Card sx={{ position: 'absolute', zIndex: 1, minWidth: 340, top: 130, left: 20}}>
+        <CardContent>
+          <Typography variant="h6" component="div" gutterBottom>
+            Top5
+          </Typography>
+          {/* <Top5DualChart energyUsage={energyUsage} airQualData={avgAirQualBylclgv}/> */}
+        </CardContent>
+      </Card>
       {loading 
         ? <div>loading ... </div>
-        : <EchartsExtGmap data={convertData} airQualData={avgAirQualBylclgv} />}
+        : <EchartsExtGmap energyUsage={energyUsage} airQualData={avgAirQualBylclgv} />}
     </div>
   );
 }
 
 export default EneryUsageMonitoring;
+
+
+//       const lclgvCoords: LclgvCoords = await api.fetchLclgvCoords();
+// const convertedData: ConvertData[] =  _(items) 
+//         .filter(o => typeof lclgvCoords[o.lclgvNm] === 'object')
+//         .orderBy('avgUseQnt', 'desc')
+//         .map(o => {
+//           const coord = lclgvCoords[o.lclgvNm];
+//           return { 
+//             name: o.lclgvNm,
+//             value: [...coord, o.avgUseQnt] as [...GeoCoord, number]
+//           } 
+//         })
+//         .value()
