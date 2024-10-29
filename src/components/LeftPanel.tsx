@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { TextField, Box, Autocomplete, Grid, Typography, Button, Paper, Avatar, List, ListItem, ListItemButton, ListItemAvatar, ListItemText } from '@mui/material';
 import KeyboardArrowLeftRoundedIcon from '@mui/icons-material/KeyboardArrowLeftRounded';
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
-import { AirQualByRegMerics, LclgvCoords, EnergyUsageByLclgv, AirQualByLclgvNumeric} from '../types'
+import { AirQualByRegMerics, LclgvCoords, GasUsageByLclgv, AirQualByLclgvNumeric} from '../types'
 import _ from 'lodash'
 import { getAirQualityColor } from '../utils'
 import { useSelector } from 'react-redux';
@@ -12,7 +12,6 @@ import { AppDispatch, RootState } from '../state/store';
 
 function LeftPanel() {
   const airQualData = useSelector((state: RootState) => state.airQual.data);
-  const energyUsage = useSelector((state: RootState) => state.energyUsage.data);
 
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const [selected, setSelect] = useState<AirQualByLclgvNumeric[]>([]);

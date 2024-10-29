@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import counterReducer from './counterSlice'
 import airQualSlice from './airQualSlice'
-import eneryUsageSlice from './eneryUsageSlice';
+import gasUsageSlice from './gasUsageSlice';
 import coordSlice from './coordSlice';
 
 export const store = configureStore({
@@ -9,7 +9,7 @@ export const store = configureStore({
     counter: counterReducer,
     coordSlice: coordSlice,
     airQual: airQualSlice,
-    energyUsage: eneryUsageSlice,
+    gasUsage: gasUsageSlice,
   }
 })
 

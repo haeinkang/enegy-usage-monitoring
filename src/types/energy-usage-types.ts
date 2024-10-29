@@ -21,19 +21,15 @@ export interface EnerygyUsageApiResItem {
 
 /** 
  * 좌표값을 추가한 
- * 지자체별 에너지 평균 사용량 
+ * 지자체별 가스 평균 사용량 
  */
-export interface EnergyUsageByLclgv  { 
+export interface GasUsageByLclgv  { 
   /** 지자체명 */
   lclgvNm: string;
   /** 지자체의 [경도, 위도] */
   coord: GeoCoord;
   /** 가스 평균 사용량 */
-  gas: number;
-  /** 물 평균 사용량 */
-  water: number;
-  /** 전기 평균 사용량 */
-  elec: number;
+  avgUseQnt: number;
   /** 해당 년도 */
   rlvtYr: string;
 }

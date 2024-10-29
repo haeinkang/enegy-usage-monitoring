@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../state/store';
 import { getAirQualData } from '../../state/airQualSlice';
 import { getCoordJson } from '../../state/coordSlice';
-import { getEnergyUsage } from '../../state/eneryUsageSlice';
+import { getGasUsage } from '../../state/gasUsageSlice';
 
 function EneryUsageMonitoring() {
   const dispatch = useDispatch<AppDispatch>();
@@ -18,7 +18,7 @@ function EneryUsageMonitoring() {
   const initData = async () => {
     dispatch(getCoordJson());
     dispatch(getAirQualData());
-    dispatch(getEnergyUsage());
+    dispatch(getGasUsage());
     setLoading(false)
   }
 
@@ -44,7 +44,7 @@ export default EneryUsageMonitoring;
 
 
 //       const lclgvCoords: LclgvCoords = await api.fetchLclgvCoords();
-// const convertedData: ConvertData[] =  _(items) 
+// const convertedData: EchartMapData[] =  _(items) 
 //         .filter(o => typeof lclgvCoords[o.lclgvNm] === 'object')
 //         .orderBy('avgUseQnt', 'desc')
 //         .map(o => {
@@ -69,7 +69,7 @@ export default EneryUsageMonitoring;
 //     ...acc, 
 //     ...item, 
 //     coord: lclgvCoords[item.lclgvNm] 
-//   }), {} as Partial<EnergyUsageByLclgv>)
+//   }), {} as Partial<GasUsageByLclgv>)
 // ) 
 // .orderBy(item => item.gas && item.elec && item.gas + item.elec || 0, 'desc')
 // .slice(0, 100)
@@ -78,4 +78,4 @@ export default EneryUsageMonitoring;
 //   && item.water !== undefined 
 //   && item.elec !== undefined
 // ) 
-// .value() as EnergyUsageByLclgv[]
+// .value() as GasUsageByLclgv[]

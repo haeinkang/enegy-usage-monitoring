@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import * as echarts from 'echarts';
 import 'echarts-extension-gmap';
-import { ConvertData, AirQualByLclgvNumeric, GeoCoord} from '../../types'
+import { EchartMapData, AirQualByLclgvNumeric, GeoCoord} from '../../types'
 import { slice } from 'lodash';
 import { getCtprvnMesureLIst } from '../../services'
 
 interface iProps {
-  data: ConvertData[];
+  data: EchartMapData[];
   airQualData: AirQualByLclgvNumeric[];
 }
 
