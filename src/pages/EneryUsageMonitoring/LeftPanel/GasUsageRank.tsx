@@ -5,9 +5,7 @@ import _, { map, includes, sortBy, find } from 'lodash'
 import { getAirQualityColor } from '../../../utils'
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../state/store';
-import { 
-  selectLclgvNm 
-} from '../../../state/airQualSlice';
+import { selectLclgvNm } from '../../../state/airQualSlice';
 
 
 
