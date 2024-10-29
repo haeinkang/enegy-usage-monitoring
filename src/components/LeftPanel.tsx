@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { TextField, Box, Autocomplete, Grid, Typography, Button, Paper, Avatar, List, ListItem, ListItemButton, ListItemAvatar, ListItemText } from '@mui/material';
+import { TextField, Box, Autocomplete, Grid, Typography, Button, Paper, Avatar, List, ListItem, ListItemButton, ListItemAvatar, ListItemText, Chip } from '@mui/material';
 import KeyboardArrowLeftRoundedIcon from '@mui/icons-material/KeyboardArrowLeftRounded';
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
 import { AirQualByRegMerics, LclgvCoords, GasUsageByLclgv, AirQualByLclgvNumeric} from '../types'
@@ -50,11 +50,25 @@ function LeftPanel() {
           defaultValue={[]}
           options={options}
           getOptionLabel={(option) => option}
+          // renderTags={(value, getTagProps) =>
+          //   value.map((option, index) => {
+          //     const { key, ...tagProps } = getTagProps({ index });
+          //     return (
+          //       <div {...tagProps}>{option}</div>
+          //     );
+          //   })
+          // }
           renderTags={(value, getTagProps) =>
             value.map((option, index) => {
               const { key, ...tagProps } = getTagProps({ index });
               return (
-                <div {...tagProps}>{option}</div>
+                <Chip
+                  key={key}
+                  variant="outlined"
+                  label={option}
+                  size="small"
+                  {...tagProps}
+                />
               );
             })
           }
@@ -79,7 +93,9 @@ function LeftPanel() {
           {
             _(airQualData)
               .filter(o => 
-                find(selected, sel => includes(o.lclgvNm, sel)) !== undefined
+                selected.length > 0 
+                ? find(selected, sel => includes(o.lclgvNm, sel)) !== undefined
+                : true
               )
               .orderBy('pm10Value', 'desc')
               .map((item, idx) => {
