@@ -7,18 +7,25 @@ import { AirQualByRegMerics, LclgvCoords, EnergyUsageByLclgv, AirQualByLclgvNume
 import _, { map, find, includes, meanBy } from 'lodash'
 import { Card, CardContent, Typography } from '@mui/material';
 
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../state/store';
+import { getAirQualData } from '../../state/airQualSlice';
+
 function EneryUsageMonitoring() {
+  const dispatch = useDispatch<AppDispatch>();
+
   const [loading, setLoading] = useState<boolean>(true)
   const [energyUsage, setEnergyUsage] = useState<EnergyUsageByLclgv[]>([]);
   const [avgAirQualBylclgv, setAvgAirQualBylclgv] = useState<AirQualByLclgvNumeric[]>([]);
-
+  
   useEffect(() => {
     initData();
+    dispatch(getAirQualData());
   }, [])
 
   const initData = async () => {
     await getEnergyUsageByLclgv();
-    await getCtprvnRltmMesureDnsty()
+    // await getCtprvnRltmMesureDnsty()
     setLoading(false)
   }
   
@@ -58,7 +65,6 @@ function EneryUsageMonitoring() {
             }
           }, {});  
 
-          const coord = lclgvCoords[lclgvNm];
           return {
             lclgvNm,
             coord: lclgvCoords[lclgvNm],
@@ -149,10 +155,10 @@ function EneryUsageMonitoring() {
 
   return (
     <div style={{ position: 'relative', width: '100%', height: '90vh'}}>
-      <LeftPanel energyUsage={energyUsage}  airQualData={avgAirQualBylclgv}/>
+      <LeftPanel energyUsage={energyUsage} />
       {loading 
         ? <div>loading ... </div>
-        : <EchartsExtGmap energyUsage={energyUsage} airQualData={avgAirQualBylclgv} />}
+        : <EchartsExtGmap energyUsage={energyUsage} />}
     </div>
   );
 }

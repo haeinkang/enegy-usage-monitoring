@@ -6,19 +6,16 @@ import { EneryUsageMonitoring, NotFound } from './pages';
 
 function App() {
   return (
-   
-      <Wrapper>
-        <Header />
-        
-        <Router>
-          <Routes>
-            <Route path="/" element={<EneryUsageMonitoring />} />
-            <Route path="*" element={<NotFound />} /> 
-          </Routes>
-        </Router>
-
-        <Footer />
-      </Wrapper>
+    <Wrapper>
+      <Header />
+      <Router>
+        <Routes>
+          <Route path="/" element={<EneryUsageMonitoring />} />
+          <Route path="*" element={<NotFound />} /> 
+        </Routes>
+      </Router>
+      <Footer />
+    </Wrapper>
   );
 }
 

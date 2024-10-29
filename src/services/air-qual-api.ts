@@ -1,20 +1,5 @@
-import axios from 'axios';
 import { AirQualByRegApiRes } from '../types';
-
-// Axios 인스턴스 생성
-const api = axios.create({
-  baseURL: `${process.env.REACT_APP_BASE_URL}/ArpltnInforInqireSvc`, // 기본 API URL 설정
-  timeout: 3000, // 타임아웃 시간 설정 (ms)
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  params: {
-    pageNo: 1, // 페이지번호
-    serviceKey: process.env.REACT_APP_SERVICE_KEY, // Open API 서비스키
-    returnType: 'json', // 데이터 타입  
-  } 
-});
-
+import { api } from '.';
 
 /**
  * 시도명을 검색조건으로 하여 

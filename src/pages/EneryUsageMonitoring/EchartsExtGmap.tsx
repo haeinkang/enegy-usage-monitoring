@@ -4,13 +4,16 @@ import 'echarts-extension-gmap';
 import _, { slice, map } from 'lodash'
 import { EnergyUsageByLclgv, ConvertData, AirQualByLclgvNumeric, GeoCoord} from '../../types'
 import BoltIcon from '@mui/icons-material/Bolt';
+import { useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../state/store';
 
 interface iProps {
   energyUsage: EnergyUsageByLclgv[];
-  airQualData: AirQualByLclgvNumeric[];
 }
 
-const EchartsExtGmap = ({ energyUsage, airQualData }: iProps) => {
+const EchartsExtGmap = ({ energyUsage }: iProps) => {
+  const airQualData = useSelector((state: RootState) => state.airQual.data);
+
   const chartRef = useRef(null);
   const [googleLoaded, setGoogleLoaded] = useState(false);
 
@@ -39,16 +42,11 @@ const EchartsExtGmap = ({ energyUsage, airQualData }: iProps) => {
       // ECharts 인스턴스 생성
       const chart = echarts.init(chartRef.current, 'dark');
 
-      
-
-      fetch('../../법정구역_시도_simplified.geojson') // GeoJSON 파일 경로를 여기에 넣으세요
-        .then(response => response.json())
-
       const heatmapData = map(airQualData, o => {
         const coord = Array.isArray(o.coord) ? o.coord : [0, 0];
         return { 
           name: o.lclgvNm, 
-          value: [...coord, o['khaiValue']]
+          value: [...coord, o['pm10Value']]
         }
       })
     

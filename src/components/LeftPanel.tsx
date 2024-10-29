@@ -4,16 +4,19 @@ import { TextField, Box, Autocomplete, Grid, Typography, Button, Paper, Avatar, 
 import KeyboardArrowLeftRoundedIcon from '@mui/icons-material/KeyboardArrowLeftRounded';
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
 import { AirQualByRegMerics, LclgvCoords, EnergyUsageByLclgv, AirQualByLclgvNumeric} from '../types'
-import _, { find, includes, map } from 'lodash'
+import _ from 'lodash'
 import { getAirQualityColor } from '../utils'
+import { useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../state/store';
 
 interface iProps {
   energyUsage: EnergyUsageByLclgv[];
-  airQualData: AirQualByLclgvNumeric[];
 }
 
 
 function LeftPanel(props: iProps) {
+  const airQualData = useSelector((state: RootState) => state.airQual.data);
+
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const [selected, setSelect] = useState<AirQualByLclgvNumeric[]>([]);
   const [inputValue, setInputValue] = useState('');
@@ -33,7 +36,7 @@ function LeftPanel(props: iProps) {
         <Autocomplete
           multiple
           defaultValue={[]}
-          options={props.airQualData}
+          options={airQualData}
           getOptionLabel={(option) => option.lclgvNm}
           renderTags={(value, getTagProps) =>
             value.map((option, index) => {
@@ -63,7 +66,7 @@ function LeftPanel(props: iProps) {
         >
         <List dense disablePadding sx={{ width: '100%' }}>
           {
-            _(selected.length > 0 ? selected : props.airQualData)
+            _(selected.length > 0 ? selected : airQualData)
               .orderBy('pm10Value', 'desc')
               .map((item, idx) => {
                 const region = item.lclgvNm.split(' ');
