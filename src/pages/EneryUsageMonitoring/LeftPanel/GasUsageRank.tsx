@@ -1,29 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { TextField, Box, Autocomplete, Grid, Typography, Button, Paper, Avatar, List, ListItem, ListItemButton, ListItemAvatar, ListItemText, Chip } from '@mui/material';
-import KeyboardArrowLeftRoundedIcon from '@mui/icons-material/KeyboardArrowLeftRounded';
-import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
 import _, { map, includes, sortBy, find } from 'lodash'
 import { getAirQualityColor } from '../../../utils'
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../state/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../../state/store';
+import { 
+  selectLclgvNm 
+} from '../../../state/airQualSlice';
+
 
 
 function GasUsageRank() {
+  const dispatch = useDispatch<AppDispatch>();
   const gasUsage = useSelector((state: RootState) => state.gasUsage.data);
 
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
-  const [selected, setSelect] = useState<string[]>([]);
+  const [filtered, setFiltered] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [options, setOptions] = useState<string[]>([])
 
   useEffect(() => {
     getOptions();
   }, [gasUsage])
-
-  const handleCollapse = () => {
-    setIsCollapsed((prev) => !prev);
-  };
 
   const getOptions = () => {
     const lclgvNmList = map(gasUsage, 'lclgvNm')
@@ -61,7 +59,7 @@ function GasUsageRank() {
           })
         }
         onChange={(event: any, newValue: string[]) => {
-          setSelect(newValue);
+          setFiltered(newValue);
         }}
         inputValue={inputValue}
         onInputChange={(event, newInputValue) => {
@@ -82,8 +80,8 @@ function GasUsageRank() {
           {
             _(gasUsage)
               .filter(o => 
-                selected.length > 0 
-                ? find(selected, sel => includes(o.lclgvNm, sel)) !== undefined
+                filtered.length > 0 
+                ? find(filtered, sel => includes(o.lclgvNm, sel)) !== undefined
                 : true
               )
               .orderBy('pm10Value', 'desc')
@@ -91,7 +89,10 @@ function GasUsageRank() {
                 const region = item.lclgvNm.split(' ');
                 return (
                   <ListItem key={`pm10-${idx}`} disablePadding sx={{ borderRadius: '3px', marginBottom: .5, bgcolor: 'rgba(255, 255, 255, 0.09)' }}> 
-                    <ListItemButton dense>
+                    <ListItemButton 
+                      onClick={() => dispatch(selectLclgvNm(item.lclgvNm))} 
+                      dense
+                    >
                       <Grid container gap={1.5} alignItems="center" >
                         <span>{idx + 1}</span>
                         <Mark value={item.avgUseQnt} />

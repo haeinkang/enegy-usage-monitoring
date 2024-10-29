@@ -3,44 +3,27 @@ import styled from 'styled-components';
 import { TextField, Box, Autocomplete, Grid, Typography, Button, Paper, Avatar, List, ListItem, ListItemButton, ListItemAvatar, ListItemText, Chip } from '@mui/material';
 import KeyboardArrowLeftRoundedIcon from '@mui/icons-material/KeyboardArrowLeftRounded';
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
-import _, { map, includes, sortBy, find } from 'lodash'
 import { getAirQualityColor } from '../../../utils'
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../state/store';
 import GasUsageRank from './GasUsageRank'
+import DetailedAirQuality from './DetailedAirQuality'
 
 function LeftPanel() {
-  const airQualData = useSelector((state: RootState) => state.airQual.data);
-
+  const lclgvNm = useSelector((state: RootState) => state.airQual.selected);
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
-  const [selected, setSelect] = useState<string[]>([]);
-  const [inputValue, setInputValue] = useState('');
-  const [options, setOptions] = useState<string[]>([])
-
-  useEffect(() => {
-    getOptions();
-  }, [airQualData])
 
   const handleCollapse = () => {
     setIsCollapsed((prev) => !prev);
   };
 
-  const getOptions = () => {
-    const lclgvNmList = map(airQualData, 'lclgvNm')
-    const cityList = _(airQualData)
-      .map(o => o.lclgvNm.split(' ')[0])
-      .uniq()
-      .value();
-
-    setOptions(sortBy([...cityList, ...lclgvNmList]))
-  }
-
-
   return (
     <GridContainer>
       <Panel square elevation={10} isCollapsed={isCollapsed}>
-      <GasUsageRank />
-
+      { lclgvNm 
+        ? <DetailedAirQuality />
+        : <GasUsageRank />
+      }
       </Panel>
       <CollapseButton variant="contained" onClick={handleCollapse}>
         {isCollapsed  
@@ -88,10 +71,3 @@ const CollapseButton = styled(Button)`
     color: #fff;
   }
 `;
-
-const Mark = styled.div<{ value: number }>`
-  width: 1rem;
-  height: 1rem;
-  border-radius: .125rem;
-  background: ${(props) => getAirQualityColor(props.value)};
-`

@@ -11,11 +11,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../state/store';
 
 interface AirQaulState {
-  data: AirQualByLclgvNumeric[]
+  data: AirQualByLclgvNumeric[]; 
+  selected?: string;
 }
 
 const initialState: AirQaulState = {
-  data: []
+  data: [], 
+  selected: undefined,
 }
 
 
@@ -23,7 +25,10 @@ const airQualSlice = createSlice({
   name: 'airQual', 
   initialState,
   reducers: {
-
+    selectLclgvNm: (state, action) => {
+      console.log(action.payload)
+      state.selected = action.payload;
+    },
   }, 
   extraReducers: (builder) => {
     builder.addCase(
@@ -92,6 +97,7 @@ export const getAirQualData = createAsyncThunk(
 
 
 export const { 
+  selectLclgvNm,
 } = airQualSlice.actions;
 
 export default airQualSlice.reducer;
