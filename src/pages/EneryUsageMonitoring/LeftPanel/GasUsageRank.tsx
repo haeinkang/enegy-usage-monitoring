@@ -3,15 +3,14 @@ import styled from 'styled-components';
 import { TextField, Box, Autocomplete, Grid, Typography, Button, Paper, Avatar, List, ListItem, ListItemButton, ListItemAvatar, ListItemText, Chip } from '@mui/material';
 import KeyboardArrowLeftRoundedIcon from '@mui/icons-material/KeyboardArrowLeftRounded';
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
-import { AirQualByRegMerics, LclgvCoords, GasUsageByLclgv, AirQualByLclgvNumeric} from '../types'
 import _, { map, includes, sortBy, find } from 'lodash'
-import { getAirQualityColor } from '../utils'
+import { getAirQualityColor } from '../../../utils'
 import { useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../state/store';
+import { RootState } from '../../../state/store';
 
 
-function LeftPanel() {
-  const airQualData = useSelector((state: RootState) => state.airQual.data);
+function GasUsageRank() {
+  const gasUsage = useSelector((state: RootState) => state.gasUsage.data);
 
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const [selected, setSelect] = useState<string[]>([]);
@@ -20,15 +19,15 @@ function LeftPanel() {
 
   useEffect(() => {
     getOptions();
-  }, [airQualData])
+  }, [gasUsage])
 
   const handleCollapse = () => {
     setIsCollapsed((prev) => !prev);
   };
 
   const getOptions = () => {
-    const lclgvNmList = map(airQualData, 'lclgvNm')
-    const cityList = _(airQualData)
+    const lclgvNmList = map(gasUsage, 'lclgvNm')
+    const cityList = _(gasUsage)
       .map(o => o.lclgvNm.split(' ')[0])
       .uniq()
       .value();
@@ -38,60 +37,50 @@ function LeftPanel() {
 
 
   return (
-    <GridContainer>
-      <Panel square elevation={10} isCollapsed={isCollapsed}>
-    
-        <Typography variant="subtitle1">
-          가스 소비에 따른 미세먼지 순위 (ug/m3)
-        </Typography>
-    
-        <Autocomplete
-          multiple
-          defaultValue={[]}
-          options={options}
-          getOptionLabel={(option) => option}
-          // renderTags={(value, getTagProps) =>
-          //   value.map((option, index) => {
-          //     const { key, ...tagProps } = getTagProps({ index });
-          //     return (
-          //       <div {...tagProps}>{option}</div>
-          //     );
-          //   })
-          // }
-          renderTags={(value, getTagProps) =>
-            value.map((option, index) => {
-              const { key, ...tagProps } = getTagProps({ index });
-              return (
-                <Chip
-                  key={key}
-                  variant="outlined"
-                  label={option}
-                  size="small"
-                  {...tagProps}
-                />
-              );
-            })
-          }
-          onChange={(event: any, newValue: string[]) => {
-            setSelect(newValue);
-          }}
-          inputValue={inputValue}
-          onInputChange={(event, newInputValue) => {
-            setInputValue(newInputValue);
-          }}
-          disablePortal
-          sx={{ width: '100%', margin: '20px 0 10px' }}
-          size='small'
-          renderInput={(params) => 
-            <TextField {...params} label="지역 검색" variant="filled"/>
-          }
-        />
-        <Box
-          sx={{ width: '100%', height: 400, bgcolor: 'inherit', overflow: 'scroll' }}
-        >
+    <>
+      <Typography variant="subtitle1">
+        가스 사용량 순위 (㎥)
+      </Typography>
+      <Autocomplete
+        multiple
+        defaultValue={[]}
+        options={options}
+        getOptionLabel={(option) => option}
+        renderTags={(value, getTagProps) =>
+          value.map((option, index) => {
+            const { key, ...tagProps } = getTagProps({ index });
+            return (
+              <Chip
+                key={key}
+                variant="outlined"
+                label={option}
+                size="small"
+                {...tagProps}
+              />
+            );
+          })
+        }
+        onChange={(event: any, newValue: string[]) => {
+          setSelect(newValue);
+        }}
+        inputValue={inputValue}
+        onInputChange={(event, newInputValue) => {
+          setInputValue(newInputValue);
+        }}
+        disablePortal
+        sx={{ width: '100%', margin: '20px 0 10px' }}
+        size='small'
+        renderInput={(params) => 
+          <TextField {...params} label="지역 검색" variant="filled"/>
+        }
+      />
+
+      <Box
+        sx={{ width: '100%', height: 400, bgcolor: 'inherit', overflow: 'scroll' }}
+      >
         <List dense disablePadding sx={{ width: '100%' }}>
           {
-            _(airQualData)
+            _(gasUsage)
               .filter(o => 
                 selected.length > 0 
                 ? find(selected, sel => includes(o.lclgvNm, sel)) !== undefined
@@ -101,16 +90,16 @@ function LeftPanel() {
               .map((item, idx) => {
                 const region = item.lclgvNm.split(' ');
                 return (
-                  <ListItem disablePadding sx={{ borderRadius: '3px', marginBottom: .5, bgcolor: 'rgba(255, 255, 255, 0.09)' }}> 
+                  <ListItem key={`pm10-${idx}`} disablePadding sx={{ borderRadius: '3px', marginBottom: .5, bgcolor: 'rgba(255, 255, 255, 0.09)' }}> 
                     <ListItemButton dense>
                       <Grid container gap={1.5} alignItems="center" >
                         <span>{idx + 1}</span>
-                        <Mark value={item.pm10Value} />
+                        <Mark value={item.avgUseQnt} />
                         <ListItemText
                           primary={region[0]}
                           secondary={region[1]}
                         />
-                        <span>{item.pm10Value}</span>
+                        <span>{`${item.avgUseQnt} ㎥`}</span>
                       </Grid>
                     </ListItemButton>
                   </ListItem>
@@ -119,20 +108,12 @@ function LeftPanel() {
               .value()
           }
         </List>
-        </Box>
-
-      </Panel>
-      <CollapseButton variant="contained" onClick={handleCollapse}>
-        {isCollapsed  
-          ? <KeyboardArrowRightRoundedIcon /> 
-          : <KeyboardArrowLeftRoundedIcon />
-        }
-      </CollapseButton>
-    </GridContainer>
+      </Box>
+    </>
   );
 }
 
-export default LeftPanel;
+export default GasUsageRank;
 
 const GridContainer = styled.div`
   position: absolute;

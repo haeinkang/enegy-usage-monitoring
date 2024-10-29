@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import EchartsExtGmap from './EchartsExtGmap'
-import LeftPanel from '../../components/LeftPanel'
+import LeftPanel from './LeftPanel'
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../state/store';
 import { getAirQualData } from '../../state/airQualSlice';
