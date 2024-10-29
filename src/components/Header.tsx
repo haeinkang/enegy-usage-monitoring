@@ -9,7 +9,7 @@ function Header() {
 
   return (
     <AppBar position="static" color="primary">
-      <Container maxWidth="xl">
+      <Container sx={{ maxWidth: 'none !important' }}>
         <Toolbar disableGutters variant="dense">
           <Co2Icon fontSize='large' sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography

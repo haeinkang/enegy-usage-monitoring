@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import * as echarts from 'echarts';
 import 'echarts-extension-gmap';
-import { slice, map } from 'lodash'
+import _, { slice, map } from 'lodash'
 import { EnergyUsageByLclgv, ConvertData, AirQualByLclgvNumeric, GeoCoord} from '../../types'
+import BoltIcon from '@mui/icons-material/Bolt';
 
 interface iProps {
   energyUsage: EnergyUsageByLclgv[];
@@ -47,10 +48,10 @@ const EchartsExtGmap = ({ energyUsage, airQualData }: iProps) => {
         const coord = Array.isArray(o.coord) ? o.coord : [0, 0];
         return { 
           name: o.lclgvNm, 
-          value: [...coord, o['pm10Value']]
+          value: [...coord, o['khaiValue']]
         }
       })
-
+    
 
       // ECharts 옵션 설정
       const option = {
@@ -60,9 +61,9 @@ const EchartsExtGmap = ({ energyUsage, airQualData }: iProps) => {
         },
         gmap: {
           mapId: '739af084373f96fe',
-          center: [126.7594, 37.4237],
-          // center: [127.7669, 35.9078],
-          zoom: 10,
+          // center: [126.7594, 37.4237],
+          center: [127.7669, 35.9078],
+          zoom: 7.5,
           renderOnMoving: true,
           echartsLayerZIndex: 2019,
           roam: true,
@@ -71,7 +72,7 @@ const EchartsExtGmap = ({ energyUsage, airQualData }: iProps) => {
           show: false,
           top: 'top',
           min: 0,
-          max: 300,
+          max: 500,
           seriesIndex: 0,
           calculable: true,
           inRange: {
@@ -83,7 +84,7 @@ const EchartsExtGmap = ({ energyUsage, airQualData }: iProps) => {
             type: 'heatmap',
             coordinateSystem: 'gmap',
             data: heatmapData,
-            pointSize: 120,
+            pointSize: 55,
             blurSize: 1, 
             label: {
               formatter: '{b}',
@@ -91,63 +92,73 @@ const EchartsExtGmap = ({ energyUsage, airQualData }: iProps) => {
               show: true
             },
           },
-          ...createPieSeries(),
-          // {
-          //   name: '에너지 평균 사용량',
-          //   type: 'scatter',
-          //   coordinateSystem: 'gmap',
-          //   data: energyUsage,
-          //   symbolSize: function (val: [...GeoCoord, number]) {
-          //     return val[2] / 10;
-          //   },
-          //   encode: {
-          //     value: 2
-          //   },
-          //   label: {
-          //     formatter: '{b}',
-          //     position: 'right',
-          //     show: false
-          //   },
-          //   itemStyle: {
-          //     color: '#98FF98',
-          //   },
-          //   emphasis: {
-          //     label: {
-          //       show: true
-          //     }
-          //   }
-          // },
-          // {
-          //   name: 'Top 10',
-          //   type: 'effectScatter',
-          //   coordinateSystem: 'gmap',
-          //   data: slice(energyUsage, 0, 10),
-          //   symbolSize: function (val: [...GeoCoord, number]) {
-          //     return val[2] / 10;
-          //   },
-          //   encode: {
-          //     value: 2
-          //   },
-          //   showEffectOn: 'render',
-          //   rippleEffect: {
-          //     brushType: 'stroke'
-          //   },
-          //   label: {
-          //     formatter: '{b}',
-          //     position: 'right',
-          //     show: true
-          //   },
-          //   itemStyle: {
-          //     color: '#FF5733',
-          //     shadowBlur: 30,
-          //     shadowColor: '#FF2400'
-          //   },
-          //   emphasis: {
-          //     scale: true
-          //   },
-          //   zlevel: 1
-          // }, 
-        
+          {
+            name: '에너지 평균 사용량',
+            type: 'scatter',
+            coordinateSystem: 'gmap',
+            data: map(energyUsage, item => ({
+              name: item.lclgvNm, 
+              value: [...item.coord, item.gas]
+            })),
+            symbolSize: function (val: [...GeoCoord, number]) {
+              return val[2] / 5;
+            },
+            encode: {
+              value: 2
+            },
+            label: {
+              formatter: '{b}',
+              position: 'right',
+              show: false
+            },
+            itemStyle: {
+              color: '#98FF98',
+            },
+            emphasis: {
+              label: {
+                show: true
+              }
+            }
+          },
+          {
+            name: 'Top 5',
+            type: 'effectScatter',
+            coordinateSystem: 'gmap',
+            // data: [],
+            data: _(energyUsage)
+              .orderBy('gas', 'desc')
+              .slice(0, 5)
+              .map(item => ({
+                name: item.lclgvNm, 
+                value: [...item.coord, item.gas]
+              }))
+              .value(),
+            symbolSize: function (val: [...GeoCoord, number]) {
+              return val[2] / 5;
+            },
+            encode: {
+              value: 2
+            },
+            showEffectOn: 'render',
+            rippleEffect: {
+              brushType: 'stroke'
+            },
+            label: {
+              formatter: '{b}',
+              position: 'right',
+              show: true
+            },
+            itemStyle: {
+              color: '#e01f54',
+              shadowBlur: 30,
+              shadowColor: '#e01f54'
+            },
+            emphasis: {
+              scale: true
+            },
+            zlevel: 1
+          }, 
+          // ...createPieSeries(),
         ],
       };
 
@@ -177,13 +188,15 @@ const EchartsExtGmap = ({ energyUsage, airQualData }: iProps) => {
       label: {
         show: true,
         position: 'inner',
-        fontSize: 14
+        fontSize: 14,
       },
       labelLine: {
         show: false
       },
+      color: ['#e01f54', '#001852', '#f5e8c8'], 
       animationDuration: 0,
-      radius: (item.gas + item.water + item.elec)/50,
+      radius: (item.gas + item.elec)/20,
+      // radius: 25, 
       center: item.coord,
       data: [
         { name: '가스', value: item.gas * 39 },

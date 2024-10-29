@@ -79,6 +79,18 @@ export const fetchLclgvCoords = async (): Promise<LclgvCoords> => {
   }
 };
 
+/** 시도별 위도, 경도 가져오기 */
+export const fetchSidoCoords = async (): Promise<LclgvCoords> => {
+  try {
+    const res = await fetch('/json/sido-coords.json'); 
+    const data: LclgvCoords = await res.json();
+    return data
+  } catch (error) {
+    console.error("Error fetching the JSON file:", error);
+    return {}
+  }
+};
+
 /** 행정구역(시,구,군) 가져오기 */
 export const fetchCityDists = async (): Promise<LclgvCoords> => {
   try {

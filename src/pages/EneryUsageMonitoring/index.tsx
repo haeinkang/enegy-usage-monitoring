@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import * as api from '../../services'
 import EchartsExtGmap from './EchartsExtGmap'
 import Top5DualChart from './Top5DualChart'
+import LeftPanel from '../../components/LeftPanel'
 import { AirQualByRegMerics, LclgvCoords, EnergyUsageByLclgv, AirQualByLclgvNumeric} from '../../types'
-import _, { map, find, includes } from 'lodash'
+import _, { map, find, includes, meanBy } from 'lodash'
 import { Card, CardContent, Typography } from '@mui/material';
 
 function EneryUsageMonitoring() {
@@ -78,41 +79,34 @@ function EneryUsageMonitoring() {
     try {
       const [gasRes, wtRes, elecRes] = await Promise.all([getGas(), getWtspl(), getElec()]);
       const lclgvCoords: LclgvCoords = await api.fetchLclgvCoords();
-      
-      const gasData = map(gasRes, 
-        ({ lclgvNm, rlvtYr, avgUseQnt }) => 
-        ({ lclgvNm, rlvtYr, gas: avgUseQnt })
-      ) 
+      const sidoCoords  = await api.fetchSidoCoords();
 
-      const wtData = map(wtRes, 
-        ({ lclgvNm, rlvtYr, avgUseQnt }) => 
-        ({ lclgvNm, rlvtYr, water: avgUseQnt })
-      )
+      const gasData = _(gasRes)
+        .groupBy(item => item.lclgvNm.split(' ')[0])
+        .map((items, city) => ({
+          lclgvNm: city,
+          gas: Math.round(meanBy(items, 'avgUseQnt') * 10) / 10
+        }))
+        .value()
 
-      const elecData = map(elecRes, 
-        ({ lclgvNm, rlvtYr, avgUseQnt }) => 
-        ({ lclgvNm, rlvtYr, elec: avgUseQnt })
-      )
-      
-      // 세 배열을 합치고 `lclgvNm`과 `rlvtYr` 기준으로 그룹화
-      const res =_([...gasData, ...wtData, ...elecData])
-        .filter(item => 
-          includes(item.lclgvNm, '경기')
-          || includes(item.lclgvNm, '인천')
-        )
-        .groupBy(item => `${item.lclgvNm}-${item.rlvtYr}`)
+      const elecData = _(elecRes)
+        .groupBy(item => item.lclgvNm.split(' ')[0])
+        .map((items, city) => ({
+          lclgvNm: city,
+          elec: Math.round(meanBy(items, 'avgUseQnt') * 10) / 10
+        }))
+        .value()
+        
+
+      const res =_([...gasData, ...elecData])
+        .groupBy(item => item.lclgvNm)
         .map((items) => items.reduce(
           (acc, item) => ({ 
             ...acc, 
             ...item, 
-            coord: lclgvCoords[item.lclgvNm] 
-          }), {} as Partial<EnergyUsageByLclgv>)
+            coord: sidoCoords[item.lclgvNm] 
+          }), {})
         ) 
-        .filter(item => 
-          item.gas !== undefined 
-          && item.water !== undefined 
-          && item.elec !== undefined
-        )
         .value() as EnergyUsageByLclgv[]
 
       console.log(res)
@@ -154,15 +148,8 @@ function EneryUsageMonitoring() {
   }
 
   return (
-    <div style={{ width: '100%', height: '80vh'}}>
-      <Card sx={{ position: 'absolute', zIndex: 1, minWidth: 340, top: 130, left: 20}}>
-        <CardContent>
-          <Typography variant="h6" component="div" gutterBottom>
-            Top5
-          </Typography>
-          {/* <Top5DualChart energyUsage={energyUsage} airQualData={avgAirQualBylclgv}/> */}
-        </CardContent>
-      </Card>
+    <div style={{ position: 'relative', width: '100%', height: '90vh'}}>
+      <LeftPanel energyUsage={energyUsage}  airQualData={avgAirQualBylclgv}/>
       {loading 
         ? <div>loading ... </div>
         : <EchartsExtGmap energyUsage={energyUsage} airQualData={avgAirQualBylclgv} />}
@@ -170,6 +157,14 @@ function EneryUsageMonitoring() {
   );
 }
 
+      // <Card sx={{ position: 'absolute', zIndex: 1, minWidth: 340, top: 130, left: 20}}>
+      //   <CardContent>
+      //     <Typography variant="h6" component="div" gutterBottom>
+      //       Top5
+      //     </Typography>
+      //     {/* <Top5DualChart energyUsage={energyUsage} airQualData={avgAirQualBylclgv}/> */}
+      //   </CardContent>
+      // </Card>
 export default EneryUsageMonitoring;
 
 
@@ -185,3 +180,27 @@ export default EneryUsageMonitoring;
 //           } 
 //         })
 //         .value()
+
+
+// 세 배열을 합치고 `lclgvNm`과 `rlvtYr` 기준으로 그룹화
+// const res =_([...gasData, ...wtData, ...elecData])
+// // .filter(item => 
+// //   includes(item.lclgvNm, '경기')
+// //   || includes(item.lclgvNm, '인천')
+// // )
+// .groupBy(item => `${item.lclgvNm}-${item.rlvtYr}`)
+// .map((items) => items.reduce(
+//   (acc, item) => ({ 
+//     ...acc, 
+//     ...item, 
+//     coord: lclgvCoords[item.lclgvNm] 
+//   }), {} as Partial<EnergyUsageByLclgv>)
+// ) 
+// .orderBy(item => item.gas && item.elec && item.gas + item.elec || 0, 'desc')
+// .slice(0, 100)
+// .filter((item) => 
+//   item.gas !== undefined 
+//   && item.water !== undefined 
+//   && item.elec !== undefined
+// ) 
+// .value() as EnergyUsageByLclgv[]
