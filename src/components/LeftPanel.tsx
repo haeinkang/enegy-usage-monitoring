@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { TextField, Box, Autocomplete, Grid, Typography, Button, Paper, Avatar, List, ListItem, ListItemButton, ListItemAvatar, ListItemText } from '@mui/material';
 import KeyboardArrowLeftRoundedIcon from '@mui/icons-material/KeyboardArrowLeftRounded';
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
 import { AirQualByRegMerics, LclgvCoords, GasUsageByLclgv, AirQualByLclgvNumeric} from '../types'
-import _ from 'lodash'
+import _, { map, includes, sortBy, find } from 'lodash'
 import { getAirQualityColor } from '../utils'
 import { useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../state/store';
@@ -14,12 +14,28 @@ function LeftPanel() {
   const airQualData = useSelector((state: RootState) => state.airQual.data);
 
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
-  const [selected, setSelect] = useState<AirQualByLclgvNumeric[]>([]);
+  const [selected, setSelect] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState('');
+  const [options, setOptions] = useState<string[]>([])
+
+  useEffect(() => {
+    getOptions();
+  }, [airQualData])
 
   const handleCollapse = () => {
     setIsCollapsed((prev) => !prev);
   };
+
+  const getOptions = () => {
+    const lclgvNmList = map(airQualData, 'lclgvNm')
+    const cityList = _(airQualData)
+      .map(o => o.lclgvNm.split(' ')[0])
+      .uniq()
+      .value();
+
+    setOptions(sortBy([...cityList, ...lclgvNmList]))
+  }
+
 
   return (
     <GridContainer>
@@ -32,18 +48,17 @@ function LeftPanel() {
         <Autocomplete
           multiple
           defaultValue={[]}
-          options={airQualData}
-          getOptionLabel={(option) => option.lclgvNm}
+          options={options}
+          getOptionLabel={(option) => option}
           renderTags={(value, getTagProps) =>
             value.map((option, index) => {
               const { key, ...tagProps } = getTagProps({ index });
               return (
-                <div {...tagProps}>{option.lclgvNm}</div>
+                <div {...tagProps}>{option}</div>
               );
             })
           }
-  
-          onChange={(event: any, newValue: AirQualByLclgvNumeric[]) => {
+          onChange={(event: any, newValue: string[]) => {
             setSelect(newValue);
           }}
           inputValue={inputValue}
@@ -62,7 +77,10 @@ function LeftPanel() {
         >
         <List dense disablePadding sx={{ width: '100%' }}>
           {
-            _(selected.length > 0 ? selected : airQualData)
+            _(airQualData)
+              .filter(o => 
+                find(selected, sel => includes(o.lclgvNm, sel)) !== undefined
+              )
               .orderBy('pm10Value', 'desc')
               .map((item, idx) => {
                 const region = item.lclgvNm.split(' ');

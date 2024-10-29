@@ -77,7 +77,6 @@ const EchartsExtGmap = () => {
         },
         gmap: {
           // mapId: '739af084373f96fe',
-          // center: [126.7594, 37.4237],
           center: [126.7669, 36.2178],
           zoom: 8,
           renderOnMoving: true,
