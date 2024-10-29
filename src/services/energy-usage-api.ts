@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { EnerygyUsageApiRes, LclgvCoords, RegionMapping } from '../types';
+import { EnerygyUsageApiResItem, EnerygyUsageApiRes, LclgvCoords, RegionMapping } from '../types';
 
 // Axios 인스턴스 생성
 export const api = axios.create({
@@ -20,11 +20,11 @@ export const api = axios.create({
 /**
  * 가스 사용량 통계
  */
-export const getGas = async (): Promise<EnerygyUsageApiRes> => { 
+export const getGas = async (): Promise<EnerygyUsageApiResItem[]> => { 
   try {
     const res = await api.get<EnerygyUsageApiRes>('getGas');
 
-    return res.data;
+    return res.data.body.items;
 
   } catch (e) {
     console.error("getGas API 호출 에러:", e);
@@ -36,11 +36,11 @@ export const getGas = async (): Promise<EnerygyUsageApiRes> => {
 /**
  * 수도 사용량 통계
  */
-export const getWtspl = async (): Promise<EnerygyUsageApiRes> => { 
+export const getWtspl = async (): Promise<EnerygyUsageApiResItem[]> => { 
   try {
     const res = await api.get<EnerygyUsageApiRes>('getWtspl');
 
-    return res.data;
+    return res.data.body.items;
 
   } catch (e) {
     console.error("getWtspl API 호출 에러:", e);
@@ -54,11 +54,11 @@ export const getWtspl = async (): Promise<EnerygyUsageApiRes> => {
 /**
  * 전기 사용량 통계
  */
-export const getElec = async (): Promise<EnerygyUsageApiRes> => { 
+export const getElec = async (): Promise<EnerygyUsageApiResItem[]> => { 
   try {
     const res = await api.get<EnerygyUsageApiRes>('getElec');
 
-    return res.data;
+    return res.data.body.items;
 
   } catch (e) {
     console.error("getElec API 호출 에러:", e);

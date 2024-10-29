@@ -9,13 +9,10 @@ import { getAirQualityColor } from '../utils'
 import { useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../state/store';
 
-interface iProps {
-  energyUsage: EnergyUsageByLclgv[];
-}
 
-
-function LeftPanel(props: iProps) {
+function LeftPanel() {
   const airQualData = useSelector((state: RootState) => state.airQual.data);
+  const energyUsage = useSelector((state: RootState) => state.energyUsage.data);
 
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const [selected, setSelect] = useState<AirQualByLclgvNumeric[]>([]);

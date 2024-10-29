@@ -1,109 +1,33 @@
 import React, { useEffect, useState } from 'react';
-import * as api from '../../services'
 import EchartsExtGmap from './EchartsExtGmap'
-import Top5DualChart from './Top5DualChart'
 import LeftPanel from '../../components/LeftPanel'
-import { AirQualByRegMerics, LclgvCoords, EnergyUsageByLclgv, AirQualByLclgvNumeric} from '../../types'
-import _, { map, find, includes, meanBy } from 'lodash'
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../state/store';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../state/store';
 import { getAirQualData } from '../../state/airQualSlice';
 import { getCoordJson } from '../../state/coordSlice';
+import { getEnergyUsage } from '../../state/eneryUsageSlice';
 
 function EneryUsageMonitoring() {
   const dispatch = useDispatch<AppDispatch>();
   const [loading, setLoading] = useState<boolean>(true)
-  const [energyUsage, setEnergyUsage] = useState<EnergyUsageByLclgv[]>([]);
   
   useEffect(() => {
     initData();
-
   }, [])
 
   const initData = async () => {
     dispatch(getCoordJson());
     dispatch(getAirQualData());
-    // await getEnergyUsageByLclgv();
+    dispatch(getEnergyUsage());
     setLoading(false)
-  }
-  
-  const getEnergyUsageByLclgv = async () => {
-    try {
-      const [gasRes, wtRes, elecRes] = await Promise.all([getGas(), getWtspl(), getElec()]);
-      const sidoCoords  = await api.fetchSidoCoords();
-
-      const gasData = _(gasRes)
-        .groupBy(item => item.lclgvNm.split(' ')[0])
-        .map((items, city) => ({
-          lclgvNm: city,
-          gas: Math.round(meanBy(items, 'avgUseQnt') * 10) / 10
-        }))
-        .value()
-
-      const elecData = _(elecRes)
-        .groupBy(item => item.lclgvNm.split(' ')[0])
-        .map((items, city) => ({
-          lclgvNm: city,
-          elec: Math.round(meanBy(items, 'avgUseQnt') * 10) / 10
-        }))
-        .value()
-        
-
-      const res =_([...gasData, ...elecData])
-        .groupBy(item => item.lclgvNm)
-        .map((items) => items.reduce(
-          (acc, item) => ({ 
-            ...acc, 
-            ...item, 
-            coord: sidoCoords[item.lclgvNm] 
-          }), {})
-        ) 
-        .value() as EnergyUsageByLclgv[]
-
-      console.log(res)
-
-      setEnergyUsage(res)
-
-    } catch(e) {
-
-    }
-  }
-
-  const getGas = async () => {
-    try {
-      const res = await api.getGas();
-      return res.body.items;
-    } catch (error) {
-      console.error(error);
-      return [];
-    }
-  }
-
-  const getWtspl = async () => {
-    try {
-      const res = await api.getWtspl()
-      return res.body.items;
-    } catch (error) {
-      console.error(error);
-      return [];
-    }
-  }
-  const getElec = async () => {
-    try {
-      const res = await api.getElec()
-      return res.body.items;
-    } catch (error) {
-      console.error(error);
-      return [];
-    }
   }
 
   return (
     <div style={{ position: 'relative', width: '100%', height: '90vh'}}>
-      <LeftPanel energyUsage={energyUsage} />
+      <LeftPanel />
       {loading 
         ? <div>loading ... </div>
-        : <EchartsExtGmap energyUsage={energyUsage} />}
+        : <EchartsExtGmap />}
     </div>
   );
 }

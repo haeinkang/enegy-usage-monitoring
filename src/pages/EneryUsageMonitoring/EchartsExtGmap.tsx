@@ -1,18 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import * as echarts from 'echarts';
 import 'echarts-extension-gmap';
-import _, { slice, map } from 'lodash'
-import { EnergyUsageByLclgv, ConvertData, AirQualByLclgvNumeric, GeoCoord} from '../../types'
+import _, { map } from 'lodash'
+import { GeoCoord} from '../../types'
 import BoltIcon from '@mui/icons-material/Bolt';
 import { useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../state/store';
 
-interface iProps {
-  energyUsage: EnergyUsageByLclgv[];
-}
-
-const EchartsExtGmap = ({ energyUsage }: iProps) => {
+const EchartsExtGmap = () => {
   const airQualData = useSelector((state: RootState) => state.airQual.data);
+  const energyUsage = useSelector((state: RootState) => state.energyUsage.data);
 
   const chartRef = useRef(null);
   const [googleLoaded, setGoogleLoaded] = useState(false);
