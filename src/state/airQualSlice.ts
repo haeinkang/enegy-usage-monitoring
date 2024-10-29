@@ -4,12 +4,11 @@ import {
   AirQualByRegMerics 
 } from '../types'
 import { 
-  getCtprvnRltmMesureDnsty, 
-  fetchCityDists,
-  fetchLclgvCoords,
-  fetchSidoCoords,
+  getCtprvnRltmMesureDnsty
 } from '../services'
-import _ from "lodash";
+import _, { reduce, meanBy } from "lodash";
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../state/store';
 
 interface AirQaulState {
   data: AirQualByLclgvNumeric[]
@@ -44,17 +43,18 @@ const airQualSlice = createSlice({
 
 export const getAirQualData = createAsyncThunk(
   "airQual/fetchAirQaul", 
-  async () => {
+  async (undefined, { getState }) => {
     const { response: { body: { items } }} = await getCtprvnRltmMesureDnsty();
-    const cityDists = await fetchCityDists();
-    const lclgvCoords  = await fetchLclgvCoords();
+    const state = getState() as RootState;
+    const regionMapping = state.coordSlice.regionMapping;
+    const lclgvCoords = state.coordSlice.lclgvCoords;
 
     const res: AirQualByLclgvNumeric[] = _(items)
         // 지자체명으로 groupBy 
         // ex) 서울 학동로 -> 서울 강남구
         .groupBy(o => {
           const adr =  `${o.sidoName} ${o.stationName}` 
-          const districts = cityDists[adr] // 지자체명 맵핑
+          const districts = regionMapping[adr] // 지자체명 맵핑
           return `${o.sidoName} ${districts}`
         })
         // 각 지자체의 대기질 지표별 평균값 계산
@@ -71,10 +71,10 @@ export const getAirQualData = createAsyncThunk(
             .value() as AirQualByRegMerics;
 
           /** 각 지자체별 평균값을 가진 새로운 객체 생성 */
-          const averageValues = _.reduce(metrics, (acc, key) => {
+          const averageValues = reduce(metrics, (acc, key) => {
             return { 
               ...acc, 
-              [key]: _.meanBy(items, o => parseFloat(o[key]) || 0)
+              [key]: meanBy(items, o => parseFloat(o[key]) || 0)
             }
           }, {});  
 

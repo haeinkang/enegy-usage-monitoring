@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { EnerygyUsageApiRes, LclgvCoords } from '../types';
+import { EnerygyUsageApiRes, LclgvCoords, RegionMapping } from '../types';
 
 // Axios 인스턴스 생성
 export const api = axios.create({
@@ -71,9 +71,9 @@ export const getElec = async (): Promise<EnerygyUsageApiRes> => {
  * 행정구역(시,구,군) 가져오기 
  * @returns '{ "부산 청룡동": "금정구", ... }'
  */
-export const fetchCityDists = async (): Promise<LclgvCoords> => {
+export const fetchRegionMapping = async (): Promise<RegionMapping> => {
   try {
-    const res = await fetch('/json/city-districts.json'); 
+    const res = await fetch('/json/region-mapping.json'); 
     const data = await res.json();
     return data
   } catch (error) {

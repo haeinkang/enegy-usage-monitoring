@@ -42,3 +42,9 @@ export interface EnergyUsageByLclgv  {
 export interface LclgvCoords {
   [lclgvNm: string]: GeoCoord;
 }
+/**
+ * { "부산 청룡동": "금정구", ... }
+ */
+export interface RegionMapping {
+  [key: string]: string;
+}

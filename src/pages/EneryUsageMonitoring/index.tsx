@@ -5,86 +5,31 @@ import Top5DualChart from './Top5DualChart'
 import LeftPanel from '../../components/LeftPanel'
 import { AirQualByRegMerics, LclgvCoords, EnergyUsageByLclgv, AirQualByLclgvNumeric} from '../../types'
 import _, { map, find, includes, meanBy } from 'lodash'
-import { Card, CardContent, Typography } from '@mui/material';
-
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../state/store';
 import { getAirQualData } from '../../state/airQualSlice';
+import { getCoordJson } from '../../state/coordSlice';
 
 function EneryUsageMonitoring() {
   const dispatch = useDispatch<AppDispatch>();
-
   const [loading, setLoading] = useState<boolean>(true)
   const [energyUsage, setEnergyUsage] = useState<EnergyUsageByLclgv[]>([]);
-  const [avgAirQualBylclgv, setAvgAirQualBylclgv] = useState<AirQualByLclgvNumeric[]>([]);
   
   useEffect(() => {
     initData();
-    dispatch(getAirQualData());
+
   }, [])
 
   const initData = async () => {
-    await getEnergyUsageByLclgv();
-    // await getCtprvnRltmMesureDnsty()
+    dispatch(getCoordJson());
+    dispatch(getAirQualData());
+    // await getEnergyUsageByLclgv();
     setLoading(false)
   }
   
-
-  const getCtprvnRltmMesureDnsty = async () => {
-    try {
-      const { response: { body: { items } }} = await api.getCtprvnRltmMesureDnsty()
-      const cityDists = await api.fetchCityDists()
-      const lclgvCoords  = await api.fetchLclgvCoords();
-
-      const avgAirQualBylclgv: AirQualByLclgvNumeric[] = _(items)
-        // 지자체명으로 groupBy 
-        // ex) 서울 학동로 -> 서울 강남구
-        .groupBy(o => {
-          const adr =  `${o.sidoName} ${o.stationName}` 
-          const districts = cityDists[adr] // 지자체명 맵핑
-          return `${o.sidoName} ${districts}`
-        })
-        // 각 지자체의 대기질 지표별 평균값 계산
-        .map((items, lclgvNm) => {      
-          /** 평균을 구하고자 하는 대기질 측정 지표 리스트 */
-          const metrics: AirQualByRegMerics = _(items[0])
-            .keys() 
-            .filter((metric) => 
-              metric !== 'sidoName' 
-              && metric !== 'stationName'
-              && metric !== 'mangName'
-              && metric !== 'dataTime'
-            )
-            .value() as AirQualByRegMerics;
-
-          /** 각 지자체별 평균값을 가진 새로운 객체 생성 */
-          const averageValues = _.reduce(metrics, (acc, key) => {
-            return { 
-              ...acc, 
-              [key]: _.meanBy(items, o => parseFloat(o[key]) || 0)
-            }
-          }, {});  
-
-          return {
-            lclgvNm,
-            coord: lclgvCoords[lclgvNm],
-            ...averageValues
-          } as AirQualByLclgvNumeric
-
-        })
-        .value()
-      
-        setAvgAirQualBylclgv(avgAirQualBylclgv)
-      
-    } catch(e) {
-      console.error(e)
-    }
-  }
-
   const getEnergyUsageByLclgv = async () => {
     try {
       const [gasRes, wtRes, elecRes] = await Promise.all([getGas(), getWtspl(), getElec()]);
-      const lclgvCoords: LclgvCoords = await api.fetchLclgvCoords();
       const sidoCoords  = await api.fetchSidoCoords();
 
       const gasData = _(gasRes)
