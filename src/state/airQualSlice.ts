@@ -6,13 +6,13 @@ import {
 import { 
   getCtprvnRltmMesureDnsty
 } from '../services'
-import _, { reduce, meanBy } from "lodash";
+import _, { find, reduce, meanBy } from "lodash";
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../state/store';
 
 interface AirQaulState {
   data: AirQualByLclgvNumeric[]; 
-  selected?: string;
+  selected?: AirQualByLclgvNumeric;
 }
 
 const initialState: AirQaulState = {
@@ -26,8 +26,8 @@ const airQualSlice = createSlice({
   initialState,
   reducers: {
     selectLclgvNm: (state, action) => {
-      console.log(action.payload)
-      state.selected = action.payload;
+      const res = find(state.data, o => o.lclgvNm === action.payload)
+      state.selected = res;
     },
   }, 
   extraReducers: (builder) => {

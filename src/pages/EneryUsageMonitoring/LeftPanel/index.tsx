@@ -51,7 +51,7 @@ interface PanelProps {
 }
 
 const Panel = styled(Paper)<PanelProps>`
-  width: ${(props) => (props.isCollapsed ? '0' : 'calc(10vw + 16rem)')};
+  width: ${(props) => (props.isCollapsed ? '0' : 'calc(10vw + 24rem)')};
   padding: 15px 20px;
   transition: width 0.3s ease, padding 0.3s ease !important;
   background: var(--joy-palette-neutral-800) !important;

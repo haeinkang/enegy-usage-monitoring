@@ -5,7 +5,7 @@ export * from './air-qual-api';
 // Axios 인스턴스 생성
 export const api = axios.create({
   baseURL: `${process.env.REACT_APP_BASE_URL}/ArpltnInforInqireSvc`, // 기본 API URL 설정
-  timeout: 3000, // 타임아웃 시간 설정 (ms)
+  // timeout: 3000, // 타임아웃 시간 설정 (ms)
   headers: {
     'Content-Type': 'application/json',
   },
