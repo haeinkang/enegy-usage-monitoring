@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { TextField, Box, Autocomplete, Grid, Typography, Button, Paper, Avatar, List, ListItem, ListItemButton, ListItemAvatar, ListItemText, Chip } from '@mui/material';
 import KeyboardArrowLeftRoundedIcon from '@mui/icons-material/KeyboardArrowLeftRounded';
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
-import { getAirQualityColor } from '../../../utils'
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../state/store';
 import GasUsageRank from './GasUsageRank'

@@ -1,21 +1,27 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { GasUsageByLclgv } from '../types'
 import { getGas, getElec } from '../services'
-import _, { orderBy } from "lodash";
+import _, { maxBy, orderBy } from "lodash";
 import { RootState } from './store';
 
 interface GasUsageState {
-  data: GasUsageByLclgv[]
+  data: GasUsageByLclgv[];
+  selected?: GasUsageByLclgv;
+  max?: GasUsageByLclgv;
 }
 
 const initialState: GasUsageState = {
-  data: []
+  data: [],
 }
 
 const gasUsageSlice = createSlice({
   name: 'gasUsage', 
   initialState,
-  reducers: {}, 
+  reducers: {
+    select: (state, action) => {
+      state.selected = action.payload;
+    }
+  }, 
   extraReducers: (builder) => {
     builder.addCase(
       getGasUsage.pending, 
@@ -27,6 +33,7 @@ const gasUsageSlice = createSlice({
       getGasUsage.fulfilled,
       (state, action) => {
         state.data = orderBy(action.payload, ['gas'], ['desc']);
+        state.max = maxBy(action.payload, 'avgUseQnt')
       }
     )
   }
@@ -52,6 +59,7 @@ export const getGasUsage = createAsyncThunk(
 )
 
 export const { 
+  select,
 } = gasUsageSlice.actions;
 
 export default gasUsageSlice.reducer;

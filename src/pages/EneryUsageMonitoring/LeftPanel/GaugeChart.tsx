@@ -26,10 +26,20 @@ function GaugeChart(props: iProps) {
       // ECharts 인스턴스 생성
       const chart = echarts.init(chartRef.current, 'dark');
 
-
       // ECharts 옵션 설정
       const option = {
         backgroundColor: 'rgba(0,0,0,0)',
+        axisLine: {
+          lineStyle: {
+            width: 6,
+            color: [
+              [0.25, '#000'],
+              [0.5, '#FDDD60'],
+              [0.75, '#58D9F9'],
+              [1, '#7CFFB2']
+            ]
+          }
+        },
         series: [
           {
             type: 'gauge',
@@ -97,6 +107,7 @@ function GaugeChart(props: iProps) {
       flexDirection='column' 
       alignItems='center' 
       flexWrap='nowrap'
+      spacing={1}
     >
       <Grid item sx={{ width: '100%' }}>
         <div

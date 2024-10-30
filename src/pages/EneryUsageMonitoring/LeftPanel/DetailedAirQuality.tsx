@@ -5,6 +5,7 @@ import { Grid, IconButton, Typography } from '@mui/material';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import { selectLclgvNm } from '../../../state/airQualSlice';
 import { map } from 'lodash';
+import GasUsageCard from './GasUsageCard'
 import GaugeChart from './GaugeChart'
 
 function DetailedAirQuality() {
@@ -27,12 +28,9 @@ function DetailedAirQuality() {
       
       {airQual && 
         <Grid container spacing={1} sx={{ mt: 1 }}>
-          <GaugeChart 
+          <GasUsageCard 
             gridXs={4}
             title={'가스 사용량'}
-            min={0}
-            max={500}
-            value={airQual.khaiValue}
           />
           <GaugeChart 
             gridXs={4}

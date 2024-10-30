@@ -4,7 +4,7 @@ import { TextField, Box, Autocomplete, Grid, Typography, Button, Paper, Avatar, 
 import KeyboardArrowLeftRoundedIcon from '@mui/icons-material/KeyboardArrowLeftRounded';
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
 import _, { map, includes, sortBy, find } from 'lodash'
-import { getAirQualityColor } from '../../../utils'
+import { getPm10Color } from '../../../utils'
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../state/store';
 
@@ -151,5 +151,5 @@ const Mark = styled.div<{ value: number }>`
   width: 1rem;
   height: 1rem;
   border-radius: .125rem;
-  background: ${(props) => getAirQualityColor(props.value)};
+  background: ${(props) => getPm10Color(props.value)};
 `
