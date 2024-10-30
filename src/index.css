@@ -1,3 +1,6 @@
+body {
+  font-family: "Comfortaa", sans-serif !important;
+}
 :root {
   /** Level **/
   --level-1-blue: #0d6efd;

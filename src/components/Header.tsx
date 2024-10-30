@@ -20,7 +20,6 @@ function Header() {
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
-              fontFamily: 'Comfortaa, sans-serif',
               fontWeight: 700,
               letterSpacing: '.3rem',
               color: 'inherit',

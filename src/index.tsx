@@ -13,13 +13,16 @@ const root = ReactDOM.createRoot(
 const darkTheme = createTheme({
   palette: {
     mode: 'dark',
-  }
+  }, 
+  typography: {
+    fontFamily: '"Comfortaa", sans-serif',
+  },
 });
 
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <MuiThemeProvider data-joy-color-scheme="dark" theme={createTheme({ palette: { mode: 'dark'}})}>
+      <MuiThemeProvider data-joy-color-scheme="dark" theme={darkTheme}>
         <CssBaseline />
         <App />
       </MuiThemeProvider>

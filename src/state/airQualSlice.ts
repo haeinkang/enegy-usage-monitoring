@@ -13,11 +13,50 @@ import { AppDispatch, RootState } from '../state/store';
 interface AirQaulState {
   data: AirQualByLclgvNumeric[]; 
   selected?: AirQualByLclgvNumeric;
+  metrics: {
+    [key: string]: { 
+      ko: string; 
+      en: string;
+      unit: string;
+    }
+  };
 }
 
 const initialState: AirQaulState = {
   data: [], 
   selected: undefined,
+  metrics: {
+    pm10Value: {
+      ko: '미세먼지',
+      en: 'PM10',
+      unit: 'ug/m3',
+    },
+    pm25Value: {
+      ko: '초미세먼지',
+      en: 'PM2.5',
+      unit: 'ug/m3',
+    },
+    coValue: {
+      ko: '일산화탄소',
+      en: 'CO',
+      unit: 'ppm',
+    },
+    no2Value: {
+      ko: '이산화질소',
+      en: 'NO2',
+      unit: 'ppm',
+    },
+    so2Value: {
+      ko: '아황산가스',
+      en: 'SO2',
+      unit: 'ppm',
+    },
+    o3Value: {
+      ko: '오존 지수',
+      en: 'O3',
+      unit: '',
+    },
+  }
 }
 
 

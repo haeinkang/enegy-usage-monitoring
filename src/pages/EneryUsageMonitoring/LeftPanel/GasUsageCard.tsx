@@ -1,4 +1,4 @@
-import { Card, CardContent, Grid, Typography } from '@mui/material';
+import { CardContent, Grid, Typography } from '@mui/material';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../state/store';
@@ -28,20 +28,29 @@ function GasUsageCard(props: iProps) {
       flexDirection='column' 
       alignItems='center' 
       flexWrap='nowrap'
-      spacing={1}
+      gap={1}
+      sx={{ height: '100%' }}
     >
-      <Grid item sx={{ width: '108px' }}>
-        <StyledCard className={getColorClassName(max.avgUseQnt, selected.avgUseQnt)}>
-          <CardContent>
-            <Typography variant="h5" component="div" gutterBottom align='center' fontWeight={500}>
-              {`${selected.avgUseQnt} ㎥`}
-            </Typography>
-            <Typography variant="body2" align='center' fontWeight={700}>
-              {`상위 ${topPercent} %`}
-            </Typography>
-          </CardContent>
-        </StyledCard>
-      </Grid>
+      <GridCard 
+        item 
+        flexGrow={1} 
+        container 
+        flexDirection='column' 
+        alignItems='center'
+        justifyContent='center'
+        className={getColorClassName(max.avgUseQnt, selected.avgUseQnt)}
+      >
+        <Grid item >
+          <Typography variant="h5" component="div" gutterBottom align='center' fontWeight={700}>
+            {`${selected.avgUseQnt} ㎥`}
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Typography variant="body2" align='center' fontWeight={500}>
+            {`상위 ${topPercent} %`}
+          </Typography>
+        </Grid>
+      </GridCard>
 
       <Grid item>
         <Typography variant='subtitle2'>
@@ -57,11 +66,9 @@ function GasUsageCard(props: iProps) {
 export default GasUsageCard;
 
 
-const StyledCard = styled(Card)`
-  width: 100%; 
-  height: 90%; 
+const GridCard = styled(Grid)`
+  width: 100px !important;
   border-radius: 18px;
-  mix-blend-mode: difference !important;
   background: ${(props) => `var(${props.className})`} !important; 
   color: ${(props) => 
     props.className === '--level-3-yellow' 

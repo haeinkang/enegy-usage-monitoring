@@ -7,6 +7,7 @@ import { selectLclgvNm } from '../../../state/airQualSlice';
 import { map } from 'lodash';
 import GasUsageCard from './GasUsageCard'
 import GaugeChart from './GaugeChart'
+import AirQualTable from './AirQualTable'
 
 function DetailedAirQuality() {
   const dispatch = useDispatch<AppDispatch>();
@@ -27,27 +28,29 @@ function DetailedAirQuality() {
       </Grid>
       
       {airQual && 
-        <Grid container spacing={1} sx={{ mt: 1 }}>
+        <Grid container spacing={1} sx={{ height: '137px', mt: 1, mb: 5}}>
           <GasUsageCard 
             gridXs={4}
             title={'가스 사용량'}
           />
           <GaugeChart 
             gridXs={4}
-            title={'통합대기환경수치'}
+            title={'통합대기환경 지수'}
             min={0}
             max={500}
-            value={airQual.khaiValue}
+            value={airQual.khaiGrade}
           />
           <GaugeChart 
             gridXs={4}
-            title={'통합대기환경수치'}
+            title={'통합대기환경 수치'}
             min={0}
             max={500}
-            value={airQual.khaiValue}
+            value={Number(airQual.khaiValue.toFixed(1))}
           />
         </Grid>
       }
+
+      <AirQualTable />
 
       <div>
        
@@ -55,7 +58,6 @@ function DetailedAirQuality() {
         no2Grade 이산화질소 지수 
         no2Value(pin):0.009666666666666665
         
-        pm10Grade(pin):1 미세먼지 지수
         pm10Value(pin):15.333333333333334 미세먼지(PM10) 농도 (단위: ug/m3))
         
         coGrade(pin):0.6666666666666666
