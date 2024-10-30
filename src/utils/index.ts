@@ -16,21 +16,21 @@ export const getColorClassName = (
 };
 
 /**
- * 가스 사용량에 따른 색상 코드 정의
+ * 가스 사용량 상위 퍼센트에 따른 색상 코드 정의
  * @param max: number
  * @param val: number
- * @returns 색상코드
- */
+ * @returns 색상코드 (파랑 | 초록 | 노랑 | 주황 | 빨강)
+ */ 
 export const getGasUsageColor = (
   max: number, 
   val: number
 ): string => {
-  console.log({ max, val})
-  if (val <= max * 0.2) return 'var(--level-1-blue)'; // 파랑 (매우 좋음)
-  if (val <= max * 0.4) return 'var(--level-2-green)'; // 초록색 (좋음)
-  if (val <= max * 0.6) return 'var(--level-3-yellow)'; // 노란색 (보통)
-  if (val <= max * 0.8) return 'var(--level-4-orange)'; // 주황색 (나쁨)
-  return 'var(--level-5-red)'; // 빨간색 (매우 나쁨)
+  console.log({max, val})
+  if (val <= max * 0.2) return '#0d6efd'; // 상위 20%
+  if (val <= max * 0.4) return '#198754'; // 상위 40%
+  if (val <= max * 0.6) return '#ffc107'; // 상위 60%
+  if (val <= max * 0.8) return '#ff8f07'; // 상위 80%
+  return '#dc3545'; // 상위 100%
 };
 
 /**

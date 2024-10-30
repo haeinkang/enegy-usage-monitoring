@@ -1,16 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 import * as echarts from 'echarts';
 import 'echarts-extension-gmap';
-import _, { slice, map } from 'lodash'
+import _, { slice } from 'lodash'
 import { GeoCoord, EchartMapData, GeoCoordVal } from '../../types'
-import BoltIcon from '@mui/icons-material/Bolt';
 import { useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../state/store';
-import { mapToStyles } from '@popperjs/core/lib/modifiers/computeStyles';
+import { getGasUsageColor } from '../../utils'
 
 const EchartsExtGmap = () => {
   // const airQualData = useSelector((state: RootState) => state.airQual.data);
   const gasUsage = useSelector((state: RootState) => state.gasUsage.data);
+  const max = useSelector((state: RootState) => state.gasUsage.max);
 
   const chartRef = useRef(null);
   const [googleLoaded, setGoogleLoaded] = useState(false);
@@ -66,8 +66,6 @@ const EchartsExtGmap = () => {
 
       // ECharts 인스턴스 생성
       const chart = echarts.init(chartRef.current, 'dark');
-
-      
 
       // ECharts 옵션 설정
       const option = {
@@ -125,7 +123,9 @@ const EchartsExtGmap = () => {
               show: false
             },
             itemStyle: {
-              color: '#ddb926',
+              color: function(item: any) {
+                return getGasUsageColor(max!.avgUseQnt, item.value[2]);
+              }
             },
             emphasis: {
               label: {
@@ -154,9 +154,10 @@ const EchartsExtGmap = () => {
               show: true
             },
             itemStyle: {
-              color: '#c23531',
+              color: function(item: any) {
+                return getGasUsageColor(max!.avgUseQnt, item.value[2]);
+              },
               shadowBlur: 30,
-              shadowColor: '#c23531'
             },
             emphasis: {
               scale: true

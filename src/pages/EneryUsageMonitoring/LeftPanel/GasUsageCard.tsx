@@ -2,7 +2,7 @@ import { CardContent, Grid, Typography } from '@mui/material';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../state/store';
-import { getGasUsageColor, getColorClassName } from '../../../utils'
+import { getColorClassName } from '../../../utils'
 import { findIndex } from 'lodash';
 import styled from 'styled-components';
 
