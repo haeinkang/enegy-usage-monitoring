@@ -9,7 +9,7 @@ import { AppDispatch, RootState } from '../../state/store';
 import { mapToStyles } from '@popperjs/core/lib/modifiers/computeStyles';
 
 const EchartsExtGmap = () => {
-  const airQualData = useSelector((state: RootState) => state.airQual.data);
+  // const airQualData = useSelector((state: RootState) => state.airQual.data);
   const gasUsage = useSelector((state: RootState) => state.gasUsage.data);
 
   const chartRef = useRef(null);
@@ -33,13 +33,13 @@ const EchartsExtGmap = () => {
   }, []);
 
   useEffect(() => {
-    const heatmapData = map(airQualData, o => {
-      const coord: GeoCoord = Array.isArray(o.coord) ? o.coord : [0, 0];
-      return { 
-        name: o.lclgvNm, 
-        value: [...coord, o['pm10Value']] as GeoCoordVal 
-      }
-    })
+    // const heatmapData = map(airQualData, o => {
+    //   const coord: GeoCoord = Array.isArray(o.coord) ? o.coord : [0, 0];
+    //   return { 
+    //     name: o.lclgvNm, 
+    //     value: [...coord, o['pm10Value']] as GeoCoordVal 
+    //   }
+    // })
 
     const scatterData = _(gasUsage)
       .map((o) => {
@@ -51,11 +51,11 @@ const EchartsExtGmap = () => {
       })
       .value() 
     
-    setHeatmapData(heatmapData)
+    // setHeatmapData(heatmapData)
     setScatterData(scatterData)
     setTop10Data(slice(scatterData, 0, 10))
     
-  }, [airQualData, gasUsage])
+  }, [gasUsage])
 
   useEffect(() => {
     if (googleLoaded && chartRef.current) {
@@ -84,30 +84,30 @@ const EchartsExtGmap = () => {
           roam: true,
           styles: gmapStyles
         },
-        visualMap: {
-          show: false,
-          top: 'top',
-          min: 0,
-          max: 500,
-          seriesIndex: 0,
-          calculable: true,
-          inRange: {
-            color: ['blue', 'green', 'yellow', 'orange', 'red']
-          }
-        },
+        // visualMap: {
+        //   show: false,
+        //   top: 'top',
+        //   min: 0,
+        //   max: 500,
+        //   seriesIndex: 0,
+        //   calculable: true,
+        //   inRange: {
+        //     color: ['blue', 'green', 'yellow', 'orange', 'red']
+        //   }
+        // },
         series: [
-          {
-            type: 'heatmap',
-            coordinateSystem: 'gmap',
-            data: [],
-            pointSize: 55,
-            blurSize: 1, 
-            label: {
-              formatter: '{b}',
-              position: 'right',
-              show: true
-            },
-          },
+          // {
+          //   type: 'heatmap',
+          //   coordinateSystem: 'gmap',
+          //   data: [],
+          //   pointSize: 55,
+          //   blurSize: 1, 
+          //   label: {
+          //     formatter: '{b}',
+          //     position: 'right',
+          //     show: true
+          //   },
+          // },
           {
             name: '가스 사용량',
             type: 'scatter',
@@ -171,7 +171,7 @@ const EchartsExtGmap = () => {
       chart.setOption(option);
 
     }
-  }, [googleLoaded, heatmapData, scatterData, top10Data]);
+  }, [googleLoaded, scatterData, top10Data]);
 
   return (
     <div

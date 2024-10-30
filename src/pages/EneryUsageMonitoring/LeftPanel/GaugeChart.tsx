@@ -3,6 +3,7 @@ import * as echarts from 'echarts';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../state/store';
 import { Grid, Typography } from '@mui/material';
+import { getEchartLevelColor } from '../../../utils'
 
 interface iProps {
   gridXs: number;
@@ -31,17 +32,16 @@ function GaugeChart(props: iProps) {
         backgroundColor: 'rgba(0,0,0,0)',
         axisLine: {
           lineStyle: {
-            width: 6,
-            color: [
-              [0.25, '#000'],
-              [0.5, '#FDDD60'],
-              [0.75, '#58D9F9'],
-              [1, '#7CFFB2']
-            ]
+            width: 6
           }
         },
         series: [
           {
+            data: [
+              {
+                value: props.value,
+              }
+            ],
             type: 'gauge',
             startAngle: 230,
             endAngle: 310,
@@ -49,16 +49,12 @@ function GaugeChart(props: iProps) {
             max: props.max,
             radius: '100%',
             center: ["50%", "50%"],
-            data: [
-              {
-                value: props.value,
-              }
-            ],
             detail: {
               fontSize: 30,
               offsetCenter: [0, 0]
             },
             itemStyle: {
+               color: getEchartLevelColor('khaiValue', props.value)
             },
             progress: {
               show: true,
@@ -96,8 +92,6 @@ function GaugeChart(props: iProps) {
 
     }
   }, []);
-
-
 
   return (
     <Grid 

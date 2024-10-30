@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { 
   AirQualByLclgvNumeric, 
-  AirQualByRegMerics 
+  AirQualByRegMerics, 
+  PollutionLevel
 } from '../types'
 import { 
   getCtprvnRltmMesureDnsty
@@ -26,6 +27,11 @@ const initialState: AirQaulState = {
   data: [], 
   selected: undefined,
   metrics: {
+    khaiValue: {
+      ko: '통합대기환경', 
+      en: 'KHAI', 
+      unit: ''
+    },
     pm10Value: {
       ko: '미세먼지',
       en: 'PM10',
@@ -118,7 +124,7 @@ export const getAirQualData = createAsyncThunk(
           const averageValues = reduce(metrics, (acc, key) => {
             return { 
               ...acc, 
-              [key]: meanBy(items, o => parseFloat(o[key]) || 0)
+              [key]: Number(meanBy(items, o => parseFloat(o[key]) || 0).toFixed(1))
             }
           }, {});  
 

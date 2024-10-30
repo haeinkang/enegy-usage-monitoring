@@ -54,6 +54,11 @@ export interface AirQualByRegion {
    */
   no2Value:	string; 
   /** 
+   * 미세먼지(PM10) 지수
+   * sampleData: 1
+   */
+  pm10Grade: string;
+  /** 
    * 미세먼지(PM10) 농도 (단위: ug/m3))
    * sampleData: 68
    */
@@ -63,6 +68,11 @@ export interface AirQualByRegion {
    * sampleData: 56
    */
   pm10Value24: string;
+  /** 
+   * 초미세먼지(PM10) 지수
+   * sampleData: 1
+   */
+  pm25Grade: string;
   /**
    * 초미세먼지(PM2.5) 농도(단위: ug/m3)
    * sampleData: 39
@@ -144,6 +154,11 @@ export interface AirQualByLclgvNumeric {
    */
   no2Value: number; 
   /** 
+   * 미세먼지(PM10) 지수
+   * sampleData: 1
+   */
+  pm10Grade: string;
+  /** 
    * 미세먼지(PM10) 농도 (단위: ug/m3))
    * sampleData: 68
    */
@@ -153,6 +168,11 @@ export interface AirQualByLclgvNumeric {
    * sampleData: 56
    */
   pm10Value24: number;
+  /** 
+   * 초미세먼지(PM10) 지수
+   * sampleData: 1
+   */
+  pm25Grade: string;
   /**
    * 초미세먼지(PM2.5) 농도(단위: ug/m3)
    * sampleData: 39
@@ -199,3 +219,5 @@ export interface AirQualByLclgvNumeric {
  * 대기질 지표 리스트
  */
 export type AirQualByRegMerics = (keyof AirQualByRegion)[];
+
+export type PollutionLevel = "좋음" | "보통" | "나쁨" | "매우 나쁨";
