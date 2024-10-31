@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../state/store';
 import { Grid, IconButton, Typography } from '@mui/material';
@@ -11,7 +11,6 @@ import AirQualTable from './AirQualTable'
 function DetailedAirQuality() {
   const dispatch = useDispatch<AppDispatch>();
   const airQual = useSelector((state: RootState) => state.airQual.selected);
-
 
   const onClickBack = () => {
     dispatch(selectLclgvNm(undefined))
@@ -29,17 +28,8 @@ function DetailedAirQuality() {
         </Typography>
       </Grid>
       
-      {
-        !airQual 
-        ? <div>loading...</div> 
-        : (
-          <>
-            <Summary />
-            <AirQualTable />
-          </>
-        )
-      }
-  
+      <Summary />
+      <AirQualTable />
     </div>
   );
 }

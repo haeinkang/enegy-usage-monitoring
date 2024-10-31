@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../state/store';
 
 interface AirQaulState {
+  loading: boolean;
   data: AirQualByLclgvNumeric[]; 
   selected?: AirQualByLclgvNumeric;
   metrics: {
@@ -24,6 +25,7 @@ interface AirQaulState {
 }
 
 const initialState: AirQaulState = {
+  loading: true,
   data: [], 
   selected: undefined,
   metrics: {
@@ -77,15 +79,17 @@ const airQualSlice = createSlice({
   }, 
   extraReducers: (builder) => {
     builder.addCase(
-      getAirQualData.pending, 
-      () => {
-        console.log('getAirQualData.pending')
-      }
-    );
-    builder.addCase(
       getAirQualData.fulfilled,
       (state, action) => {
         state.data = action.payload;
+        state.loading = false;
+      }
+    )
+    builder.addCase(
+      getAirQualData.rejected,
+      (state) => {
+        console.log('getAirQualData.rejected')
+        state.loading = false;
       }
     )
   }
@@ -93,7 +97,7 @@ const airQualSlice = createSlice({
 
 export const getAirQualData = createAsyncThunk(
   "airQual/fetchAirQaul", 
-  async (undefined, { getState }) => {
+  async (__, { getState }) => {
     const { response: { body: { items } }} = await getCtprvnRltmMesureDnsty();
     const state = getState() as RootState;
     const regionMapping = state.coordSlice.regionMapping;

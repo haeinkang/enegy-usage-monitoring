@@ -10,14 +10,16 @@ import DetailedAirQuality from './DetailedAirQuality'
 import { clickCollapseBtn } from '../../../state/leftPanelSlice';
 
 function LeftPanel() {
-  const selectedGasUsage = useSelector((state: RootState) => state.gasUsage.selected);
-  const isCollapsed = useSelector((state: RootState) => state.leftPanel.isCollapsed);
   const dispatch = useDispatch<AppDispatch>();
+  const isCollapsed = useSelector((state: RootState) => state.leftPanel.isCollapsed);
+  const selectedGasUsage = useSelector((state: RootState) => state.gasUsage.selected);
+  const selectedAirQual = useSelector((state: RootState) => state.airQual.selected);
+  const loading = useSelector((state: RootState) => state.airQual.loading);
 
   return (
     <GridContainer>
       <Panel square elevation={10} isCollapsed={isCollapsed}>
-        { selectedGasUsage 
+        { selectedAirQual 
           ? <DetailedAirQuality />
           : <GasUsageRank />
         }

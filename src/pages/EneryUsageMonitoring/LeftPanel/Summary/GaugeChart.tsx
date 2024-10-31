@@ -10,7 +10,7 @@ interface iProps {
   title: string;
   min: number;
   max: number;
-  value: number;
+  value?: number;
 }
 
 function GaugeChart(props: iProps) {
@@ -53,7 +53,9 @@ function GaugeChart(props: iProps) {
               offsetCenter: [0, 0]
             },
             itemStyle: {
-               color: getEchartLevelColor('khaiValue', props.value)
+               color: props.value
+                ? getEchartLevelColor('khaiValue', props.value)
+                : '#0d6efd'
             },
             progress: {
               show: true,

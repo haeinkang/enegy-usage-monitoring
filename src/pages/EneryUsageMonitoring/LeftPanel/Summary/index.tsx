@@ -9,7 +9,6 @@ function Summary() {
   const airQual = useSelector((state: RootState) => state.airQual.selected);
 
   return (
-    !airQual ? <></> :
     <Grid container spacing={1} sx={{ height: '137px', mt: 5, mb: 6}}>
       <GasUsageCard 
         gridXs={4}
@@ -24,7 +23,7 @@ function Summary() {
         title={'통합대기환경 수치'}
         min={0}
         max={500}
-        value={airQual.khaiValue}
+        value={airQual?.khaiValue}
       />
     </Grid>
   );
