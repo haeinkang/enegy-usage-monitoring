@@ -1,14 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { 
-  RegionMapping,
-  LclgvCoords, 
-} from '../types'
+import {  RegionMapping, LclgvCoords, } from '../types'
 import { 
   fetchRegionMapping,
   fetchLclgvCoords,
   fetchSidoCoords,
 } from '../services'
-import _ from "lodash";
 
 interface CoordState {
   regionMapping: RegionMapping;
@@ -28,12 +24,6 @@ const coordSlice = createSlice({
   initialState,
   reducers: {}, 
   extraReducers: (builder) => {
-    builder.addCase(
-      getCoordJson.pending, 
-      () => {
-        console.log('getCoordJson.pending')
-      }
-    );
     builder.addCase(
       getCoordJson.fulfilled, 
       (state, action) => {

@@ -1,16 +1,14 @@
 import { useEffect, useRef } from 'react';
 import * as echarts from 'echarts';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../state/store';
 import { Grid, Typography } from '@mui/material';
-import { getEchartLevelColor } from '../../../utils'
+import { getEchartLevelColor } from '../../../../utils'
 
 interface iProps {
   gridXs: number;
   title: string;
   min: number;
   max: number;
-  value: number;
+  value?: number;
 }
 
 function GaugeChart(props: iProps) {
@@ -53,7 +51,9 @@ function GaugeChart(props: iProps) {
               offsetCenter: [0, 0]
             },
             itemStyle: {
-               color: getEchartLevelColor('khaiValue', props.value)
+               color: props.value
+                ? getEchartLevelColor('khaiValue', props.value)
+                : '#0d6efd'
             },
             progress: {
               show: true,

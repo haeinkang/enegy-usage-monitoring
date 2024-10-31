@@ -20,10 +20,6 @@ function Banner({ name }: { name: string }) {
         : <CoronavirusOutlinedIcon />
       }
     </Box>
-
-    // <Box>
-    //   {name}
-    // </Box>
   );
 }
 

@@ -12,7 +12,6 @@ function DetailedAirQuality() {
   const dispatch = useDispatch<AppDispatch>();
   const airQual = useSelector((state: RootState) => state.airQual.selected);
 
-
   const onClickBack = () => {
     dispatch(selectLclgvNm(undefined))
     dispatch(selectGasUsage(undefined))
@@ -21,25 +20,16 @@ function DetailedAirQuality() {
   return (
     <div>
       <Grid container alignItems='center'>
-        <IconButton>
-          <ArrowBackRoundedIcon onClick={onClickBack} />
+        <IconButton onClick={onClickBack}>
+          <ArrowBackRoundedIcon />
         </IconButton>
         <Typography variant='h5' fontWeight={700}>
           {airQual?.lclgvNm}
         </Typography>
       </Grid>
       
-      {
-        !airQual 
-        ? <div>loading...</div> 
-        : (
-          <>
-            <Summary />
-            <AirQualTable />
-          </>
-        )
-      }
-  
+      <Summary />
+      <AirQualTable />
     </div>
   );
 }

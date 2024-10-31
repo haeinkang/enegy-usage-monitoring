@@ -8,7 +8,6 @@ import { AppDispatch, RootState } from '../../state/store';
 import { getGasUsageColor } from '../../utils'
 import { selectGasUsage } from '../../state/gasUsageSlice';
 import { selectLclgvNm } from '../../state/airQualSlice';
-import { setGasData, setAirQualData } from '../../state/MapTooltipSlice';
 import MapTooltip from './MapTooltip';
 import ReactDOMServer from 'react-dom/server';
 
@@ -21,7 +20,6 @@ const EchartsExtGmap = () => {
 
   const chartRef = useRef(null);
   const [googleLoaded, setGoogleLoaded] = useState(false);
-  // const [heatmapData, setHeatmapData] = useState<EchartMapData[]>([])
   const [scatterData, setScatterData] = useState<EchartMapData[]>([])
   const [top10Data, setTop10Data] = useState<EchartMapData[]>([])
 
@@ -40,14 +38,6 @@ const EchartsExtGmap = () => {
   }, []);
 
   useEffect(() => {
-    // const heatmapData = map(airQualData, o => {
-    //   const coord: GeoCoord = Array.isArray(o.coord) ? o.coord : [0, 0];
-    //   return { 
-    //     name: o.lclgvNm, 
-    //     value: [...coord, o['pm10Value']] as GeoCoordVal 
-    //   }
-    // })
-
     const scatterData = _(gasUsageList)
       .map((o) => {
         const coord: GeoCoord = Array.isArray(o.coord) ? o.coord : [0, 0];
@@ -111,7 +101,7 @@ const EchartsExtGmap = () => {
 
         },
         gmap: {
-          // mapId: '8e0a97af9386fef',
+          // mapId: '739af084373f96fe',
           center: [126.7669, 36.2178],
           zoom: 8,
           renderOnMoving: true,
@@ -546,16 +536,3 @@ const gmapStyles = [
     ]
   }
 ]
-// /** 위도 경도 값 구하기 */
-  // const fetchCoordinates = async () => {
-  //   try {
-  //     const response = await axios.get(
-  //       `https://maps.googleapis.com/maps/api/geocode/json?address=${'충남 서천군'}&key=${GOOGLE_API_KEY}`
-  //     );
-
-  //     console.log(response)
-      
-  //   } catch (error) {
-  //   }
-    
-  // };

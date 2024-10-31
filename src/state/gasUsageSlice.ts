@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { GasUsageByLclgv } from '../types'
-import { getGas, getElec } from '../services'
+import { getGas } from '../services'
 import _, { find, maxBy, orderBy } from "lodash";
 import { RootState } from './store';
 
@@ -24,12 +24,6 @@ const gasUsageSlice = createSlice({
     }
   }, 
   extraReducers: (builder) => {
-    builder.addCase(
-      getGasUsage.pending, 
-      () => {
-        console.log('fetchGasUsage.pending')
-      }
-    );
     builder.addCase(
       getGasUsage.fulfilled,
       (state, action) => {

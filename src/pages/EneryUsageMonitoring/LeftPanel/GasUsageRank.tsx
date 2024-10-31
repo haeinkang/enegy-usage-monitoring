@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { TextField, Box, Autocomplete, Grid, Typography, Button, Paper, Avatar, List, ListItem, ListItemButton, ListItemAvatar, ListItemText, Chip } from '@mui/material';
-import _, { maxBy, map, includes, sortBy, find } from 'lodash'
+import { TextField, Autocomplete, Grid, Typography, List, ListItem, ListItemButton, ListItemText, Chip, Skeleton, Stack } from '@mui/material';
+import _, { map, includes, sortBy, find } from 'lodash'
 import { getGasUsageColor } from '../../../utils'
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../state/store';
@@ -15,6 +15,7 @@ function GasUsageRank() {
   const dispatch = useDispatch<AppDispatch>();
   const gasUsage = useSelector((state: RootState) => state.gasUsage.data);
   const maxGasUsage = useSelector((state: RootState) => state.gasUsage.max);
+  const airQualListloading = useSelector((state: RootState) => state.airQual.loading);
 
   const [filtered, setFiltered] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState('');
@@ -41,85 +42,107 @@ function GasUsageRank() {
 
 
   return (
-    <>
-      <Typography variant="subtitle1">
-        가스 사용량 순위 (㎥)
-      </Typography>
-      <Autocomplete
-        multiple
-        defaultValue={[]}
-        options={options}
-        getOptionLabel={(option) => option}
-        renderTags={(value, getTagProps) =>
-          value.map((option, index) => {
-            const { key, ...tagProps } = getTagProps({ index });
-            return (
-              <Chip
-                key={key}
-                variant="outlined"
-                label={option}
-                size="small"
-                {...tagProps}
-              />
-            );
-          })
-        }
-        onChange={(event: any, newValue: string[]) => {
-          setFiltered(newValue);
-        }}
-        inputValue={inputValue}
-        onInputChange={(event, newInputValue) => {
-          setInputValue(newInputValue);
-        }}
-        disablePortal
-        sx={{ width: '100%', margin: '20px 0 10px' }}
-        size='small'
-        renderInput={(params) => 
-          <TextField {...params} label="지역 검색" variant="filled"/>
-        }
-      />
-
-      <Box
-        sx={{ width: '100%', height: 400, bgcolor: 'inherit', overflow: 'scroll' }}
-      >
-        <List dense disablePadding sx={{ width: '100%' }}>
-          {
-            _(gasUsage)
-              .filter(o => 
-                filtered.length > 0 
-                ? find(filtered, sel => includes(o.lclgvNm, sel)) !== undefined
-                : true
-              )
-              .orderBy('pm10Value', 'desc')
-              .map((item, idx) => {
-                const region = item.lclgvNm.split(' ');
-                return (
-                  <ListItem key={`pm10-${idx}`} disablePadding sx={{ borderRadius: '3px', marginBottom: .5, bgcolor: 'rgba(255, 255, 255, 0.09)' }}> 
-                    <ListItemButton 
-                      onClick={() => onClickListItem(item)} 
-                      dense
-                    >
-                      <Grid container gap={1.5} alignItems="center" >
-                        <span>{idx + 1}</span>
-                        <Mark 
-                          value={item.avgUseQnt}
-                          max={maxGasUsage?.avgUseQnt || 0} 
-                        />
-                        <ListItemText
-                          primary={region[0]}
-                          secondary={region[1]}
-                        />
-                        <span>{`${item.avgUseQnt} ㎥`}</span>
-                      </Grid>
-                    </ListItemButton>
-                  </ListItem>
-                )
-              })
-              .value()
+    <Grid container flexDirection='column' flexWrap='nowrap' sx={{ height: '100%' }}>
+      <Grid item>
+        <Typography variant="subtitle1">
+          가스 사용량 순위 (㎥)
+        </Typography>  
+      </Grid>
+      <Grid item>
+        <Autocomplete
+          multiple
+          defaultValue={[]}
+          options={options}
+          getOptionLabel={(option) => option}
+          renderTags={(value, getTagProps) =>
+            value.map((option, index) => {
+              const { key, ...tagProps } = getTagProps({ index });
+              return (
+                <Chip
+                  key={key}
+                  variant="outlined"
+                  label={option}
+                  size="small"
+                  {...tagProps}
+                />
+              );
+            })
           }
-        </List>
-      </Box>
-    </>
+          onChange={(event: any, newValue: string[]) => {
+            setFiltered(newValue);
+          }}
+          inputValue={inputValue}
+          onInputChange={(event, newInputValue) => {
+            setInputValue(newInputValue);
+          }}
+          disablePortal
+          sx={{ width: '100%', margin: '20px 0 10px' }}
+          size='small'
+          renderInput={(params) => 
+            <TextField {...params} label="지역 검색" variant="filled"/>
+          }
+        />
+      </Grid>
+      <Grid item flexGrow={1} sx={{ overflow: 'auto'}}>
+        {
+          !airQualListloading
+          ? (
+            <List 
+              dense 
+              disablePadding  
+              sx={{ width: '100%', overflow: 'auto' }}>
+              {
+                _(gasUsage)
+                  .filter(o => 
+                    filtered.length > 0 
+                    ? find(filtered, sel => includes(o.lclgvNm, sel)) !== undefined
+                    : true
+                  )
+                  .orderBy('pm10Value', 'desc')
+                  .map((item, idx) => {
+                    const region = item.lclgvNm.split(' ');
+                    return (
+                      <ListItem key={`pm10-${idx}`} disablePadding sx={{ borderRadius: '3px', marginBottom: .5, bgcolor: 'rgba(255, 255, 255, 0.09)' }}> 
+                        <ListItemButton 
+                          onClick={() => onClickListItem(item)} 
+                          dense
+                        >
+                          <Grid container gap={1.5} alignItems="center" >
+                            <span>{idx + 1}</span>
+                            <Mark 
+                              value={item.avgUseQnt}
+                              max={maxGasUsage?.avgUseQnt || 0} 
+                            />
+                            <ListItemText
+                              primary={region[0]}
+                              secondary={region[1]}
+                            />
+                            <span>{`${item.avgUseQnt} ㎥`}</span>
+                          </Grid>
+                        </ListItemButton>
+                      </ListItem>
+                    )
+                  })
+                  .value()
+              }
+            </List>
+          )
+          : (
+            <Stack spacing={0}>
+              {map(Array(8).fill(0), (_, idx) => 
+                <Skeleton
+                  key={idx}
+                  animation="wave"
+                  height={100}
+                  width="100%"
+                  style={{ marginBottom: 6 }}
+                />
+              )}
+            </Stack>
+          ) 
+        }
+      </Grid>
+    </Grid>
   );
 }
 
