@@ -20,8 +20,8 @@ function DetailedAirQuality() {
   return (
     <div>
       <Grid container alignItems='center'>
-        <IconButton>
-          <ArrowBackRoundedIcon onClick={onClickBack} />
+        <IconButton onClick={onClickBack}>
+          <ArrowBackRoundedIcon />
         </IconButton>
         <Typography variant='h5' fontWeight={700}>
           {airQual?.lclgvNm}
