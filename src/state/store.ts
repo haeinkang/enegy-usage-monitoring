@@ -4,6 +4,7 @@ import airQualSlice from './airQualSlice'
 import gasUsageSlice from './gasUsageSlice';
 import leftPanelSlice from './leftPanelSlice';
 import coordSlice from './coordSlice';
+import mapTooltipSlice from './MapTooltipSlice'
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     airQual: airQualSlice,
     gasUsage: gasUsageSlice,
     leftPanel: leftPanelSlice,
+    mapTooltip: mapTooltipSlice,
   }
 })
 
