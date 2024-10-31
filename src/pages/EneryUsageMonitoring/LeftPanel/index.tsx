@@ -18,7 +18,7 @@ function LeftPanel() {
 
   return (
     <GridContainer>
-      <Panel square elevation={10} isCollapsed={isCollapsed}>
+      <Panel square elevation={10} collapsed={`${isCollapsed}`}>
         { selectedAirQual 
           ? <DetailedAirQuality />
           : <GasUsageRank />
@@ -26,7 +26,7 @@ function LeftPanel() {
       </Panel>
 
       <CollapseButton 
-        isCollapsed={isCollapsed}
+        collapsed={`${isCollapsed}`}
         onClick={() => dispatch(clickCollapseBtn())}
         variant="contained" 
       >
@@ -49,24 +49,24 @@ const GridContainer = styled.div`
   flex-wrap: nowrap;
 `;
 
-const Panel = styled(Paper)<{ isCollapsed: boolean; }>`
+const Panel = styled(Paper)<{ collapsed: 'true' | 'false'; }>`
   background: var(--joy-palette-neutral-800) !important;
-  width: ${(props) => (props.isCollapsed ? '0' : 'calc(10vw + 24rem)')};
-  padding: ${(props) => (props.isCollapsed ? '0' : '20px')};
+  width: ${(props) => (props.collapsed === 'true' ? '0' : 'calc(10vw + 24rem)')};
+  padding: ${(props) => (props.collapsed === 'true' ? '0' : '20px')};
   transition: width 0.3s ease, padding 0.3s ease !important;
   * {
-    display: ${(props) => (props.isCollapsed ? 'none !important' : 'block')};
+    display: ${(props) => (props.collapsed === 'true' ? 'none !important' : 'block')};
   }
 `;
 
-const CollapseButton = styled(Button)<{ isCollapsed: boolean; }>`
+const CollapseButton = styled(Button)<{ collapsed: 'true' | 'false'; }>`
   border-radius: 0 4px 4px 0 !important;
   min-width: 30px !important;
   width: 30px;
   height: 55px !important;
   padding: 6px !important;
   margin-top: 10px !important;
-  background: ${(props) => `var(--joy-palette-neutral-${props.isCollapsed ? '700' : '800'})`} !important;
+  background: ${(props) => `var(--joy-palette-neutral-${props.collapsed === 'true' ? '700' : '800'})`} !important;
   svg {
     color: #fff;
   }

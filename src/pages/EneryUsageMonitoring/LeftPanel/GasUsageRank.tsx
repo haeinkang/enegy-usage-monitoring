@@ -129,8 +129,9 @@ function GasUsageRank() {
           )
           : (
             <Stack spacing={0}>
-              {map(Array(8).fill(0), () => 
+              {map(Array(8).fill(0), (_, idx) => 
                 <Skeleton
+                  key={idx}
                   animation="wave"
                   height={100}
                   width="100%"

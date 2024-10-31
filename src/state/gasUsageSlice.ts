@@ -25,12 +25,6 @@ const gasUsageSlice = createSlice({
   }, 
   extraReducers: (builder) => {
     builder.addCase(
-      getGasUsage.pending, 
-      () => {
-        console.log('fetchGasUsage.pending')
-      }
-    );
-    builder.addCase(
       getGasUsage.fulfilled,
       (state, action) => {
         state.data = orderBy(action.payload, ['gas'], ['desc']);

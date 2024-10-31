@@ -29,12 +29,6 @@ const coordSlice = createSlice({
   reducers: {}, 
   extraReducers: (builder) => {
     builder.addCase(
-      getCoordJson.pending, 
-      () => {
-        console.log('getCoordJson.pending')
-      }
-    );
-    builder.addCase(
       getCoordJson.fulfilled, 
       (state, action) => {
         state.regionMapping = action.payload.regionMapping;
