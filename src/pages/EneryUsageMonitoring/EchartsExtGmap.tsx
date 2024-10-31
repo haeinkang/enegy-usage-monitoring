@@ -3,18 +3,21 @@ import * as echarts from 'echarts';
 import 'echarts-extension-gmap';
 import _, { slice } from 'lodash'
 import { GeoCoord, EchartMapData, GeoCoordVal } from '../../types'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../state/store';
 import { getGasUsageColor } from '../../utils'
+import { selectGasUsage } from '../../state/gasUsageSlice';
+import { selectLclgvNm } from '../../state/airQualSlice';
 
 const EchartsExtGmap = () => {
-  // const airQualData = useSelector((state: RootState) => state.airQual.data);
+  const dispatch = useDispatch<AppDispatch>();
   const gasUsage = useSelector((state: RootState) => state.gasUsage.data);
   const max = useSelector((state: RootState) => state.gasUsage.max);
+  const selected = useSelector((state: RootState) => state.gasUsage.selected);
 
   const chartRef = useRef(null);
   const [googleLoaded, setGoogleLoaded] = useState(false);
-  const [heatmapData, setHeatmapData] = useState<EchartMapData[]>([])
+  // const [heatmapData, setHeatmapData] = useState<EchartMapData[]>([])
   const [scatterData, setScatterData] = useState<EchartMapData[]>([])
   const [top10Data, setTop10Data] = useState<EchartMapData[]>([])
 
@@ -66,6 +69,15 @@ const EchartsExtGmap = () => {
 
       // ECharts 인스턴스 생성
       const chart = echarts.init(chartRef.current, 'dark');
+
+
+      // 클릭 이벤트 리스너 추가
+      chart.on('click', (params) => {
+        if (params.seriesType === 'scatter' || params.seriesType === 'effectScatter') {
+          dispatch(selectLclgvNm(params.name))
+          dispatch(selectGasUsage(params.name))
+        }
+      });
 
       // ECharts 옵션 설정
       const option = {
@@ -173,6 +185,35 @@ const EchartsExtGmap = () => {
 
     }
   }, [googleLoaded, scatterData, top10Data]);
+
+  useEffect(() => {
+    if (selected && chartRef.current) {
+      // 기존 인스턴스 가져오기
+      const chart = echarts.getInstanceByDom(chartRef.current);
+      if (chart) {
+        // 첫 번째 단계: zoom을 줄여서 잠깐 표시
+        const initialZoomOption = {
+          gmap: {
+            center: selected.coord,
+            zoom: 8,  // 축소된 줌 수준
+          },
+        };
+        chart.setOption(initialZoomOption);
+  
+        // 두 번째 단계: zoom을 11로 되돌려 부드럽게 확대
+        setTimeout(() => {
+          const finalZoomOption = {
+            gmap: {
+              center: selected.coord,
+              zoom: 11,  // 확대된 줌 수준
+            },
+          };
+          chart.setOption(finalZoomOption);
+        }, 500); // 500ms 후 확대 실행
+      }
+    }
+
+  }, [selected])
 
   return (
     <div

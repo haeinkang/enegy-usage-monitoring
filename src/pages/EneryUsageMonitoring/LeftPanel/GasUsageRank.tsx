@@ -36,7 +36,7 @@ function GasUsageRank() {
 
   const onClickListItem = (selected: GasUsageByLclgv) => {
     dispatch(selectLclgvNm(selected.lclgvNm))
-    dispatch(selectGasUsage(selected))
+    dispatch(selectGasUsage(selected.lclgvNm))
   }
 
 
