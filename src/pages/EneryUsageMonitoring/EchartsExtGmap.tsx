@@ -3,12 +3,14 @@ import * as echarts from 'echarts';
 import 'echarts-extension-gmap';
 import _, { slice } from 'lodash'
 import { GeoCoord, EchartMapData, GeoCoordVal } from '../../types'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../state/store';
 import { getGasUsageColor } from '../../utils'
+import { selectGasUsage } from '../../state/gasUsageSlice';
+import { selectLclgvNm } from '../../state/airQualSlice';
 
 const EchartsExtGmap = () => {
-  // const airQualData = useSelector((state: RootState) => state.airQual.data);
+  const dispatch = useDispatch<AppDispatch>();
   const gasUsage = useSelector((state: RootState) => state.gasUsage.data);
   const max = useSelector((state: RootState) => state.gasUsage.max);
   const selected = useSelector((state: RootState) => state.gasUsage.selected);
@@ -67,6 +69,15 @@ const EchartsExtGmap = () => {
 
       // ECharts 인스턴스 생성
       const chart = echarts.init(chartRef.current, 'dark');
+
+
+      // 클릭 이벤트 리스너 추가
+      chart.on('click', (params) => {
+        if (params.seriesType === 'scatter' || params.seriesType === 'effectScatter') {
+          dispatch(selectLclgvNm(params.name))
+          dispatch(selectGasUsage(params.name))
+        }
+      });
 
       // ECharts 옵션 설정
       const option = {

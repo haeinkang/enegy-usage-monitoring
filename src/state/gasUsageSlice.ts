@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { GasUsageByLclgv } from '../types'
 import { getGas, getElec } from '../services'
-import _, { maxBy, orderBy } from "lodash";
+import _, { find, maxBy, orderBy } from "lodash";
 import { RootState } from './store';
 
 interface GasUsageState {
@@ -19,7 +19,8 @@ const gasUsageSlice = createSlice({
   initialState,
   reducers: {
     selectGasUsage: (state, action) => {
-      state.selected = action.payload;
+      const selected = find(state.data, o => o.lclgvNm === action.payload)
+      state.selected = selected;
     }
   }, 
   extraReducers: (builder) => {
