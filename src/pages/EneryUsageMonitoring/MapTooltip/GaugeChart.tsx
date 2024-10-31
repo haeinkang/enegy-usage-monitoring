@@ -1,16 +1,14 @@
-import { useEffect, useRef } from 'react';
 import * as echarts from 'echarts';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../state/store';
-import { Grid, Typography } from '@mui/material';
+import { useEffect, useRef } from 'react';
 import { getEchartLevelColor } from '../../../utils'
+import { AirQualByLclgvNumeric } from '../../../types';
+import { Container, Subtitle2 } from './stlye';
 
 interface iProps {
-  gridXs: number;
   title: string;
   min: number;
   max: number;
-  value: number;
+  data: AirQualByLclgvNumeric
 }
 
 function GaugeChart(props: iProps) {
@@ -38,7 +36,8 @@ function GaugeChart(props: iProps) {
           {
             data: [
               {
-                value: props.value,
+                // value: props.data.khaiValue,
+                value: props.data.khaiValue,
               }
             ],
             type: 'gauge',
@@ -53,7 +52,7 @@ function GaugeChart(props: iProps) {
               offsetCenter: [0, 0]
             },
             itemStyle: {
-               color: getEchartLevelColor('khaiValue', props.value)
+               color: getEchartLevelColor('khaiValue', props.data.khaiValue)
             },
             progress: {
               show: true,
@@ -90,30 +89,18 @@ function GaugeChart(props: iProps) {
       chart.setOption(option);
 
     }
-  }, []);
+  }, [props.data]);
 
   return (
-    <Grid 
-      item 
-      xs={props.gridXs} 
-      container 
-      flexDirection='column' 
-      alignItems='center' 
-      flexWrap='nowrap'
-      spacing={1}
-    >
-      <Grid item sx={{ width: '100%' }}>
+    <Container>
+      <div style={{ width: '100%', height: '100px', border: 'solid 1px' }}>
         <div
           ref={chartRef}
-          style={{ width: '100%', height: '100px' }}
+          style={{ width: '100%', height: '100%' }}
         />     
-      </Grid>
-      <Grid item>
-        <Typography variant='subtitle2'>
-          {props.title}
-        </Typography>
-      </Grid>
-    </Grid>
+      </div>
+      <Subtitle2>{props.title}</Subtitle2>
+    </Container>
     
   );
 }

@@ -1,17 +1,21 @@
 import { useEffect, useRef, useState } from 'react';
 import * as echarts from 'echarts';
 import 'echarts-extension-gmap';
-import _, { slice } from 'lodash'
+import _, { slice, find } from 'lodash'
 import { GeoCoord, EchartMapData, GeoCoordVal } from '../../types'
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../state/store';
 import { getGasUsageColor } from '../../utils'
 import { selectGasUsage } from '../../state/gasUsageSlice';
 import { selectLclgvNm } from '../../state/airQualSlice';
+import { setGasData, setAirQualData } from '../../state/MapTooltipSlice';
+import MapTooltip from './MapTooltip';
+import ReactDOMServer from 'react-dom/server';
 
 const EchartsExtGmap = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const gasUsage = useSelector((state: RootState) => state.gasUsage.data);
+  const airQualList = useSelector((state: RootState) => state.airQual.data);
+  const gasUsageList = useSelector((state: RootState) => state.gasUsage.data);
   const max = useSelector((state: RootState) => state.gasUsage.max);
   const selected = useSelector((state: RootState) => state.gasUsage.selected);
 
@@ -44,7 +48,7 @@ const EchartsExtGmap = () => {
     //   }
     // })
 
-    const scatterData = _(gasUsage)
+    const scatterData = _(gasUsageList)
       .map((o) => {
         const coord: GeoCoord = Array.isArray(o.coord) ? o.coord : [0, 0];
         return {
@@ -58,7 +62,7 @@ const EchartsExtGmap = () => {
     setScatterData(scatterData)
     setTop10Data(slice(scatterData, 0, 10))
     
-  }, [gasUsage])
+  }, [gasUsageList])
 
   useEffect(() => {
     if (googleLoaded && chartRef.current) {
@@ -83,7 +87,28 @@ const EchartsExtGmap = () => {
       const option = {
         backgroundColor: 'transparent',
         tooltip: {
-          trigger: 'item'
+          trigger: 'item', 
+          styles: { 
+            backgroundColor: "#000",
+          },
+          formatter: (
+            params: any, 
+            ticket: string
+          ) => {
+            const gasData = find(gasUsageList, o => o.lclgvNm === params.name)    
+            const airQualData = find(airQualList, o => o.lclgvNm === params.name)    
+
+            // return ReactDOMServer.renderToString( <div>dddd</div>);
+            return ReactDOMServer.renderToString(
+              <MapTooltip 
+                gasUsageList={gasUsageList}
+                selectedGasData={gasData}
+                selectedAirQualData={airQualData}
+              />
+            );
+
+          }
+
         },
         gmap: {
           // mapId: '8e0a97af9386fef',
@@ -184,7 +209,36 @@ const EchartsExtGmap = () => {
       chart.setOption(option);
 
     }
-  }, [googleLoaded, scatterData, top10Data]);
+  }, [googleLoaded, scatterData, top10Data, airQualList, gasUsageList]);
+
+  useEffect(() => {
+    if (selected && chartRef.current) {
+      // 기존 인스턴스 가져오기
+      const chart = echarts.getInstanceByDom(chartRef.current);
+      if (chart) {
+        // 첫 번째 단계: zoom을 줄여서 잠깐 표시
+        const initialZoomOption = {
+          gmap: {
+            center: selected.coord,
+            zoom: 8,  // 축소된 줌 수준
+          },
+        };
+        chart.setOption(initialZoomOption);
+  
+        // 두 번째 단계: zoom을 11로 되돌려 부드럽게 확대
+        setTimeout(() => {
+          const finalZoomOption = {
+            gmap: {
+              center: selected.coord,
+              zoom: 11,  // 확대된 줌 수준
+            },
+          };
+          chart.setOption(finalZoomOption);
+        }, 500); // 500ms 후 확대 실행
+      }
+    }
+
+  }, [selected])
 
   useEffect(() => {
     if (selected && chartRef.current) {

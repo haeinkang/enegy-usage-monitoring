@@ -5,10 +5,7 @@ import { Grid, IconButton, Typography } from '@mui/material';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import { selectLclgvNm } from '../../../state/airQualSlice';
 import { selectGasUsage } from '../../../state/gasUsageSlice';
-import { map } from 'lodash';
-import GasUsageCard from './GasUsageCard'
-import KhaiGradeCard from './KhaiGradeCard'
-import GaugeChart from './GaugeChart'
+import Summary from './Summary';
 import AirQualTable from './AirQualTable'
 
 function DetailedAirQuality() {
@@ -37,23 +34,7 @@ function DetailedAirQuality() {
         ? <div>loading...</div> 
         : (
           <>
-            <Grid container spacing={1} sx={{ height: '137px', mt: 5, mb: 6}}>
-              <GasUsageCard 
-                gridXs={4}
-                title={'가스 사용량'}
-              />
-              <KhaiGradeCard 
-                gridXs={4}
-                title={'통합대기환경 지수'}
-              />
-              <GaugeChart 
-                gridXs={4}
-                title={'통합대기환경 수치'}
-                min={0}
-                max={500}
-                value={airQual.khaiValue}
-              />
-            </Grid>
+            <Summary />
             <AirQualTable />
           </>
         )
