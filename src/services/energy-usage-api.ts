@@ -1,10 +1,10 @@
 import axios from 'axios';
-import { EnerygyUsageApiRes, LclgvCoords } from '../types';
+import { EnerygyUsageApiResItem, EnerygyUsageApiRes, LclgvCoords, RegionMapping } from '../types';
 
 // Axios 인스턴스 생성
-const api = axios.create({
+export const api = axios.create({
   baseURL: `${process.env.REACT_APP_BASE_URL}/kecoapi/cpointEnrgUsqntStatsService`, // 기본 API URL 설정
-  timeout: 3000, // 타임아웃 시간 설정 (ms)
+  // timeout: 3000, // 타임아웃 시간 설정 (ms)
   headers: {
     'Content-Type': 'application/json',
   },
@@ -20,11 +20,11 @@ const api = axios.create({
 /**
  * 가스 사용량 통계
  */
-export const getGas = async (): Promise<EnerygyUsageApiRes> => { 
+export const getGas = async (): Promise<EnerygyUsageApiResItem[]> => { 
   try {
     const res = await api.get<EnerygyUsageApiRes>('getGas');
 
-    return res.data;
+    return res.data.body.items;
 
   } catch (e) {
     console.error("getGas API 호출 에러:", e);
@@ -36,11 +36,11 @@ export const getGas = async (): Promise<EnerygyUsageApiRes> => {
 /**
  * 수도 사용량 통계
  */
-export const getWtspl = async (): Promise<EnerygyUsageApiRes> => { 
+export const getWtspl = async (): Promise<EnerygyUsageApiResItem[]> => { 
   try {
     const res = await api.get<EnerygyUsageApiRes>('getWtspl');
 
-    return res.data;
+    return res.data.body.items;
 
   } catch (e) {
     console.error("getWtspl API 호출 에러:", e);
@@ -54,11 +54,11 @@ export const getWtspl = async (): Promise<EnerygyUsageApiRes> => {
 /**
  * 전기 사용량 통계
  */
-export const getElec = async (): Promise<EnerygyUsageApiRes> => { 
+export const getElec = async (): Promise<EnerygyUsageApiResItem[]> => { 
   try {
     const res = await api.get<EnerygyUsageApiRes>('getElec');
 
-    return res.data;
+    return res.data.body.items;
 
   } catch (e) {
     console.error("getElec API 호출 에러:", e);
@@ -67,7 +67,40 @@ export const getElec = async (): Promise<EnerygyUsageApiRes> => {
 };
 
 
-/** 지자체별 위도, 경도 가져오기 */
+/** 
+ * 행정구역(시,구,군) 가져오기 
+ * @returns '{ "부산 청룡동": "금정구", ... }'
+ */
+export const fetchRegionMapping = async (): Promise<RegionMapping> => {
+  try {
+    const res = await fetch('/json/region-mapping.json'); 
+    const data = await res.json();
+    return data
+  } catch (error) {
+    console.error("Error fetching the JSON file:", error);
+    return {}
+  }
+};
+
+/** 
+ * 시도별 위도, 경도 가져오기
+ * @returns '{ "부산": [129.075641, 35.179554], ... }' 
+ */
+export const fetchSidoCoords = async (): Promise<LclgvCoords> => {
+  try {
+    const res = await fetch('/json/sido-coords.json'); 
+    const data: LclgvCoords = await res.json();
+    return data
+  } catch (error) {
+    console.error("Error fetching the JSON file:", error);
+    return {}
+  }
+};
+
+/** 
+ * 지자체별 위도, 경도 가져오기 
+ * @returns '{ "부산 금정구": [129.092749, 35.242010], ... }' 
+ */
 export const fetchLclgvCoords = async (): Promise<LclgvCoords> => {
   try {
     const res = await fetch('/json/lclgv-coords.json'); 
@@ -78,16 +111,3 @@ export const fetchLclgvCoords = async (): Promise<LclgvCoords> => {
     return {}
   }
 };
-
-/** 행정구역(시,구,군) 가져오기 */
-export const fetchCityDists = async (): Promise<LclgvCoords> => {
-  try {
-    const res = await fetch('/json/city-districts.json'); 
-    const data = await res.json();
-    return data
-  } catch (error) {
-    console.error("Error fetching the JSON file:", error);
-    return {}
-  }
-};
-
