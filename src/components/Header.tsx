@@ -3,15 +3,14 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import Co2Icon from '@mui/icons-material/Co2';
+import TroubleshootIcon from '@mui/icons-material/Troubleshoot';
 
 function Header() {
-
   return (
     <AppBar position="static" color="primary">
       <Container sx={{ maxWidth: 'none !important' }}>
         <Toolbar disableGutters variant="dense">
-          <Co2Icon fontSize='large' sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <TroubleshootIcon fontSize='large' sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
             variant="h6"
             noWrap
@@ -26,7 +25,7 @@ function Header() {
               textDecoration: 'none',
             }}
           >
-            Enery Usage Monitoring
+            Gas Usage and Air Quality Tracking
           </Typography>
 
         </Toolbar>

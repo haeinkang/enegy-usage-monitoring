@@ -50,7 +50,7 @@ const GridContainer = styled.div`
 const Panel = styled(Paper)<{ isCollapsed: boolean; }>`
   background: var(--joy-palette-neutral-800) !important;
   width: ${(props) => (props.isCollapsed ? '0' : 'calc(10vw + 24rem)')};
-  padding: ${(props) => (props.isCollapsed ? '0' : '15px 20px')};
+  padding: ${(props) => (props.isCollapsed ? '0' : '20px')};
   transition: width 0.3s ease, padding 0.3s ease !important;
   * {
     display: ${(props) => (props.isCollapsed ? 'none !important' : 'block')};
