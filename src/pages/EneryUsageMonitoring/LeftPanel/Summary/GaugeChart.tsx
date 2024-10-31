@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react';
 import * as echarts from 'echarts';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../../state/store';
+import { RootState } from '../../../../state/store';
 import { Grid, Typography } from '@mui/material';
-import { getEchartLevelColor } from '../../../utils'
+import { getEchartLevelColor } from '../../../../utils'
 
 interface iProps {
   gridXs: number;

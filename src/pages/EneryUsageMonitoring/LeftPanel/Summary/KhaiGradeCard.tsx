@@ -1,7 +1,7 @@
 import { Grid, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../../state/store';
-import { getLevelColor } from '../../../utils'
+import { RootState } from '../../../../state/store';
+import { getLevelColor } from '../../../../utils'
 
 interface iProps { 
   gridXs: number;
