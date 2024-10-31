@@ -25,7 +25,6 @@ export const getGasUsageColor = (
   max: number, 
   val: number
 ): string => {
-  console.log({max, val})
   if (val <= max * 0.2) return '#0d6efd'; // 상위 20%
   if (val <= max * 0.4) return '#198754'; // 상위 40%
   if (val <= max * 0.6) return '#ffc107'; // 상위 60%
