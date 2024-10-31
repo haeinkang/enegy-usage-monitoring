@@ -18,7 +18,7 @@ const gasUsageSlice = createSlice({
   name: 'gasUsage', 
   initialState,
   reducers: {
-    select: (state, action) => {
+    selectGasUsage: (state, action) => {
       state.selected = action.payload;
     }
   }, 
@@ -59,7 +59,7 @@ export const getGasUsage = createAsyncThunk(
 )
 
 export const { 
-  select,
+  selectGasUsage,
 } = gasUsageSlice.actions;
 
 export default gasUsageSlice.reducer;

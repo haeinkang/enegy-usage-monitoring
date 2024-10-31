@@ -74,7 +74,7 @@ const EchartsExtGmap = () => {
           trigger: 'item'
         },
         gmap: {
-          // mapId: '739af084373f96fe',
+          // mapId: '8e0a97af9386fef',
           center: [126.7669, 36.2178],
           zoom: 8,
           renderOnMoving: true,

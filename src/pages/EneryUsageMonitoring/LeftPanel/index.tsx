@@ -1,33 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { TextField, Box, Autocomplete, Grid, Typography, Button, Paper, Avatar, List, ListItem, ListItemButton, ListItemAvatar, ListItemText, Chip } from '@mui/material';
-import KeyboardArrowLeftRoundedIcon from '@mui/icons-material/KeyboardArrowLeftRounded';
-import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../state/store';
+import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
+import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../../state/store';
 import GasUsageRank from './GasUsageRank'
 import DetailedAirQuality from './DetailedAirQuality'
+import { clickCollapseBtn } from '../../../state/leftPanelSlice';
 
 function LeftPanel() {
-  const lclgvNm = useSelector((state: RootState) => state.airQual.selected);
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
-
-  const handleCollapse = () => {
-    setIsCollapsed((prev) => !prev);
-  };
+  const selectedGasUsage = useSelector((state: RootState) => state.gasUsage.selected);
+  const isCollapsed = useSelector((state: RootState) => state.leftPanel.isCollapsed);
+  const dispatch = useDispatch<AppDispatch>();
 
   return (
     <GridContainer>
       <Panel square elevation={10} isCollapsed={isCollapsed}>
-      { lclgvNm 
-        ? <DetailedAirQuality />
-        : <GasUsageRank />
-      }
+        { selectedGasUsage 
+          ? <DetailedAirQuality />
+          : <GasUsageRank />
+        }
       </Panel>
-      <CollapseButton variant="contained" onClick={handleCollapse}>
+
+      <CollapseButton 
+        isCollapsed={isCollapsed}
+        onClick={() => dispatch(clickCollapseBtn())}
+        variant="contained" 
+      >
         {isCollapsed  
-          ? <KeyboardArrowRightRoundedIcon /> 
-          : <KeyboardArrowLeftRoundedIcon />
+          ? <ArrowForwardIosRoundedIcon /> 
+          : <ArrowBackIosNewRoundedIcon />
         }
       </CollapseButton>
     </GridContainer>
@@ -44,28 +47,24 @@ const GridContainer = styled.div`
   flex-wrap: nowrap;
 `;
 
-// Panel 컴포넌트에 추가 속성 타입을 정의합니다.
-interface PanelProps {
-  isCollapsed: boolean;
-}
-
-const Panel = styled(Paper)<PanelProps>`
-  width: ${(props) => (props.isCollapsed ? '0' : 'calc(10vw + 24rem)')};
-  padding: 15px 20px;
-  transition: width 0.3s ease, padding 0.3s ease !important;
+const Panel = styled(Paper)<{ isCollapsed: boolean; }>`
   background: var(--joy-palette-neutral-800) !important;
+  width: ${(props) => (props.isCollapsed ? '0' : 'calc(10vw + 24rem)')};
+  padding: ${(props) => (props.isCollapsed ? '0' : '15px 20px')};
+  transition: width 0.3s ease, padding 0.3s ease !important;
+  * {
+    display: ${(props) => (props.isCollapsed ? 'none !important' : 'block')};
+  }
 `;
 
-const CollapseButton = styled(Button)`
+const CollapseButton = styled(Button)<{ isCollapsed: boolean; }>`
   border-radius: 0 4px 4px 0 !important;
-  min-width: 25px !important;
-  width: 25px;
-  height: 50px !important;
+  min-width: 30px !important;
+  width: 30px;
+  height: 55px !important;
   padding: 6px !important;
   margin-top: 10px !important;
-  // background: var(--action-active) !important;
-  background: var(--joy-palette-neutral-800) !important;
-
+  background: ${(props) => `var(--joy-palette-neutral-${props.isCollapsed ? '700' : '800'})`} !important;
   svg {
     color: #fff;
   }

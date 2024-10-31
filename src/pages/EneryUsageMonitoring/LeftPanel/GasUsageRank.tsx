@@ -5,7 +5,7 @@ import _, { maxBy, map, includes, sortBy, find } from 'lodash'
 import { getGasUsageColor } from '../../../utils'
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../state/store';
-import { select } from '../../../state/gasUsageSlice';
+import { selectGasUsage } from '../../../state/gasUsageSlice';
 import { selectLclgvNm } from '../../../state/airQualSlice';
 import { GasUsageByLclgv } from '../../../types'
 
@@ -35,10 +35,8 @@ function GasUsageRank() {
   }
 
   const onClickListItem = (selected: GasUsageByLclgv) => {
-
     dispatch(selectLclgvNm(selected.lclgvNm))
-    dispatch(select(selected))
-
+    dispatch(selectGasUsage(selected))
   }
 
 
@@ -126,41 +124,6 @@ function GasUsageRank() {
 }
 
 export default GasUsageRank;
-
-const GridContainer = styled.div`
-  position: absolute;
-  z-index: 1;
-  height: 100%;
-  display: flex;
-  flex-wrap: nowrap;
-`;
-
-// Panel 컴포넌트에 추가 속성 타입을 정의합니다.
-interface PanelProps {
-  isCollapsed: boolean;
-}
-
-const Panel = styled(Paper)<PanelProps>`
-  width: ${(props) => (props.isCollapsed ? '0' : 'calc(10vw + 16rem)')};
-  padding: 15px 20px;
-  transition: width 0.3s ease, padding 0.3s ease !important;
-  background: var(--joy-palette-neutral-800) !important;
-`;
-
-const CollapseButton = styled(Button)`
-  border-radius: 0 4px 4px 0 !important;
-  min-width: 25px !important;
-  width: 25px;
-  height: 50px !important;
-  padding: 6px !important;
-  margin-top: 10px !important;
-  // background: var(--action-active) !important;
-  background: var(--joy-palette-neutral-800) !important;
-
-  svg {
-    color: #fff;
-  }
-`;
 
 const Mark = styled.div<{ value: number, max: number }>`
   width: 1rem;

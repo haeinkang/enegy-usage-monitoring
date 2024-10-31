@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import counterReducer from './counterSlice'
 import airQualSlice from './airQualSlice'
 import gasUsageSlice from './gasUsageSlice';
+import leftPanelSlice from './leftPanelSlice';
 import coordSlice from './coordSlice';
 
 export const store = configureStore({
@@ -10,6 +11,7 @@ export const store = configureStore({
     coordSlice: coordSlice,
     airQual: airQualSlice,
     gasUsage: gasUsageSlice,
+    leftPanel: leftPanelSlice,
   }
 })
 

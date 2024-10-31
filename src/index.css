@@ -11,11 +11,10 @@ body {
 
   /** Black **/
   --joy-palette-common-black: #000;
+  --joy-palette-neutral-900: #0B0D0E;
   --joy-palette-neutral-800: #171A1C;
   --joy-palette-neutral-700: #32383E;
   --joy-palette-neutral-600: #555E68;
-  --joy-palette-common-black: #000;
-  --joy-palette-neutral-900: #0B0D0E;
   --joy-palette-neutral-600: #555E68;
   --joy-palette-neutral-500: #636B74;
   
