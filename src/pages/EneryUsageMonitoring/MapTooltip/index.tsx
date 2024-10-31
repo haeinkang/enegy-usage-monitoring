@@ -1,8 +1,6 @@
 import GasUsageCard from './GasUsageCard'
 import KhaiGradeCard from './KhaiGradeCard'
-import GaugeChart from './GaugeChart'
 import { GasUsageByLclgv, AirQualByLclgvNumeric } from '../../../types';
-import { styled } from 'styled-components';
 import { Title, Summary } from './stlye';
 
 interface iProps { 

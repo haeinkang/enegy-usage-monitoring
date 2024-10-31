@@ -1,15 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { 
-  AirQualByLclgvNumeric, 
-  AirQualByRegMerics, 
-  PollutionLevel
-} from '../types'
-import { 
-  getCtprvnRltmMesureDnsty
-} from '../services'
+import { AirQualByLclgvNumeric, AirQualByRegMerics, } from '../types'
+import { getCtprvnRltmMesureDnsty } from '../services'
 import _, { find, reduce, meanBy } from "lodash";
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../state/store';
+import { RootState } from '../state/store';
 
 interface AirQaulState {
   loading: boolean;

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { TextField, Box, Autocomplete, Grid, Typography, Button, Paper, Avatar, List, ListItem, ListItemButton, ListItemAvatar, ListItemText, Chip } from '@mui/material';
+import { Button, Paper } from '@mui/material';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,9 +12,7 @@ import { clickCollapseBtn } from '../../../state/leftPanelSlice';
 function LeftPanel() {
   const dispatch = useDispatch<AppDispatch>();
   const isCollapsed = useSelector((state: RootState) => state.leftPanel.isCollapsed);
-  const selectedGasUsage = useSelector((state: RootState) => state.gasUsage.selected);
   const selectedAirQual = useSelector((state: RootState) => state.airQual.selected);
-  const loading = useSelector((state: RootState) => state.airQual.loading);
 
   return (
     <GridContainer>

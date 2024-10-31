@@ -1,14 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { 
-  RegionMapping,
-  LclgvCoords, 
-} from '../types'
+import {  RegionMapping, LclgvCoords, } from '../types'
 import { 
   fetchRegionMapping,
   fetchLclgvCoords,
   fetchSidoCoords,
 } from '../services'
-import _ from "lodash";
 
 interface CoordState {
   regionMapping: RegionMapping;
