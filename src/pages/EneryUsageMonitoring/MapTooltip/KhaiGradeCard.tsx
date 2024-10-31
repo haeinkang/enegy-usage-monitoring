@@ -5,14 +5,19 @@ import { Container, Subtitle2, H4 } from './stlye';
 
 interface iProps { 
   title: string;
+  metric: string;
   data: AirQualByLclgvNumeric;
 }
 function KhaiGradeCard(props: iProps) {
 
   return (
     <Container>
-      <Card khaiValue={props.data.khaiValue}>
-        <H4>{props.data.khaiGrade}</H4>
+      <Card metric={props.metric} value={props.data.khaiValue}>
+        <H4>
+          {props.metric === 'khaiValue' 
+            ? props.data.khaiValue
+            : props.data.khaiGrade}
+        </H4>
       </Card>
 
       <Subtitle2>{props.title}</Subtitle2>
@@ -22,7 +27,7 @@ function KhaiGradeCard(props: iProps) {
 
 export default KhaiGradeCard;
 
-const Card = styled.div<{khaiValue: number}>`
+const Card = styled.div<{metric: string; value: number}>`
   display: flex;
   flex-grow: 1;
   flex-direction: column;
@@ -30,6 +35,6 @@ const Card = styled.div<{khaiValue: number}>`
   justify-content: center;
   width: 100px;
   border-radius: 18px;
-  background: ${(props) => getLevelColor('khaiValue', props.khaiValue)};
+  background: ${(props) => getLevelColor('khaiValue', props.value)};
   color: #fff;
 `

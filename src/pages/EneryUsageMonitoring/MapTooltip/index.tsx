@@ -25,14 +25,20 @@ function MapTooltip(props: iProps) {
           />
           <KhaiGradeCard 
             title={'통합대기환경 지수'}
+            metric={'khaiGrade'}
             data={props.selectedAirQualData}
           />
-          <GaugeChart 
+          <KhaiGradeCard 
+            title={'통합대기환경 수치'}
+            metric={'khaiValue'}
+            data={props.selectedAirQualData}
+          />
+          {/* <GaugeChart 
             title={'통합대기환경 수치'}
             min={0}
             max={500}
             data={props.selectedAirQualData}
-          />
+          /> */}
         </Summary>
       </div>
 

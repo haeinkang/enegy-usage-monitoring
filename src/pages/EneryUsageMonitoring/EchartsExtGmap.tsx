@@ -88,7 +88,9 @@ const EchartsExtGmap = () => {
         backgroundColor: 'transparent',
         tooltip: {
           trigger: 'item', 
-
+          styles: { 
+            backgroundColor: "#000",
+          },
           formatter: (
             params: any, 
             ticket: string
