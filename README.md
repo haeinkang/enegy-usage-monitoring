@@ -16,7 +16,8 @@ https://github.com/user-attachments/assets/9b62000a-4228-4f86-94e4-795eac20b560
   - 이산화질소(NO₂)
   - 아황산가스(SO₂)
   - 오존지수(O₃)
-    
+- **필터링 검색**: 지자체 자동완성 검색기능을 제공합니다.
+
 # 사용 기술
 - **Frontend**: React, TypeScript, ES6+, HTML, CSS
 - **Library**:
