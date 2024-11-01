@@ -73,7 +73,7 @@ export const getElec = async (): Promise<EnerygyUsageApiResItem[]> => {
  */
 export const fetchRegionMapping = async (): Promise<RegionMapping> => {
   try {
-    const res = await fetch('/json/region-mapping.json'); 
+    const res = await fetch(`${process.env.PUBLIC_URL}/json/region-mapping.json`); 
     const data = await res.json();
     return data
   } catch (error) {
@@ -88,7 +88,7 @@ export const fetchRegionMapping = async (): Promise<RegionMapping> => {
  */
 export const fetchSidoCoords = async (): Promise<LclgvCoords> => {
   try {
-    const res = await fetch('/json/sido-coords.json'); 
+    const res = await fetch(`${process.env.PUBLIC_URL}/json/sido-coords.json`); 
     const data: LclgvCoords = await res.json();
     return data
   } catch (error) {
@@ -103,7 +103,7 @@ export const fetchSidoCoords = async (): Promise<LclgvCoords> => {
  */
 export const fetchLclgvCoords = async (): Promise<LclgvCoords> => {
   try {
-    const res = await fetch('/json/lclgv-coords.json'); 
+    const res = await fetch(`${process.env.PUBLIC_URL}/json/lclgv-coords.json`); 
     const data: LclgvCoords = await res.json();
     return data
   } catch (error) {
