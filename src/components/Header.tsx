@@ -25,7 +25,7 @@ function Header() {
               textDecoration: 'none',
             }}
           >
-            Gas Usage and Air Quality Tracking
+            Gas Usage and Air Quality
           </Typography>
 
         </Toolbar>
