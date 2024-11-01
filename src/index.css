@@ -23,7 +23,11 @@ body {
   --joy-palette-neutral-600: #555E68;
   --joy-palette-neutral-600: #555E68;
   --joy-palette-neutral-500: #636B74;
-  
+
+  /** About Me **/
+  --joy-palette-aboutme-bg: #212830;
+  --joy-palette-aboutme-color: #d1d7e0;
+
   /** Button */
   --action-active: rgba(0, 0, 0, 0.54);
   --action-hover: rgba(0, 0, 0, 0.04);

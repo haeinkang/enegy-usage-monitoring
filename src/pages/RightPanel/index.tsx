@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Button, Paper } from '@mui/material';
-import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../state/store';
 import { clickCollapseBtn } from '../../state/rightPanelSlice';
+import AboutMe from './AboutMe';
 
 function RightPanel() {
   const dispatch = useDispatch<AppDispatch>();
@@ -13,20 +13,18 @@ function RightPanel() {
 
   return (
     <GridContainer>
-      <CollapseButton 
-        collapsed={`${isCollapsed}`}
-        onClick={() => dispatch(clickCollapseBtn())}
-        variant="contained" 
-      >
-        {isCollapsed  
-          ? <ArrowBackIosNewRoundedIcon />
-          : <ArrowForwardIosRoundedIcon /> 
-        }
-      </CollapseButton>
+      {!isCollapsed && 
+        <CollapseButton 
+          collapsed={`${isCollapsed}`}
+          onClick={() => dispatch(clickCollapseBtn())}
+          variant="contained" 
+        >
+          <ArrowForwardIosRoundedIcon />
+        </CollapseButton>
+      }
       <Panel square elevation={10} collapsed={`${isCollapsed}`}>
-     
+        <AboutMe />
       </Panel>
-
     </GridContainer>
   );
 }
@@ -43,9 +41,10 @@ const GridContainer = styled.div`
 `;
 
 const Panel = styled(Paper)<{ collapsed: 'true' | 'false'; }>`
-  background: var(--joy-palette-neutral-800) !important;
-  width: ${(props) => (props.collapsed === 'true' ? '0' : 'calc(10vw + 24rem)')};
-  padding: ${(props) => (props.collapsed === 'true' ? '0' : '20px')};
+  background: var( --joy-palette-aboutme-bg);
+  color: var( --joy-palette-aboutme-color) !important;
+  width: ${(props) => (props.collapsed === 'true' ? '0' : 'calc(3vw + 24rem)')};
+  padding: ${(props) => (props.collapsed === 'true' ? '0' : '30px')};
   transition: width 0.3s ease, padding 0.3s ease !important;
   * {
     display: ${(props) => (props.collapsed === 'true' ? 'none !important' : 'block')};
@@ -53,13 +52,13 @@ const Panel = styled(Paper)<{ collapsed: 'true' | 'false'; }>`
 `;
 
 const CollapseButton = styled(Button)<{ collapsed: 'true' | 'false'; }>`
+  background: var( --joy-palette-aboutme-bg) !important;
   border-radius: 4px 0 0 4px !important;
   min-width: 30px !important;
   width: 30px;
   height: 55px !important;
   padding: 6px !important;
   margin-top: 10px !important;
-  background: ${(props) => `var(--joy-palette-neutral-${props.collapsed === 'true' ? '700' : '800'})`} !important;
   svg {
     color: #fff;
   }

@@ -2,8 +2,17 @@ import * as React from 'react';
 import { Container, Typography, Toolbar, AppBar, Avatar, Grid, IconButton, } from '@mui/material';
 import TroubleshootIcon from '@mui/icons-material/Troubleshoot';
 import ProfileImage from '../assets/img/profile.jpg'; 
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../state/store';
+import { clickCollapseBtn } from '../state/rightPanelSlice';
 
 function Header() {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const onClickProfile = () => {
+    dispatch(clickCollapseBtn())
+  }
+
   return (
     <AppBar position="static" color="primary">
       <Container sx={{ maxWidth: 'none !important', }}>
@@ -29,9 +38,16 @@ function Header() {
                 Gas Usage and Air Quality
               </Typography>
             </Grid>
-            <Grid item container justifyContent="center" alignItems="center" gap={2} sx={{  width: 'fit-content' }}>
-              <Avatar alt="Haein Kang" src={ProfileImage} />
-              <div className='my-name'>Haein Kang</div>
+            <Grid item container justifyContent="center" alignItems="center" gap={.5} sx={{  width: 'fit-content' }}>
+              <IconButton onClick={onClickProfile}>
+                <Avatar alt="Haein Kang" src={ProfileImage} />
+              </IconButton>
+              <Typography 
+                onClick={onClickProfile} 
+                sx={{ cursor: 'pointer', ':hover': { textShadow: '2px 2px 4px rgba(255, 255, 255, 0.5)'  }}}
+              >
+                Haein Kang
+              </Typography>
             </Grid>
           </Grid>
           

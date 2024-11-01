@@ -91,23 +91,3 @@ const Wrapper = styled.div`
     color: var(--subtext-color);
   }
 `;
-
-
-{/* <Grid gap={10}>
-          <Grid container  justifyContent="center" alignItems="flex-start" gap={2}> 
-            <Avatar src={ProfileImage} sx={{ width: 70, height: 70 }} />
-
-            <Grid container flexDirection="column" gap={2}>
-              <div className='my-name'>
-                Haein Kang
-              </div>
-              <Typography className='job' variant="caption" gutterBottom>
-                저는 '월급루팡'이라는 단어를 가장 싫어하는,<br />
-                주도적으로 일하는 프론트엔드 개발자입니다.<br />
-                단순히 주어진 업무에만 그치지 않고,<br />
-                프로젝트의 가치를 극대화할 수 있는 방법을<br />
-                지속적으로 고민하며, 능동적으로 개선해 나갑니다.
-              </Typography>
-            </Grid>
-          </Grid>
-        </Grid> */}
