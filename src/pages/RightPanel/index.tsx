@@ -4,26 +4,29 @@ import { Button, Paper } from '@mui/material';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../state/store';
+import { clickCollapseBtn } from '../../state/rightPanelSlice';
 
 function RightPanel() {
-  const isCollapsed = false;
+  const dispatch = useDispatch<AppDispatch>();
+  const isCollapsed = useSelector((state: RootState) => state.rightPanel.isCollapsed);;
 
   return (
     <GridContainer>
-      <Panel square elevation={10} collapsed={`${isCollapsed}`}>
-     
-      </Panel>
-
-      {/* <CollapseButton 
+      <CollapseButton 
         collapsed={`${isCollapsed}`}
         onClick={() => dispatch(clickCollapseBtn())}
         variant="contained" 
       >
         {isCollapsed  
-          ? <ArrowForwardIosRoundedIcon /> 
-          : <ArrowBackIosNewRoundedIcon />
+          ? <ArrowBackIosNewRoundedIcon />
+          : <ArrowForwardIosRoundedIcon /> 
         }
-      </CollapseButton> */}
+      </CollapseButton>
+      <Panel square elevation={10} collapsed={`${isCollapsed}`}>
+     
+      </Panel>
+
     </GridContainer>
   );
 }
@@ -32,6 +35,7 @@ export default RightPanel;
 
 const GridContainer = styled.div`
   position: absolute;
+  right: 0;
   z-index: 1;
   height: 100%;
   display: flex;
@@ -49,7 +53,7 @@ const Panel = styled(Paper)<{ collapsed: 'true' | 'false'; }>`
 `;
 
 const CollapseButton = styled(Button)<{ collapsed: 'true' | 'false'; }>`
-  border-radius: 0 4px 4px 0 !important;
+  border-radius: 4px 0 0 4px !important;
   min-width: 30px !important;
   width: 30px;
   height: 55px !important;

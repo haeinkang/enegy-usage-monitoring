@@ -1,9 +1,7 @@
 import React from 'react';
-import styled from 'styled-components'
 import { Header } from './components'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { EneryUsageMonitoring, NotFound } from './pages';
-import LeftPanel from './pages/LeftPanel';
+import { LeftPanel, RightPanel, EneryUsageMonitoring, NotFound } from './pages';
 import { Grid } from '@mui/material';
 
 function App() {
@@ -14,6 +12,8 @@ function App() {
       </Grid>
       <Grid item flexGrow={1}>
         <div style={{ position: 'relative', width: '100%', height: '100%'}}>          
+          <LeftPanel />
+          <RightPanel />
           <Router>
             <Routes>
               <Route path="/" element={<EneryUsageMonitoring />} />
@@ -21,7 +21,6 @@ function App() {
             </Routes>
           </Router>
           
-          <LeftPanel />
         </div>
       </Grid>
 
