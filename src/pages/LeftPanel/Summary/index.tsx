@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { RootState } from '../../../../state/store';
+import { RootState } from '../../../state/store';
 import { Grid } from '@mui/material';
 import GasUsageCard from './GasUsageCard'
 import KhaiGradeCard from './KhaiGradeCard'

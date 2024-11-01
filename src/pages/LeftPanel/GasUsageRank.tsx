@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { TextField, Autocomplete, Grid, Typography, List, ListItem, ListItemButton, ListItemText, Chip, Skeleton, Stack } from '@mui/material';
 import _, { map, includes, sortBy, find } from 'lodash'
-import { getGasUsageColor } from '../../../utils'
+import { getGasUsageColor } from '../../utils'
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../../state/store';
-import { selectGasUsage } from '../../../state/gasUsageSlice';
-import { selectLclgvNm } from '../../../state/airQualSlice';
-import { GasUsageByLclgv } from '../../../types'
+import { AppDispatch, RootState } from '../../state/store';
+import { selectGasUsage } from '../../state/gasUsageSlice';
+import { selectLclgvNm } from '../../state/airQualSlice';
+import { GasUsageByLclgv } from '../../types'
 
 
 

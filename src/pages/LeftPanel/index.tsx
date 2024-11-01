@@ -4,10 +4,10 @@ import { Button, Paper } from '@mui/material';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../../state/store';
+import { AppDispatch, RootState } from '../../state/store';
 import GasUsageRank from './GasUsageRank'
 import DetailedAirQuality from './DetailedAirQuality'
-import { clickCollapseBtn } from '../../../state/leftPanelSlice';
+import { clickCollapseBtn } from '../../state/leftPanelSlice';
 
 function LeftPanel() {
   const dispatch = useDispatch<AppDispatch>();
