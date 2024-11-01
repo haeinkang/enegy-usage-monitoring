@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import * as echarts from 'echarts';
 import { Grid, Typography } from '@mui/material';
-import { getEchartLevelColor } from '../../../../utils'
+import { getEchartLevelColor } from '../../../utils'
 
 interface iProps {
   gridXs: number;

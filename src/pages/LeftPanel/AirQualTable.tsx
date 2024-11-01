@@ -1,11 +1,11 @@
 import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Grid, Typography } from '@mui/material';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../../state/store';
+import { RootState } from '../../state/store';
 import { map } from 'lodash'
 import Banner from './Banner'
 import styled from 'styled-components';
-import { Status } from '../../../components'
+import { Status } from '../../components'
 
 function AirQualTable() {
   const data = useSelector((state: RootState) => state.airQual.selected);

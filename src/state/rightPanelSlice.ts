@@ -1,15 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-interface LeftPanelState {
+interface RightPanelState {
   isCollapsed: boolean;
 }
 
-const initialState: LeftPanelState = {
-  isCollapsed: false,
+const initialState: RightPanelState = {
+  isCollapsed: true,
 }
 
-const leftPanelSlice = createSlice({
-  name: 'leftPanel', 
+const rightPanelSlice = createSlice({
+  name: 'rightPanel', 
   initialState,
   reducers: {
     clickCollapseBtn: (state) => {
@@ -20,6 +20,6 @@ const leftPanelSlice = createSlice({
 
 export const { 
   clickCollapseBtn,
-} = leftPanelSlice.actions;
+} = rightPanelSlice.actions;
 
-export default leftPanelSlice.reducer;
+export default rightPanelSlice.reducer;

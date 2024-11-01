@@ -1,8 +1,8 @@
 import { CardContent, Grid, Typography } from '@mui/material';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../../../state/store';
-import { getColorClassName } from '../../../../utils'
+import { RootState } from '../../../state/store';
+import { getColorClassName } from '../../../utils'
 import { findIndex } from 'lodash';
 import styled from 'styled-components';
 
