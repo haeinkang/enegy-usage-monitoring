@@ -1,5 +1,5 @@
 import React from 'react';
-import { getColorClassName } from '../../../utils'
+import { getColorClassName, getTopPercent } from '../../../utils'
 import { findIndex, maxBy } from 'lodash';
 import styled from 'styled-components';
 import { GasUsageByLclgv } from '../../../types'
@@ -12,9 +12,7 @@ interface iProps {
 }
 function GasUsageCard(props: iProps) {
   const maxUsage = maxBy(props.gasUsageList, 'avgUseQnt')
-  const topPercent = Math.floor((1 - (
-      findIndex(props.gasUsageList, o => o.lclgvNm === props.data.lclgvNm)
-    ) / props.gasUsageList.length) * 100)
+  const topPercent = getTopPercent(props.gasUsageList, props.data.lclgvNm)
     
   return (
     <Container>

@@ -2,8 +2,7 @@ import { CardContent, Grid, Typography } from '@mui/material';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../state/store';
-import { getColorClassName } from '../../../utils'
-import { findIndex } from 'lodash';
+import { getColorClassName, getTopPercent } from '../../../utils'
 import styled from 'styled-components';
 
 interface iProps { 
@@ -14,10 +13,7 @@ function GasUsageCard(props: iProps) {
   const gasUsageList = useSelector((state: RootState) => state.gasUsage.data);
   const selected = useSelector((state: RootState) => state.gasUsage.selected);
   const max = useSelector((state: RootState) => state.gasUsage.max);
-
-  const topPercent = Math.floor((1 - (
-    findIndex(gasUsageList, o => o.lclgvNm === selected?.lclgvNm)
-  ) / gasUsageList.length) * 100);
+  const topPercent = selected ? getTopPercent(gasUsageList, selected.lclgvNm) : 100;
 
   return (
     selected && max ?

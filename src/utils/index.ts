@@ -1,3 +1,21 @@
+import { GasUsageByLclgv } from '../types'
+import { findIndex } from 'lodash'
+
+/**
+ * 특정 지자체의 가스 사용량 순위를 상위 백분율로 반환
+ * @param 가스 사용량 리스트
+ * @param 지자체명
+ * @returns 백분율
+ */
+export const getTopPercent = (
+  list: GasUsageByLclgv[],
+  lclgvNm: string
+): number => {
+  return Math.floor((
+    findIndex(list, o => o.lclgvNm === lclgvNm)
+  ) / (list.length - 1) * 100)
+}
+
 /**
  * 가스 사용량에 따른 색상 className 정의
  * @param max: number
