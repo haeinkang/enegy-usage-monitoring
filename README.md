@@ -34,4 +34,4 @@ https://github.com/user-attachments/assets/9b62000a-4228-4f86-94e4-795eac20b560
   - echarts-extension-gmap (v1.7.0)
     	Google Maps 위에 Echarts 데이터를 시각화하여 지자체별 가스 사용량 정보 표시
 - **API**:
-  - 공공 데이터 포털 (가스 사용량 및 대기환경 API) [참고: 공공 데이터 API 링크]
+  - [공공 데이터 포털](https://www.data.go.kr/index.do)
