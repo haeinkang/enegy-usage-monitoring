@@ -5,6 +5,7 @@ import ProfileImage from '../assets/img/profile.jpg';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../state/store';
 import { clickCollapseBtn } from '../state/rightPanelSlice';
+import packageJson from '../../package.json'; // 위치에 따라 경로를 조정하세요
 
 function Header() {
   const dispatch = useDispatch<AppDispatch>();
@@ -40,7 +41,7 @@ function Header() {
               </Typography>
 
               <Typography variant="body2">
-                v0.1.0-beta
+                {`v${packageJson.version}`}
               </Typography>
             </Grid>
             <Grid item container justifyContent="center" alignItems="center" gap={.5} sx={{  width: 'fit-content' }}>
