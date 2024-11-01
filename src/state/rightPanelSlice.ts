@@ -5,7 +5,7 @@ interface RightPanelState {
 }
 
 const initialState: RightPanelState = {
-  isCollapsed: false,
+  isCollapsed: true,
 }
 
 const rightPanelSlice = createSlice({
