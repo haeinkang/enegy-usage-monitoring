@@ -10,6 +10,7 @@ import { selectGasUsage } from '../../state/gasUsageSlice';
 import { selectLclgvNm } from '../../state/airQualSlice';
 import MapTooltip from './MapTooltip';
 import ReactDOMServer from 'react-dom/server';
+import { CircularProgress, Grid } from '@mui/material';
 
 const EchartsExtGmap = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -271,7 +272,11 @@ const EchartsExtGmap = () => {
 
   return (
     gasLoading || airLoading 
-    ? <div>loading...</div>
+    ? (
+      <Grid container alignItems='center' justifyContent='center' sx={{  height: '100%' }}>
+        <CircularProgress size="6rem"  color="inherit"/>
+      </Grid>
+    )
     : (
       <div
         ref={chartRef}
