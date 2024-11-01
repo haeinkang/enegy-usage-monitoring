@@ -44,7 +44,10 @@ function Header() {
               </IconButton>
               <Typography 
                 onClick={onClickProfile} 
-                sx={{ cursor: 'pointer', ':hover': { textShadow: '2px 2px 4px rgba(255, 255, 255, 0.5)'  }}}
+                sx={{ 
+                  cursor: 'pointer', 
+                  ':hover': { textShadow: '-2px 0 4px rgba(255, 255, 255, 0.3), 2px 0 4px rgba(255, 255, 255, 0.3), 0 -2px 4px rgba(255, 255, 255, 0.3), 0 2px 4px rgba(255, 255, 255, 0.3)' }
+                }}
               >
                 Haein Kang
               </Typography>
