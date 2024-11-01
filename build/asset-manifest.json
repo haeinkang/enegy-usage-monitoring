@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/enegy-usage-monitoring/static/css/main.028c67d3.css",
+    "main.js": "/enegy-usage-monitoring/static/js/main.fb45677a.js",
+    "static/media/profile.jpg": "/enegy-usage-monitoring/static/media/profile.7d4e1fd3cf8a8e7f007b.jpg",
+    "index.html": "/enegy-usage-monitoring/index.html",
+    "main.028c67d3.css.map": "/enegy-usage-monitoring/static/css/main.028c67d3.css.map",
+    "main.fb45677a.js.map": "/enegy-usage-monitoring/static/js/main.fb45677a.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.028c67d3.css",
+    "static/js/main.fb45677a.js"
+  ]
+}
