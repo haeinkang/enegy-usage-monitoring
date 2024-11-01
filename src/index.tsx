@@ -6,6 +6,7 @@ import { ThemeProvider as MuiThemeProvider, createTheme } from '@mui/material/st
 import CssBaseline from '@mui/material/CssBaseline';
 import { Provider } from 'react-redux';
 import { store } from './state/store';
+import { BrowserRouter } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -21,11 +22,13 @@ const darkTheme = createTheme({
 
 root.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <MuiThemeProvider data-joy-color-scheme="dark" theme={darkTheme}>
-        <CssBaseline />
-        <App />
-      </MuiThemeProvider>
-    </Provider>
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
+      <Provider store={store}>
+        <MuiThemeProvider data-joy-color-scheme="dark" theme={darkTheme}>
+          <CssBaseline />
+          <App />
+        </MuiThemeProvider>
+      </Provider>
+    </BrowserRouter>
   </React.StrictMode>
 );

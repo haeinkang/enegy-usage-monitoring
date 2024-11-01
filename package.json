@@ -1,6 +1,7 @@
 {
   "name": "carbon-usage-monitoring",
   "version":  "0.1.0-Beta",
+  "homepage": "https://haeinkang.github.io/enegy-usage-monitoring",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.13.3",
