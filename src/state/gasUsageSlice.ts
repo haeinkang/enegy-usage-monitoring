@@ -5,6 +5,7 @@ import _, { find, maxBy, orderBy } from "lodash";
 import { RootState } from './store';
 
 interface GasUsageState {
+  loading: boolean;
   data: GasUsageByLclgv[];
   selected?: GasUsageByLclgv;
   max?: GasUsageByLclgv;
@@ -12,6 +13,7 @@ interface GasUsageState {
 
 const initialState: GasUsageState = {
   data: [],
+  loading: true,
 }
 
 const gasUsageSlice = createSlice({
@@ -28,7 +30,15 @@ const gasUsageSlice = createSlice({
       getGasUsage.fulfilled,
       (state, action) => {
         state.data = orderBy(action.payload, ['gas'], ['desc']);
-        state.max = maxBy(action.payload, 'avgUseQnt')
+        state.max = maxBy(action.payload, 'avgUseQnt');
+        state.loading = false;
+      }
+    )
+    builder.addCase(
+      getGasUsage.rejected,
+      (state) => {
+        console.error('getGasUsage.rejected')
+        state.loading = false;
       }
     )
   }

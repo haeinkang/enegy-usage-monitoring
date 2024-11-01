@@ -10,9 +10,12 @@ import { selectGasUsage } from '../../state/gasUsageSlice';
 import { selectLclgvNm } from '../../state/airQualSlice';
 import MapTooltip from './MapTooltip';
 import ReactDOMServer from 'react-dom/server';
+import { CircularProgress, Grid } from '@mui/material';
 
 const EchartsExtGmap = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const gasLoading = useSelector((state: RootState) => state.gasUsage.loading);
+  const airLoading = useSelector((state: RootState) => state.airQual.loading);
   const airQualList = useSelector((state: RootState) => state.airQual.data);
   const gasUsageList = useSelector((state: RootState) => state.gasUsage.data);
   const max = useSelector((state: RootState) => state.gasUsage.max);
@@ -55,7 +58,7 @@ const EchartsExtGmap = () => {
   }, [gasUsageList])
 
   useEffect(() => {
-    if (googleLoaded && chartRef.current) {
+    if (!gasLoading && !airLoading && googleLoaded && chartRef.current) {
       // 이미 초기화된 차트 인스턴스가 있는지 확인하고 삭제
       if (echarts.getInstanceByDom(chartRef.current)) {
         echarts.dispose(chartRef.current);
@@ -199,7 +202,15 @@ const EchartsExtGmap = () => {
       chart.setOption(option);
 
     }
-  }, [googleLoaded, scatterData, top10Data, airQualList, gasUsageList]);
+  }, [
+    googleLoaded, 
+    scatterData, 
+    top10Data, 
+    airQualList, 
+    gasUsageList, 
+    gasLoading, 
+    airLoading
+  ]);
 
   useEffect(() => {
     if (selected && chartRef.current) {
@@ -260,10 +271,18 @@ const EchartsExtGmap = () => {
   }, [selected])
 
   return (
-    <div
-      ref={chartRef}
-      style={{ width: '100%', height: '100%' }}
-    />
+    gasLoading || airLoading 
+    ? (
+      <Grid container alignItems='center' justifyContent='center' sx={{  height: '100%' }}>
+        <CircularProgress size="6rem"  color="inherit"/>
+      </Grid>
+    )
+    : (
+      <div
+        ref={chartRef}
+        style={{ width: '100%', height: '100%' }}
+      />
+    )
   );
 };
 
