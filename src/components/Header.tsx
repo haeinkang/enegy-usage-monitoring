@@ -33,9 +33,14 @@ function Header() {
                   letterSpacing: '.3rem',
                   color: 'inherit',
                   textDecoration: 'none',
+                  mr: 1,
                 }}
               >
                 Gas Usage and Air Quality
+              </Typography>
+
+              <Typography variant="body2">
+                v0.1.0-beta
               </Typography>
             </Grid>
             <Grid item container justifyContent="center" alignItems="center" gap={.5} sx={{  width: 'fit-content' }}>
