@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import EchartsExtGmap from './EchartsExtGmap'
 import LeftPanel from '../LeftPanel'
 import { useDispatch } from 'react-redux';
@@ -9,24 +9,23 @@ import { getGasUsage } from '../../state/gasUsageSlice';
 
 function EneryUsageMonitoring() {
   const dispatch = useDispatch<AppDispatch>();
-  const [loading, setLoading] = useState<boolean>(true)
-  
-  useEffect(() => {
-    initData();
-  }, [])
+  const isMounted = useRef(false);
 
-  const initData = async () => {
+  useEffect(() => {
+    if (isMounted.current) return;
+    isMounted.current = true;
+    initData();
+  }, []);
+
+  const initData = useCallback(async () => {
     dispatch(getCoordJson());
     dispatch(getAirQualData());
     dispatch(getGasUsage());
-    setLoading(false)
-  }
+  }, [])
 
   return (
     <div style={{ width: '100%', height: '100%'}}>
-      {loading 
-        ? <div>loading ... </div>
-        : <EchartsExtGmap />}
+      <EchartsExtGmap />
     </div>
   );
 }
