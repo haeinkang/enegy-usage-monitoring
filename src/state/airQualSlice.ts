@@ -5,7 +5,8 @@ import _, { find, reduce, meanBy } from "lodash";
 import { RootState } from '../state/store';
 
 interface AirQaulState {
-  loading: boolean;
+  loaded: boolean;
+  error: string | null;
   data: AirQualByLclgvNumeric[]; 
   selected?: AirQualByLclgvNumeric;
   metrics: {
@@ -18,7 +19,8 @@ interface AirQaulState {
 }
 
 const initialState: AirQaulState = {
-  loading: true,
+  loaded: false,
+  error: null,
   data: [], 
   selected: undefined,
   metrics: {
@@ -75,14 +77,17 @@ const airQualSlice = createSlice({
       getAirQualData.fulfilled,
       (state, action) => {
         state.data = action.payload;
-        state.loading = false;
+        state.loaded = true;
+        state.error = null
       }
     )
     builder.addCase(
       getAirQualData.rejected,
-      (state) => {
+      (state, payload) => {
         console.log('getAirQualData.rejected')
-        state.loading = false;
+        state.loaded = true;
+        console.log(payload.error)
+        state.error = `${payload.error.code}: ${payload.error.message}`
       }
     )
   }
@@ -91,49 +96,53 @@ const airQualSlice = createSlice({
 export const getAirQualData = createAsyncThunk(
   "airQual/fetchAirQaul", 
   async (__, { getState }) => {
-    const { response: { body: { items } }} = await getCtprvnRltmMesureDnsty();
-    const state = getState() as RootState;
-    const regionMapping = state.coordSlice.regionMapping;
-    const lclgvCoords = state.coordSlice.lclgvCoords;
+    try { 
+      const { response: { body: { items } }} = await getCtprvnRltmMesureDnsty();
+      const state = getState() as RootState;
+      const regionMapping = state.coordSlice.regionMapping;
+      const lclgvCoords = state.coordSlice.lclgvCoords;
 
-    const res: AirQualByLclgvNumeric[] = _(items)
-        // 지자체명으로 groupBy 
-        // ex) 서울 학동로 -> 서울 강남구
-        .groupBy(o => {
-          const adr =  `${o.sidoName} ${o.stationName}` 
-          const districts = regionMapping[adr] // 지자체명 맵핑
-          return `${o.sidoName} ${districts}`
-        })
-        // 각 지자체의 대기질 지표별 평균값 계산
-        .map((items, lclgvNm) => {      
-          /** 평균을 구하고자 하는 대기질 측정 지표 리스트 */
-          const metrics: AirQualByRegMerics = _(items[0])
-            .keys() 
-            .filter((metric) => 
-              metric !== 'sidoName' 
-              && metric !== 'stationName'
-              && metric !== 'mangName'
-              && metric !== 'dataTime'
-            )
-            .value() as AirQualByRegMerics;
+      const res: AirQualByLclgvNumeric[] = _(items)
+          // 지자체명으로 groupBy 
+          // ex) 서울 학동로 -> 서울 강남구
+          .groupBy(o => {
+            const adr =  `${o.sidoName} ${o.stationName}` 
+            const districts = regionMapping[adr] // 지자체명 맵핑
+            return `${o.sidoName} ${districts}`
+          })
+          // 각 지자체의 대기질 지표별 평균값 계산
+          .map((items, lclgvNm) => {      
+            /** 평균을 구하고자 하는 대기질 측정 지표 리스트 */
+            const metrics: AirQualByRegMerics = _(items[0])
+              .keys() 
+              .filter((metric) => 
+                metric !== 'sidoName' 
+                && metric !== 'stationName'
+                && metric !== 'mangName'
+                && metric !== 'dataTime'
+              )
+              .value() as AirQualByRegMerics;
 
-          /** 각 지자체별 평균값을 가진 새로운 객체 생성 */
-          const averageValues = reduce(metrics, (acc, key) => {
-            return { 
-              ...acc, 
-              [key]: Number(meanBy(items, o => parseFloat(o[key]) || 0).toFixed(1))
-            }
-          }, {});  
+            /** 각 지자체별 평균값을 가진 새로운 객체 생성 */
+            const averageValues = reduce(metrics, (acc, key) => {
+              return { 
+                ...acc, 
+                [key]: Number(meanBy(items, o => parseFloat(o[key]) || 0).toFixed(1))
+              }
+            }, {});  
 
-          return {
-            lclgvNm,
-            coord: lclgvCoords[lclgvNm],
-            ...averageValues
-          } as AirQualByLclgvNumeric
-        })
-        .value()
+            return {
+              lclgvNm,
+              coord: lclgvCoords[lclgvNm],
+              ...averageValues
+            } as AirQualByLclgvNumeric
+          })
+          .value()
 
-    return res;
+      return res;
+    } catch(e) {
+      throw e;
+    }
   }
 )
 
