@@ -24,7 +24,7 @@ root.render(
   <React.StrictMode>
     <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Provider store={store}>
-        <MuiThemeProvider data-joy-color-scheme="dark" theme={darkTheme}>
+        <MuiThemeProvider theme={darkTheme}>
           <CssBaseline />
           <App />
         </MuiThemeProvider>
