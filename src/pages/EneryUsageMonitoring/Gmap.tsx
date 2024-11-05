@@ -225,7 +225,7 @@ const EChartsGMapComponent = () => {
       // 첫 번째 단계: zoom을 줄여서 잠깐 표시
       const initialZoomOption = {
         gmap: {
-          center: leftPanelCollapsed ? newCoord : [newCoord[0] - .2, newCoord[1]],
+          center: leftPanelCollapsed ? newCoord : [newCoord[0] - .1, newCoord[1]],
           zoom: initialZoom,
         },
       };
@@ -235,7 +235,7 @@ const EChartsGMapComponent = () => {
       setTimeout(() => {
         const finalZoomOption = {
           gmap: {
-            center: leftPanelCollapsed ? newCoord : [newCoord[0] - .2, newCoord[1]],
+            center: leftPanelCollapsed ? newCoord : [newCoord[0] - .1, newCoord[1]],
             zoom: finalZoom,
           },
         };
@@ -262,13 +262,13 @@ const EChartsGMapComponent = () => {
   
         if (distance > distanceThreshold) {
           // 거리가 임계값보다 크면 줌 아웃 후 확대
-          smoothZoomTo(chart, selected.coord, 8, 11, 500);
+          smoothZoomTo(chart, selected.coord, 8, 12, 500);
         } else {
           // 거리가 임계값 이하이면 바로 확대
           chart.setOption({
             gmap: {
               center: selected.coord,
-              zoom: 11,
+              zoom: 12,
             },
           });
         }
