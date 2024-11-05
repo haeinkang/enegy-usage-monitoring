@@ -15,7 +15,7 @@ function GasUsageRank() {
   const dispatch = useDispatch<AppDispatch>();
   const gasUsage = useSelector((state: RootState) => state.gasUsage.data);
   const maxGasUsage = useSelector((state: RootState) => state.gasUsage.max);
-  const airQualListloading = useSelector((state: RootState) => state.airQual.loading);
+  const airQualListloaded = useSelector((state: RootState) => state.airQual.loaded);
 
   const [filtered, setFiltered] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState('');
@@ -85,7 +85,7 @@ function GasUsageRank() {
       </Grid>
       <Grid item flexGrow={1} sx={{ overflow: 'auto'}}>
         {
-          !airQualListloading
+          airQualListloaded
           ? (
             <List 
               dense 

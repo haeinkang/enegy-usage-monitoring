@@ -4,13 +4,11 @@ import airQualSlice from './airQualSlice'
 import gasUsageSlice from './gasUsageSlice';
 import leftPanelSlice from './leftPanelSlice';
 import rightPanelSlice from './rightPanelSlice';
-import coordSlice from './coordSlice';
 import mapTooltipSlice from './MapTooltipSlice'
 
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
-    coordSlice: coordSlice,
     airQual: airQualSlice,
     gasUsage: gasUsageSlice,
     leftPanel: leftPanelSlice,
