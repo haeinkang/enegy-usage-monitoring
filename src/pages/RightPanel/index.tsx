@@ -49,6 +49,7 @@ const Panel = styled(Paper)<{ collapsed: 'true' | 'false'; }>`
   * {
     display: ${(props) => (props.collapsed === 'true' ? 'none !important' : 'block')};
   }
+  overflow: auto;
 `;
 
 const CollapseButton = styled(Button)<{ collapsed: 'true' | 'false'; }>`
