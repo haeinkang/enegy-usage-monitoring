@@ -20,6 +20,7 @@ const EChartsGMapComponent = () => {
   const [isMapLoaded, setIsMapLoaded] = useState<boolean>(false);
   const max = useSelector((state: RootState) => state.gasUsage.max);
   const selected = useSelector((state: RootState) => state.gasUsage.selected);
+  const leftPanelCollapsed = useSelector((state: RootState) => state.leftPanel.isCollapsed);
 
   /**
    * 새로운 ECharts 인스턴스 생성
@@ -38,7 +39,7 @@ const EChartsGMapComponent = () => {
       const option = {
         gmap: {
           mapId: '739af084373f96fe',
-          center: [126.7669, 36.2178],
+          center: [126.7669, 36.2178], 
           zoom: 8,
           roam: true,
         }
@@ -215,7 +216,7 @@ const EChartsGMapComponent = () => {
   // 선택된 위치로 부드럽게 확대하는 함수
   const smoothZoomTo = (
     chart: echarts.ECharts, 
-    coord: GeoCoord, 
+    newCoord: GeoCoord, 
     initialZoom: number, 
     finalZoom: number, 
     duration: number
@@ -224,7 +225,7 @@ const EChartsGMapComponent = () => {
       // 첫 번째 단계: zoom을 줄여서 잠깐 표시
       const initialZoomOption = {
         gmap: {
-          center: coord,
+          center: leftPanelCollapsed ? newCoord : [newCoord[0] - .2, newCoord[1]],
           zoom: initialZoom,
         },
       };
@@ -234,7 +235,7 @@ const EChartsGMapComponent = () => {
       setTimeout(() => {
         const finalZoomOption = {
           gmap: {
-            center: coord,
+            center: leftPanelCollapsed ? newCoord : [newCoord[0] - .2, newCoord[1]],
             zoom: finalZoom,
           },
         };
