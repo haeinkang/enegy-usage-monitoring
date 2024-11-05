@@ -3,7 +3,6 @@ import MapChart from './MapChart'
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../state/store';
 import { getAirQualData } from '../../state/airQualSlice';
-import { getCoordJson } from '../../state/coordSlice';
 import { getGasUsage } from '../../state/gasUsageSlice';
 
 function EneryUsageMonitoring() {
@@ -32,7 +31,6 @@ function EneryUsageMonitoring() {
   }, [gasError, airError])
 
   const initData = useCallback(async () => {
-    dispatch(getCoordJson());
     dispatch(getGasUsage());
     dispatch(getAirQualData());
   }, [])

@@ -3,6 +3,7 @@ import { GasUsageByLclgv } from '../types'
 import { getGas } from '../services'
 import _, { find, maxBy, orderBy } from "lodash";
 import { RootState } from './store';
+import { fetchLclgvCoords } from '../services'
 
 interface GasUsageState {
   loaded: boolean;
@@ -50,11 +51,10 @@ const gasUsageSlice = createSlice({
 
 export const getGasUsage = createAsyncThunk(
   "gasUsage/fetchGasUsage", 
-  async (__, { getState }) => {
+  async () => {
     try {
       const res = await getGas();
-      const state = getState() as RootState;
-      const lclgvCoords = state.coordSlice.lclgvCoords;
+      const lclgvCoords = await fetchLclgvCoords();
 
       const gasData = _(res)
         .map((item) => ({

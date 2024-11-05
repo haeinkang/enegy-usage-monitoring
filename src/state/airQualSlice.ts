@@ -3,6 +3,11 @@ import { AirQualByLclgvNumeric, AirQualByRegMerics, } from '../types'
 import { getCtprvnRltmMesureDnsty } from '../services'
 import _, { find, reduce, meanBy } from "lodash";
 import { RootState } from '../state/store';
+import { 
+  fetchRegionMapping,
+  fetchLclgvCoords,
+  fetchSidoCoords,
+} from '../services'
 
 interface AirQaulState {
   loaded: boolean;
@@ -84,9 +89,7 @@ const airQualSlice = createSlice({
     builder.addCase(
       getAirQualData.rejected,
       (state, payload) => {
-        console.log('getAirQualData.rejected')
         state.loaded = true;
-        console.log(payload.error)
         state.error = `${payload.error.code}: ${payload.error.message}`
       }
     )
@@ -95,12 +98,11 @@ const airQualSlice = createSlice({
 
 export const getAirQualData = createAsyncThunk(
   "airQual/fetchAirQaul", 
-  async (__, { getState }) => {
+  async () => {
     try { 
       const { response: { body: { items } }} = await getCtprvnRltmMesureDnsty();
-      const state = getState() as RootState;
-      const regionMapping = state.coordSlice.regionMapping;
-      const lclgvCoords = state.coordSlice.lclgvCoords;
+      const regionMapping = await fetchRegionMapping();
+      const lclgvCoords = await fetchLclgvCoords();
 
       const res: AirQualByLclgvNumeric[] = _(items)
           // 지자체명으로 groupBy 

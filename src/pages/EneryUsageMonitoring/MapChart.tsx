@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Loader } from '@googlemaps/js-api-loader';
 import * as echarts from 'echarts';
 import 'echarts-extension-gmap';
@@ -14,39 +14,16 @@ import { selectGasUsage } from '../../state/gasUsageSlice';
 
 const MapChart = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const gasDataLoaded = useSelector((state: RootState) => state.gasUsage.loaded);
+  const airDataLoaded = useSelector((state: RootState) => state.airQual.loaded);
   const gasUsageList = useSelector((state: RootState) => state.gasUsage.data);
   const airQualList = useSelector((state: RootState) => state.airQual.data);
   const chartRef = useRef<HTMLDivElement | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState<boolean>(false);
   const max = useSelector((state: RootState) => state.gasUsage.max);
   const selected = useSelector((state: RootState) => state.gasUsage.selected);
+  const airSelected = useSelector((state: RootState) => state.airQual.selected);
   const leftPanelCollapsed = useSelector((state: RootState) => state.leftPanel.isCollapsed);
-
-  /**
-   * 새로운 ECharts 인스턴스 생성
-   */
-  const createEChart = () => {
-    if(chartRef.current) {
-      // 기존 ECharts 인스턴스 확인 및 제거
-      let chart = echarts.getInstanceByDom(chartRef.current);
-      if (chart) {
-        chart.dispose();
-      }
-  
-      // 새로운 ECharts 인스턴스 생성
-      chart = echarts.init(chartRef.current);
-  
-      const option = {
-        gmap: {
-          mapId: '739af084373f96fe',
-          center: [126.7669, 36.2178], 
-          zoom: 8,
-          roam: true,
-        }
-      };
-      chart.setOption(option);
-    }
-  }
   
   /**
    * 데이터를 Echart에 맞게 변환 
@@ -80,7 +57,7 @@ const MapChart = () => {
           if (chart) {
             chart.dispose();
           }
-          createEChart();
+          initChart();
           setIsMapLoaded(true);
         }
       } catch (error) {
@@ -103,7 +80,101 @@ const MapChart = () => {
     };
   }, []);
 
-  const updateEChartData = () => {
+  useEffect(() => {
+    if(isMapLoaded && gasDataLoaded && airDataLoaded) {
+      initOrUpdateChart()
+    }
+  }, [
+    isMapLoaded, 
+    gasDataLoaded, 
+    airDataLoaded,
+    convertData
+  ]);
+
+
+   // 선택된 위치가 변경될 때마다 확대 실행
+   useEffect(() => {
+    try { 
+      if (selected && chartRef.current) {
+        const chart = echarts.getInstanceByDom(chartRef.current);
+        if(chart) {
+          const gmap: any = chart.getOption().gmap
+          const currentCenter = gmap[0].center;
+          const distance = calculateDistance(currentCenter, selected.coord);
+          const distanceThreshold = 70; // 거리 임계값 (단위: km)
+    
+          if (distance > distanceThreshold) {
+            // 거리가 임계값보다 크면 줌 아웃 후 확대
+            smoothZoomTo(chart, selected.coord, 8, 12, 500);
+          } else {
+            // 거리가 임계값 이하이면 바로 확대
+            chart.setOption({
+              gmap: {
+                center: selected.coord,
+                zoom: 12,
+              },
+            });
+          }
+  
+        }
+      }
+    } catch(e) {
+      console.error('지자체 선택이벤트 오류', {
+        selected, 
+        gasUsageList,
+        airSelected, 
+        airQualList,
+        e
+      })
+    }
+  }, [selected]);
+
+  /**
+   * ECharts 인스턴스 생성
+   */
+  const initChart = () => {
+    if(chartRef.current) {
+      // 기존 ECharts 인스턴스 확인 및 제거
+      let chart = echarts.getInstanceByDom(chartRef.current);
+      if (chart) {
+        chart.dispose();
+      }
+  
+      // 새로운 ECharts 인스턴스 생성
+      chart = echarts.init(chartRef.current);
+  
+      const option = {
+        gmap: {
+          mapId: '739af084373f96fe',
+          center: [126.7669, 36.2178], 
+          zoom: 8,
+          roam: true,
+        }
+      };
+      chart.setOption(option);
+    }
+  }
+
+  /**
+   * ECharts 인스턴스가 이미 존재하면 option 값 업데이트하고, 
+   * 없으면 인스턴스 생성 후 option 값 업데이트 함수 실행하는 함수 
+   */
+  const initOrUpdateChart = async () => {
+    if (isMapLoaded && chartRef.current) {
+      const chart = echarts.getInstanceByDom(chartRef.current);
+      if (chart) {
+        updateEChartOpts();
+      } else {
+        initChart();
+        updateEChartOpts();
+      }
+    }
+  };
+  
+  /**
+   * Echart에 맞게 가공한 데이터 Echart에 업데이트
+   */
+  const updateEChartOpts = () => {
     if (chartRef.current) {
       const chart = echarts.getInstanceByDom(chartRef.current);
       if (chart) {
@@ -201,19 +272,14 @@ const MapChart = () => {
     }
   }
 
-  const initializeAndUpdateChart = async () => {
-    if (isMapLoaded && chartRef.current) {
-      const chart = echarts.getInstanceByDom(chartRef.current);
-      if (chart) {
-        updateEChartData();
-      } else {
-        createEChart();
-        updateEChartData();
-      }
-    }
-  };
-
-  // 선택된 위치로 부드럽게 확대하는 함수
+  /**
+   * 좌표 이동 함수 
+   * @param chart: echarts.ECharts, 
+   * @param newCoord: GeoCoord
+   * @param initialZoom: 최초 zoom 값 
+   * @param finalZoom: 최종 zoom 값 
+   * @param duration: 애니메이션이 실행되는 데 걸리는 시간
+   */
   const smoothZoomTo = (
     chart: echarts.ECharts, 
     newCoord: GeoCoord, 
@@ -244,38 +310,6 @@ const MapChart = () => {
     }
   };
 
-
-  useEffect(() => {
-    initializeAndUpdateChart()
-  }, [isMapLoaded, gasUsageList, convertData]);
-
-
-   // 선택된 위치가 변경될 때마다 확대 실행
-   useEffect(() => {
-    if (selected && chartRef.current) {
-      const chart = echarts.getInstanceByDom(chartRef.current);
-      if(chart) {
-        const gmap: any = chart.getOption().gmap
-        const currentCenter = gmap[0].center;
-        const distance = calculateDistance(currentCenter, selected.coord);
-        const distanceThreshold = 70; // 거리 임계값 (단위: km)
-  
-        if (distance > distanceThreshold) {
-          // 거리가 임계값보다 크면 줌 아웃 후 확대
-          smoothZoomTo(chart, selected.coord, 8, 12, 500);
-        } else {
-          // 거리가 임계값 이하이면 바로 확대
-          chart.setOption({
-            gmap: {
-              center: selected.coord,
-              zoom: 12,
-            },
-          });
-        }
-
-      }
-    }
-  }, [selected]);
 
   return (
     <div ref={chartRef} style={{ width: '100%', height: '100%' }} />
