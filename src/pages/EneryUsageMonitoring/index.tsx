@@ -1,7 +1,5 @@
 import React, { useCallback, useEffect, useRef } from 'react';
-import EchartsExtGmap from './EchartsExtGmap'
-import Gmap from './Gmap'
-import LeftPanel from '../LeftPanel'
+import MapChart from './MapChart'
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../state/store';
 import { getAirQualData } from '../../state/airQualSlice';
@@ -41,8 +39,7 @@ function EneryUsageMonitoring() {
 
   return (
     <div style={{ width: '100%', height: '100%' }}>
-      <Gmap />
-      {/* <EchartsExtGmap /> */}
+      <MapChart />
     </div>
   );
 }

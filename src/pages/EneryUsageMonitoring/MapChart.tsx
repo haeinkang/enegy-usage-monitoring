@@ -12,7 +12,7 @@ import ReactDOMServer from 'react-dom/server';
 import { selectLclgvNm } from '../../state/airQualSlice';
 import { selectGasUsage } from '../../state/gasUsageSlice';
 
-const EChartsGMapComponent = () => {
+const MapChart = () => {
   const dispatch = useDispatch<AppDispatch>();
   const gasUsageList = useSelector((state: RootState) => state.gasUsage.data);
   const airQualList = useSelector((state: RootState) => state.airQual.data);
@@ -282,4 +282,4 @@ const EChartsGMapComponent = () => {
   )
 };
 
-export default EChartsGMapComponent;
+export default MapChart;
