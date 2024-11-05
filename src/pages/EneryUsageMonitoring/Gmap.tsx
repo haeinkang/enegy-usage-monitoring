@@ -25,8 +25,6 @@ const EChartsGMapComponent = () => {
    * 새로운 ECharts 인스턴스 생성
    */
   const createEChart = () => {
-    console.log('createEChart called')
-
     if(chartRef.current) {
       // 기존 ECharts 인스턴스 확인 및 제거
       let chart = echarts.getInstanceByDom(chartRef.current);
@@ -66,39 +64,34 @@ const EChartsGMapComponent = () => {
   }
 
   useEffect(() => {
-    if(!isMapLoaded) {
-      const loader = new Loader({
-        apiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY || '',
-        version: 'weekly',
-      });
-
-      loader
-        .load()
-        .then(() => {
-          console.log('구글맵 로드 완료')
-
-          if (chartRef.current) {
-            console.log(chartRef.current)
-            try {
-              // 기존 ECharts 인스턴스 확인 및 제거
-              let chart = echarts.getInstanceByDom(chartRef.current);
-              if (chart) {
-                chart.dispose();
-              }
-              createEChart();
-              setIsMapLoaded(true);
-            } catch (error) {
-              console.error('ECharts 초기화 중 오류 발생:', error);
-              // 사용자에게 오류 메시지 표시 또는 대체 동작 수행
-            }
-          }
-        })
-        .catch((error) => {
-          console.error('Google Maps API 로드 중 오류 발생:', error);
-          // 사용자에게 오류 메시지 표시 또는 대체 동작 수행
+    const initializeMap = async () => {
+      try {
+        const loader = new Loader({
+          apiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY || '',
+          version: 'weekly',
         });
+  
+        await loader.load();
+  
+        if (chartRef.current) {
+          // ECharts 인스턴스 확인 및 제거
+          let chart = echarts.getInstanceByDom(chartRef.current);
+          if (chart) {
+            chart.dispose();
+          }
+          createEChart();
+          setIsMapLoaded(true);
+        }
+      } catch (error) {
+        console.error('Google Maps API 또는 ECharts 초기화 중 오류 발생:', error);
+        alert(`지도를 불러오는 중 오류가 발생했습니다. 다시 시도해 주세요.`);
+      }
+    };
+  
+    if (!isMapLoaded) {
+      initializeMap();
     }
-
+  
     return () => {
       if (chartRef.current) {
         const chart = echarts.getInstanceByDom(chartRef.current);
@@ -110,8 +103,6 @@ const EChartsGMapComponent = () => {
   }, []);
 
   const updateEChartData = () => {
-    console.log('updateEChartData called')
-
     if (chartRef.current) {
       const chart = echarts.getInstanceByDom(chartRef.current);
       if (chart) {
@@ -205,7 +196,6 @@ const EChartsGMapComponent = () => {
             }, 
           ],
         });
-        console.log('data 업데이트')
       } 
     }
   }
@@ -215,9 +205,7 @@ const EChartsGMapComponent = () => {
       const chart = echarts.getInstanceByDom(chartRef.current);
       if (chart) {
         updateEChartData();
-        console.log('data 업데이트');
       } else {
-        console.log('data 업데이트 error');
         createEChart();
         updateEChartData();
       }
@@ -270,8 +258,6 @@ const EChartsGMapComponent = () => {
         const currentCenter = gmap[0].center;
         const distance = calculateDistance(currentCenter, selected.coord);
         const distanceThreshold = 70; // 거리 임계값 (단위: km)
-
-        console.log({distance, distanceThreshold,})
   
         if (distance > distanceThreshold) {
           // 거리가 임계값보다 크면 줌 아웃 후 확대
