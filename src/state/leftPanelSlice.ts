@@ -1,11 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { selectLclgvNm } from "./airQualSlice";
 
 interface LeftPanelState {
   isCollapsed: boolean;
+  selectedRegions: string[];
 }
 
 const initialState: LeftPanelState = {
   isCollapsed: false,
+  selectedRegions: [],
 }
 
 const leftPanelSlice = createSlice({
@@ -15,19 +18,23 @@ const leftPanelSlice = createSlice({
     clickCollapseBtn: (state) => {
       state.isCollapsed = !state.isCollapsed;
     },
-    open: (state) => {
+    openLeftPanel: (state) => {
       state.isCollapsed = false;
     },
-    close: (state) => {
+    closeLeftPanel: (state) => {
       state.isCollapsed = true;
+    },
+    selectRegions: (state, action) => {
+      state.selectedRegions = action.payload;
     },
   },
 })
 
 export const { 
   clickCollapseBtn,
-  open, 
-  close,
+  openLeftPanel, 
+  closeLeftPanel,
+  selectRegions,
 } = leftPanelSlice.actions;
 
 export default leftPanelSlice.reducer;
