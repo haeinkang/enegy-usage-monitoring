@@ -17,7 +17,6 @@ const MapChart = () => {
   const dispatch = useDispatch<AppDispatch>();
   const gasDataLoaded = useSelector((state: RootState) => state.gasUsage.loaded);
   const gasUsageList = useSelector((state: RootState) => state.gasUsage.data);
-  const hoveredItem = useSelector((state: RootState) => state.gasUsage.hoveredItem);
   const clickedItem = useSelector((state: RootState) => state.gasUsage.clickedItem);
   const max = useSelector((state: RootState) => state.gasUsage.max);
 
