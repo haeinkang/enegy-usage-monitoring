@@ -11,7 +11,7 @@ import MapTooltip from './MapTooltip';
 import ReactDOMServer from 'react-dom/server';
 import { selectLclgvNm } from '../../state/airQualSlice';
 import { click } from '../../state/gasUsageSlice';
-import { open } from '../../state/leftPanelSlice';
+import { openLeftPanel } from '../../state/leftPanelSlice';
 
 const MapChart = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -223,7 +223,7 @@ const MapChart = () => {
             const clickedItem = find(gasUsageList, o => o.lclgvNm === params.name)
             dispatch(click(clickedItem))
             dispatch(selectLclgvNm(params.name))
-            dispatch(open())
+            dispatch(openLeftPanel())
           });
   
           chart.setOption({
