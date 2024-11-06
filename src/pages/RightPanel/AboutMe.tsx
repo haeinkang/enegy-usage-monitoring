@@ -2,7 +2,6 @@ import React from 'react';
 import { Grid, Link, Typography } from '@mui/material';
 import styled from 'styled-components';
 import GitHubIcon from '@mui/icons-material/GitHub';
-import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
 import EmailIcon from '@mui/icons-material/Email';
 import profileImage from '../../assets/img/profile.jpg'; 
 
@@ -15,8 +14,8 @@ const AboutMe = () => {
         alignItems='flex-start'
         gap={4}
       >
-
-        <Grid item container flexDirection='column' alignItems="center">
+        
+        <ProfileContainer>
           <Profile>
             <img src={profileImage} alt="Haein Kang" />
           </Profile >
@@ -24,7 +23,7 @@ const AboutMe = () => {
             <Typography variant='h5' fontWeight={700}>Haein Kang</Typography>
             <Typography variant='subtitle1'>강해인</Typography>
           </Grid>
-        </Grid>
+        </ProfileContainer>
 
         <Grid item container flexDirection='column' gap={1} mt={2}>
           <Typography variant="h6" fontWeight={700}>
@@ -60,14 +59,35 @@ const AboutMe = () => {
 
         <Grid item  container flexDirection='column' gap={1}>
           <Typography variant="h6" fontWeight={700}>
-            My Page
+            Repository
           </Typography>
 
-          <Grid item container alignItems="center" gap={1}>
-            <GitHubIcon fontSize='small' />
-            <Link href="https://github.com/haeinkang/carbon-usage-monitoring" color="inherit" underline="hover">
-              {'github.com/haeinkang'}
-            </Link>
+          <Grid item container flexWrap='nowrap' alignItems="center" gap={1}>
+            <Grid item>
+              <GitHubIcon fontSize='small' />
+            </Grid>
+            <Grid 
+              item 
+              flexGrow={1} 
+              sx={{ 
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap', 
+              }}
+            >
+              <Link 
+                href="https://github.com/haeinkang/enegy-usage-monitoring" 
+                color="inherit" 
+                underline="hover"
+                sx={{
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {'github.com/haeinkang/enegy-usage-monitoring'}
+              </Link>
+            </Grid>
           </Grid>
         </Grid>
 
@@ -76,11 +96,6 @@ const AboutMe = () => {
           <Typography variant="h6" fontWeight={700}>
             Contact me
           </Typography>
-          <Grid item container alignItems="center" gap={1}>
-            <PhoneAndroidIcon fontSize='small'/>
-            010-9282-0794
-          </Grid>
-
           <Grid item container alignItems="center" gap={1}>
             <EmailIcon fontSize='small' />
             haein.kang7@gmail.com
@@ -92,6 +107,18 @@ const AboutMe = () => {
 
 export default AboutMe;
 
+
+const ProfileContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  /* height가 600px 이하일 때 숨김 처리 */
+  @media (max-height: 600px) {
+    display: none;
+  }
+`;
 
 const Profile = styled.div`
   width: 180px;
