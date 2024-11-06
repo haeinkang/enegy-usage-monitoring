@@ -110,19 +110,19 @@ export default AboutMe;
 
 const ProfileContainer = styled.div`
   width: 100%;
-  display: flex;
+  display: flex !important;
   flex-direction: column;
   align-items: center;
-
   /* height가 600px 이하일 때 숨김 처리 */
   @media (max-height: 600px) {
-    display: none;
+    display: none !important;
   }
 `;
 
 const Profile = styled.div`
   width: 180px;
   height: 180px;
+    display: flex !important;
   margin-bottom: 20px;
   border-radius: 100px;
   overflow: hidden;
