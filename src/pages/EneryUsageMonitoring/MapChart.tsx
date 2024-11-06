@@ -6,11 +6,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../state/store';
 import { GeoCoord, GeoCoordVal } from '../../types';
 import { getGasUsageColor, calculateDistance } from '../../utils'
-import { map, find, slice, findIndex } from 'lodash';
+import { map, find, slice } from 'lodash';
 import MapTooltip from './MapTooltip';
 import ReactDOMServer from 'react-dom/server';
 import { selectLclgvNm } from '../../state/airQualSlice';
-import { hover, click } from '../../state/gasUsageSlice';
+import { click } from '../../state/gasUsageSlice';
+import { open } from '../../state/leftPanelSlice';
 
 const MapChart = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -95,6 +96,7 @@ const MapChart = () => {
     isMapLoaded, 
     gasDataLoaded, 
     airDataLoaded,
+    leftPanelCollapsed,
     // convertData
   ]);
 
@@ -193,6 +195,7 @@ const MapChart = () => {
             const clickedItem = find(gasUsageList, o => o.lclgvNm === params.name)
             dispatch(click(clickedItem))
             dispatch(selectLclgvNm(params.name))
+            dispatch(open())
           });
   
           chart.setOption({
