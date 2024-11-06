@@ -101,8 +101,8 @@ const MapChart = () => {
   ]);
 
 
-   // 클릭한 지자체가 바뀔 때 마다 좌표 이동 
-   useEffect(() => {
+  // 클릭한 지자체가 바뀔 때 마다 좌표 이동 
+  useEffect(() => {
     try { 
       if (clickedItem && chartRef.current) {
         const chart = echarts.getInstanceByDom(chartRef.current);
@@ -118,7 +118,7 @@ const MapChart = () => {
           } else { // 거리가 임계값 이하이면 바로 확대
             const finalZoomOption = {
               gmap: {
-                center: clickedItem.coord,
+                center: [clickedItem.coord[0] - .05, clickedItem.coord[1]] as GeoCoord,
                 zoom: 12,
               }
             }
@@ -230,7 +230,7 @@ const MapChart = () => {
                 coordinateSystem: 'gmap',
                 data: data,
                 symbolSize: function (val: any) {
-                  return val[2] / 5; // 필요에 따라 조정
+                  return val[2] < 30 ? 9 : val[2] / 5; // 필요에 따라 조정
                 },
                 encode: {
                   value: 2
@@ -310,7 +310,7 @@ const MapChart = () => {
       // 첫 번째 단계: zoom을 줄여서 잠깐 표시
       const initialZoomOption = {
         gmap: {
-          center: leftPanelCollapsed ? newCoord : [newCoord[0] - .1, newCoord[1]],
+          center: leftPanelCollapsed ? newCoord : [newCoord[0] - .05, newCoord[1]],
           zoom: initialZoom,
         },
       };
@@ -320,7 +320,7 @@ const MapChart = () => {
       setTimeout(() => {
         const finalZoomOption = {
           gmap: {
-            center: leftPanelCollapsed ? newCoord : [newCoord[0] - .1, newCoord[1]] as GeoCoord,
+            center: [newCoord[0] - .05, newCoord[1]] as GeoCoord,
             zoom: finalZoom,
           },
         };
