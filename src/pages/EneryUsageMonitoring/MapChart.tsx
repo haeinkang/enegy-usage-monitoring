@@ -103,30 +103,59 @@ const MapChart = () => {
 
   // 클릭한 지자체가 바뀔 때 마다 좌표 이동 
   useEffect(() => {
+    const chart = chartRef.current ? echarts.getInstanceByDom(chartRef.current) : null;
+    if(!chart) return;
     try { 
-      if (clickedItem && chartRef.current) {
-        const chart = echarts.getInstanceByDom(chartRef.current);
-        if(chart) {
-          const gmap: any = chart.getOption().gmap
-          const currentCenter = gmap[0].center;
-          const distance = calculateDistance(currentCenter, clickedItem.coord);
-          const distanceThreshold = 70; // 거리 임계값 (단위: km)
-    
-          if (distance > distanceThreshold) {
-            // 거리가 임계값보다 크면 줌 아웃 후 확대
-            smoothZoomTo(chart, clickedItem.coord, 8, 12, 500);
-          } else { // 거리가 임계값 이하이면 바로 확대
-            const finalZoomOption = {
-              gmap: {
-                center: [clickedItem.coord[0] - .05, clickedItem.coord[1]] as GeoCoord,
-                zoom: 12,
-              }
-            }
-            updateSelectedItemStyle(chart, finalZoomOption)
-          }
+      const option: any = chart.getOption();
+      
+      /** 클릭 시 마커 강조 처리 */
+      const handleMarkerClick = () => {
+        if(!clickedItem || !option.gmap) return;
+        const currentCenter = option.gmap[0].center;
+        const distance = calculateDistance(currentCenter, clickedItem.coord);
+        const distanceThreshold = 70; // 거리 임계값 (단위: km)
   
+        if (distance > distanceThreshold) {
+          // 거리가 임계값보다 크면 줌 아웃 후 확대
+          smoothZoomTo(chart, clickedItem.coord, 8, 12, 500);
+        } else { // 거리가 임계값 이하이면 바로 확대
+          const finalZoomOption = {
+            gmap: {
+              center: [clickedItem.coord[0] - .05, clickedItem.coord[1]] as GeoCoord,
+              zoom: 12,
+            }
+          }
+          updateSelectedItemStyle(chart, finalZoomOption)
         }
       }
+
+      /** 클릭 해제 시 마커 스타일 초기화 */
+      const handleMarkerUnclick = () => {
+        const newSeries = map(option.series, (series) => ({
+          ...series, 
+          data: map(series.data, (item) => ({
+            ...item, 
+            itemStyle: {
+              borderWidth: 0, 
+              borderColor: '#fff',
+              borderType: 'solid',
+              shadowColor: 'rgba(0, 0, 0, 1)',
+              shadowBlur: 0
+            }
+          }))
+        }))
+        chart.setOption({
+          series: newSeries, // 변경된 옵션을 차트에 다시 설정
+        });
+      }
+
+
+      if (clickedItem) { // 클릭했을 때 
+        handleMarkerClick();
+      } else { // 클릭 해제했을 때 
+        handleMarkerUnclick();
+      }
+      
     } catch(e) {
       console.error('지자체 선택이벤트 오류', {
         clickedItem, 

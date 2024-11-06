@@ -15,7 +15,7 @@ function DetailedAirQuality() {
   const onClickBack = () => {
     dispatch(selectLclgvNm(undefined))
     dispatch(click(undefined))
-  }
+   }
 
   return (
     <div>
