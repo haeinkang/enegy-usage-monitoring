@@ -6,39 +6,46 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../state/store';
 import { GeoCoord, GeoCoordVal } from '../../types';
 import { getGasUsageColor, calculateDistance } from '../../utils'
-import { find, slice } from 'lodash';
+import { map, find, slice, findIndex } from 'lodash';
 import MapTooltip from './MapTooltip';
 import ReactDOMServer from 'react-dom/server';
 import { selectLclgvNm } from '../../state/airQualSlice';
-import { selectGasUsage } from '../../state/gasUsageSlice';
+import { hover, click } from '../../state/gasUsageSlice';
 
 const MapChart = () => {
   const dispatch = useDispatch<AppDispatch>();
   const gasDataLoaded = useSelector((state: RootState) => state.gasUsage.loaded);
-  const airDataLoaded = useSelector((state: RootState) => state.airQual.loaded);
   const gasUsageList = useSelector((state: RootState) => state.gasUsage.data);
+  const hoveredItem = useSelector((state: RootState) => state.gasUsage.hoveredItem);
+  const clickedItem = useSelector((state: RootState) => state.gasUsage.clickedItem);
+  const max = useSelector((state: RootState) => state.gasUsage.max);
+
+  const airDataLoaded = useSelector((state: RootState) => state.airQual.loaded);
   const airQualList = useSelector((state: RootState) => state.airQual.data);
+  const airSelected = useSelector((state: RootState) => state.airQual.selected);
+  
+  const leftPanelCollapsed = useSelector((state: RootState) => state.leftPanel.isCollapsed);
+
   const chartRef = useRef<HTMLDivElement | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState<boolean>(false);
-  const max = useSelector((state: RootState) => state.gasUsage.max);
-  const selected = useSelector((state: RootState) => state.gasUsage.selected);
-  const airSelected = useSelector((state: RootState) => state.airQual.selected);
-  const leftPanelCollapsed = useSelector((state: RootState) => state.leftPanel.isCollapsed);
   
+
   /**
    * 데이터를 Echart에 맞게 변환 
    */
   const convertData = () => {
-    const data = gasUsageList.map((o) => {
+    const converted = map(gasUsageList, (o) => {
       const coord: GeoCoord = Array.isArray(o.coord) ? o.coord : [0, 0];
       return {
         name: o.lclgvNm,
         value: [...coord, o.avgUseQnt] as GeoCoordVal,
       };
-    });
-    const top10Data = slice(data, 0, 10);
-
-    return { data, top10Data };
+    });  
+    return { 
+      // data: slice(converted, 10, gasUsageList.length), 
+      data: converted, 
+      top10Data: slice(converted, 0, 10)
+    };
   }
 
   useEffect(() => {
@@ -88,46 +95,46 @@ const MapChart = () => {
     isMapLoaded, 
     gasDataLoaded, 
     airDataLoaded,
-    convertData
+    // convertData
   ]);
 
 
-   // 선택된 위치가 변경될 때마다 확대 실행
+   // 클릭한 지자체가 바뀔 때 마다 좌표 이동 
    useEffect(() => {
     try { 
-      if (selected && chartRef.current) {
+      if (clickedItem && chartRef.current) {
         const chart = echarts.getInstanceByDom(chartRef.current);
         if(chart) {
           const gmap: any = chart.getOption().gmap
           const currentCenter = gmap[0].center;
-          const distance = calculateDistance(currentCenter, selected.coord);
+          const distance = calculateDistance(currentCenter, clickedItem.coord);
           const distanceThreshold = 70; // 거리 임계값 (단위: km)
     
           if (distance > distanceThreshold) {
             // 거리가 임계값보다 크면 줌 아웃 후 확대
-            smoothZoomTo(chart, selected.coord, 8, 12, 500);
-          } else {
-            // 거리가 임계값 이하이면 바로 확대
-            chart.setOption({
+            smoothZoomTo(chart, clickedItem.coord, 8, 12, 500);
+          } else { // 거리가 임계값 이하이면 바로 확대
+            const finalZoomOption = {
               gmap: {
-                center: selected.coord,
+                center: clickedItem.coord,
                 zoom: 12,
-              },
-            });
+              }
+            }
+            updateSelectedItemStyle(chart, finalZoomOption)
           }
   
         }
       }
     } catch(e) {
       console.error('지자체 선택이벤트 오류', {
-        selected, 
+        clickedItem, 
         gasUsageList,
         airSelected, 
         airQualList,
         e
       })
     }
-  }, [selected]);
+  }, [clickedItem]);
 
   /**
    * ECharts 인스턴스 생성
@@ -175,100 +182,109 @@ const MapChart = () => {
    * Echart에 맞게 가공한 데이터 Echart에 업데이트
    */
   const updateEChartOpts = () => {
-    if (chartRef.current) {
-      const chart = echarts.getInstanceByDom(chartRef.current);
-      if (chart) {
-        const { data, top10Data } = convertData();
-
-        // 클릭 이벤트 리스너 추가
-        chart.on('click', (params) => {
-          if (
-            params.seriesType === 'scatter' 
-            || params.seriesType === 'effectScatter'
-          ) {
+    try {
+      if (chartRef.current) {
+        const chart = echarts.getInstanceByDom(chartRef.current);
+        if (chart) {
+          const { data, top10Data } = convertData();
+  
+          // 클릭 이벤트 리스너 추가
+          chart.on('click', (params: any) => {
+            const clickedItem = find(gasUsageList, o => o.lclgvNm === params.name)
+            dispatch(click(clickedItem))
             dispatch(selectLclgvNm(params.name))
-            dispatch(selectGasUsage(params.name))
-          }
-        });
-
-        chart.setOption({
-          tooltip: {
-            trigger: 'item', 
-            styles: { 
-              backgroundColor: "#000",
+          });
+  
+          chart.setOption({
+            tooltip: {
+              trigger: 'item', 
+              styles: { 
+                backgroundColor: "#000",
+              },
+              formatter: (
+                params: any, 
+                ticket: string
+              ) => {
+                const gasData = find(gasUsageList, o => o.lclgvNm === params.name)    
+                const airQualData = find(airQualList, o => o.lclgvNm === params.name)    
+    
+                // return ReactDOMServer.renderToString( <div>dddd</div>);
+                return ReactDOMServer.renderToString(
+                  <MapTooltip 
+                    gasUsageList={gasUsageList}
+                    selectedGasData={gasData}
+                    selectedAirQualData={airQualData}
+                  />
+                );
+    
+              }
+    
             },
-            formatter: (
-              params: any, 
-              ticket: string
-            ) => {
-              const gasData = find(gasUsageList, o => o.lclgvNm === params.name)    
-              const airQualData = find(airQualList, o => o.lclgvNm === params.name)    
-  
-              // return ReactDOMServer.renderToString( <div>dddd</div>);
-              return ReactDOMServer.renderToString(
-                <MapTooltip 
-                  gasUsageList={gasUsageList}
-                  selectedGasData={gasData}
-                  selectedAirQualData={airQualData}
-                />
-              );
-  
-            }
-  
-          },
-          series: [
-            {
-              name: '가스 사용량',
-              type: 'scatter',
-              coordinateSystem: 'gmap',
-              data: data,
-              symbolSize: function (val: any) {
-                return val[2] / 5; // 필요에 따라 조정
-              },
-              encode: {
-                value: 2
-              },
-              label: {
-                show: false
-              },
-              itemStyle: {
-                color: function(item: any) {
-                  return getGasUsageColor(max!.avgUseQnt, item.value[2]);
-                }
-              },
-            },
-            {
-              name: '가스 사용량 Top 10',
-              type: 'effectScatter',
-              coordinateSystem: 'gmap',
-              data: top10Data,
-              symbolSize: function (val: [...GeoCoord, number]) {
-                return val[2] / 5;
-              },
-              encode: {
-                value: 2
-              },
-              showEffectOn: 'render',
-              rippleEffect: {
-                brushType: 'stroke'
-              },
-              label: {
-                show: false
-              },
-              itemStyle: {
-                color: function(item: any) {
-                  return getGasUsageColor(max!.avgUseQnt, item.value[2]);
+            series: [
+              {
+                name: '가스 사용량',
+                type: 'scatter',
+                coordinateSystem: 'gmap',
+                data: data,
+                symbolSize: function (val: any) {
+                  return val[2] / 5; // 필요에 따라 조정
                 },
-                shadowBlur: 30,
+                encode: {
+                  value: 2
+                },
+                label: {
+                  show: false
+                },
+                itemStyle: {
+                  color: function(item: any) {
+                    return getGasUsageColor(max!.avgUseQnt, item.value[2]);
+                  }
+                },
+                zlevel: 1
               },
-              emphasis: {
-                scale: true
-              },
-              zlevel: 1
-            }, 
-          ],
-        });
-      } 
+              {
+                name: '가스 사용량 Top 10',
+                type: 'effectScatter',
+                coordinateSystem: 'gmap',
+                data: top10Data,
+                symbolSize: function (val: [...GeoCoord, number]) {
+                  try {
+                    return val[2] / 5;
+                  } catch(e) {
+                    console.error('symbol 사이즈 설정 과정에서 오류 발생', e, { val, top10Data })
+                    return 20;
+                  }
+                },
+                encode: {
+                  value: 2
+                },
+                showEffectOn: 'render',
+                rippleEffect: {
+                  brushType: 'stroke'
+                },
+                label: {
+                  show: false
+                },
+                itemStyle: {
+                  color: function(item: any) {
+                    try {
+                      return getGasUsageColor(max!.avgUseQnt, item.value[2]);
+                    } catch(e) {
+                      console.error('색상 레벨 설정하는 과정에서 오류 발생', e, { item, max, top10Data })
+                      return '#dc3545';
+                    }
+                  },
+                },
+                emphasis: {
+                  scale: true
+                },
+              }, 
+            ],
+          });
+        } 
+      }
+    } catch(e) {
+      console.error('Echart에 맞게 가공한 데이터 Echart에 업데이트하는 과정에서 오류 발생', e)
     }
   }
 
@@ -301,15 +317,46 @@ const MapChart = () => {
       setTimeout(() => {
         const finalZoomOption = {
           gmap: {
-            center: leftPanelCollapsed ? newCoord : [newCoord[0] - .1, newCoord[1]],
+            center: leftPanelCollapsed ? newCoord : [newCoord[0] - .1, newCoord[1]] as GeoCoord,
             zoom: finalZoom,
           },
         };
-        chart.setOption(finalZoomOption);
+        updateSelectedItemStyle(chart, finalZoomOption);
       }, duration);
     }
   };
 
+  /**
+   * 클릭한 아이템의 스타일 속성과 지도 center,zoom 값 변경
+   * @param chart :echarts.ECharts
+   * @param finalZoomOption 최종 지도 center와 zoom 값 
+   */
+  const updateSelectedItemStyle = (
+    chart: echarts.ECharts, 
+    finalZoomOption: { gmap: { center: GeoCoord, zoom: number } }
+  ) => {
+    if(clickedItem) {
+      const option: any = { ...chart.getOption() };
+      const newSeries = map(option.series, (series) => ({
+        ...series, 
+        data: map(series.data, (item) => ({
+          ...item, 
+          itemStyle: {
+            borderWidth: clickedItem.lclgvNm === item.name ? 3 : 0, 
+            borderColor: '#fff',
+            borderType: 'solid',
+            shadowColor: 'rgba(0, 0, 0, 1)',
+            shadowBlur: clickedItem.lclgvNm === item.name ? 20 : 0
+          }
+        }))
+      }))
+
+      chart.setOption({
+        ...finalZoomOption, 
+        series: newSeries, // 변경된 옵션을 차트에 다시 설정
+      });
+    }
+  };
 
   return (
     <div ref={chartRef} style={{ width: '100%', height: '100%' }} />

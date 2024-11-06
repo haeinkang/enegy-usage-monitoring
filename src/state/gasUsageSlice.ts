@@ -9,8 +9,9 @@ interface GasUsageState {
   loaded: boolean;
   data: GasUsageByLclgv[];
   error: string | null;
-  selected?: GasUsageByLclgv;
   max?: GasUsageByLclgv;
+  hoveredItem?: GasUsageByLclgv;
+  clickedItem?: GasUsageByLclgv;
 }
 
 const initialState: GasUsageState = {
@@ -23,11 +24,14 @@ const gasUsageSlice = createSlice({
   name: 'gasUsage', 
   initialState,
   reducers: {
-    selectGasUsage: (state, action) => {
-      const selected = find(state.data, o => o.lclgvNm === action.payload)
-      state.selected = selected;
+    hover: (state, action) => {
+      state.hoveredItem = find(state.data, o => o.lclgvNm === action.payload);
       state.error = null;
-    }
+    }, 
+    click: (state, action) => {
+      state.clickedItem = action.payload;
+      state.error = null;
+    }, 
   }, 
   extraReducers: (builder) => {
     builder.addCase(
@@ -57,6 +61,7 @@ export const getGasUsage = createAsyncThunk(
       const lclgvCoords = await fetchLclgvCoords();
 
       const gasData = _(res)
+        .filter(o => o.rlvtYr === "2021")
         .map((item) => ({
           ...item, 
           coord: lclgvCoords[item.lclgvNm] 
@@ -73,7 +78,8 @@ export const getGasUsage = createAsyncThunk(
 )
 
 export const { 
-  selectGasUsage,
+  hover,
+  click,
 } = gasUsageSlice.actions;
 
 export default gasUsageSlice.reducer;

@@ -1,4 +1,4 @@
-import { CardContent, Grid, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../state/store';
@@ -11,12 +11,12 @@ interface iProps {
 }
 function GasUsageCard(props: iProps) {
   const gasUsageList = useSelector((state: RootState) => state.gasUsage.data);
-  const selected = useSelector((state: RootState) => state.gasUsage.selected);
+  const clickedItem = useSelector((state: RootState) => state.gasUsage.clickedItem);
   const max = useSelector((state: RootState) => state.gasUsage.max);
-  const topPercent = selected ? getTopPercent(gasUsageList, selected.lclgvNm) : 100;
+  const topPercent = clickedItem ? getTopPercent(gasUsageList, clickedItem.lclgvNm) : 100;
 
   return (
-    selected && max ?
+    clickedItem && max ?
     <Grid 
       item 
       xs={props.gridXs} 
@@ -34,11 +34,11 @@ function GasUsageCard(props: iProps) {
         flexDirection='column' 
         alignItems='center'
         justifyContent='center'
-        className={getColorClassName(max.avgUseQnt, selected.avgUseQnt)}
+        className={getColorClassName(max.avgUseQnt, clickedItem.avgUseQnt)}
       >
         <Grid item >
           <Typography variant="h5" component="div" gutterBottom align='center' fontWeight={700}>
-            {`${selected.avgUseQnt} ㎥`}
+            {`${clickedItem.avgUseQnt} ㎥`}
           </Typography>
         </Grid>
         <Grid item>

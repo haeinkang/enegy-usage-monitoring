@@ -4,7 +4,7 @@ import { AppDispatch, RootState } from '../../state/store';
 import { Grid, IconButton, Typography } from '@mui/material';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import { selectLclgvNm } from '../../state/airQualSlice';
-import { selectGasUsage } from '../../state/gasUsageSlice';
+import { click } from '../../state/gasUsageSlice';
 import Summary from './Summary';
 import AirQualTable from './AirQualTable'
 
@@ -14,7 +14,7 @@ function DetailedAirQuality() {
 
   const onClickBack = () => {
     dispatch(selectLclgvNm(undefined))
-    dispatch(selectGasUsage(undefined))
+    dispatch(click(undefined))
   }
 
   return (

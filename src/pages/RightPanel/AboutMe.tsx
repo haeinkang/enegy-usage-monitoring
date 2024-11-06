@@ -122,7 +122,7 @@ const ProfileContainer = styled.div`
 const Profile = styled.div`
   width: 180px;
   height: 180px;
-    display: flex !important;
+  display: flex !important;
   margin-bottom: 20px;
   border-radius: 100px;
   overflow: hidden;
