@@ -5,8 +5,9 @@ import _, { map, includes, sortBy, find } from 'lodash'
 import { getGasUsageColor } from '../../utils'
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../state/store';
-import { selectGasUsage } from '../../state/gasUsageSlice';
+import { click } from '../../state/gasUsageSlice';
 import { selectLclgvNm } from '../../state/airQualSlice';
+import { selectRegions } from '../../state/leftPanelSlice';
 import { GasUsageByLclgv } from '../../types'
 
 
@@ -15,9 +16,9 @@ function GasUsageRank() {
   const dispatch = useDispatch<AppDispatch>();
   const gasUsage = useSelector((state: RootState) => state.gasUsage.data);
   const maxGasUsage = useSelector((state: RootState) => state.gasUsage.max);
-  const airQualListloading = useSelector((state: RootState) => state.airQual.loading);
+  const airQualListloaded = useSelector((state: RootState) => state.airQual.loaded);
 
-  const [filtered, setFiltered] = useState<string[]>([]);
+  const selectedRegions = useSelector((state: RootState) => state.leftPanel.selectedRegions);
   const [inputValue, setInputValue] = useState('');
   const [options, setOptions] = useState<string[]>([])
 
@@ -37,7 +38,7 @@ function GasUsageRank() {
 
   const onClickListItem = (selected: GasUsageByLclgv) => {
     dispatch(selectLclgvNm(selected.lclgvNm))
-    dispatch(selectGasUsage(selected.lclgvNm))
+    dispatch(click(selected))
   }
 
 
@@ -51,7 +52,7 @@ function GasUsageRank() {
       <Grid item>
         <Autocomplete
           multiple
-          defaultValue={[]}
+          defaultValue={selectedRegions}
           options={options}
           getOptionLabel={(option) => option}
           renderTags={(value, getTagProps) =>
@@ -69,7 +70,7 @@ function GasUsageRank() {
             })
           }
           onChange={(event: any, newValue: string[]) => {
-            setFiltered(newValue);
+            dispatch(selectRegions(newValue));
           }}
           inputValue={inputValue}
           onInputChange={(event, newInputValue) => {
@@ -85,7 +86,7 @@ function GasUsageRank() {
       </Grid>
       <Grid item flexGrow={1} sx={{ overflow: 'auto'}}>
         {
-          !airQualListloading
+          airQualListloaded
           ? (
             <List 
               dense 
@@ -94,8 +95,8 @@ function GasUsageRank() {
               {
                 _(gasUsage)
                   .filter(o => 
-                    filtered.length > 0 
-                    ? find(filtered, sel => includes(o.lclgvNm, sel)) !== undefined
+                    selectedRegions.length > 0 
+                    ? find(selectedRegions, sel => includes(o.lclgvNm, sel)) !== undefined
                     : true
                   )
                   .orderBy('pm10Value', 'desc')

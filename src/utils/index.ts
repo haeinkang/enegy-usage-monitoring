@@ -1,5 +1,32 @@
-import { GasUsageByLclgv } from '../types'
+import { GasUsageByLclgv, GeoCoord } from '../types'
 import { findIndex } from 'lodash'
+
+
+/**
+ * 두 좌표 간의 거리 계산 함수 (단순 유클리드 거리)
+ * @param coord1 [number, number] 
+ * @param coord2 [number, number] 
+ * @returns number (단위: km)
+ */
+export const calculateDistance = (
+  coord1: GeoCoord, 
+  coord2: GeoCoord
+): number => {
+  const [lng1, lat1] = coord1;
+  const [lng2, lat2] = coord2;
+  const R = 6371; // 지구 반지름(km)
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLng = ((lng2 - lng1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLng / 2) *
+      Math.sin(dLng / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = R * c;
+  return distance;
+};
 
 /**
  * 특정 지자체의 가스 사용량 순위를 상위 백분율로 반환

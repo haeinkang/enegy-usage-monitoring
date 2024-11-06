@@ -5,7 +5,8 @@ import ProfileImage from '../assets/img/profile.jpg';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../state/store';
 import { clickCollapseBtn } from '../state/rightPanelSlice';
-import packageJson from '../../package.json'; // 위치에 따라 경로를 조정하세요
+import packageJson from '../../package.json'; 
+import { Link } from 'react-router-dom'
 
 function Header() {
   const dispatch = useDispatch<AppDispatch>();
@@ -20,14 +21,14 @@ function Header() {
         <Toolbar disableGutters variant="dense" >
           <Grid container justifyContent='space-between' flexWrap='wrap'>
             <Grid item container alignItems='center' flexWrap='nowrap' sx={{  width: 'fit-content' }}>
-              <IconButton href='/' >
+              <IconButton component={Link} to='/'>
                 <TroubleshootIcon fontSize='large' sx={{ mr: 1 }} />
               </IconButton>
               <Typography
                 variant="h6"
                 noWrap
-                component="a"
-                href="/"
+                component={Link}
+                to="/"
                 sx={{
                   display: { xs: 'none', md: 'flex' },
                   fontWeight: 700,
