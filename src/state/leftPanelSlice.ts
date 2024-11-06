@@ -15,11 +15,19 @@ const leftPanelSlice = createSlice({
     clickCollapseBtn: (state) => {
       state.isCollapsed = !state.isCollapsed;
     },
+    open: (state) => {
+      state.isCollapsed = false;
+    },
+    close: (state) => {
+      state.isCollapsed = true;
+    },
   },
 })
 
 export const { 
   clickCollapseBtn,
+  open, 
+  close,
 } = leftPanelSlice.actions;
 
 export default leftPanelSlice.reducer;

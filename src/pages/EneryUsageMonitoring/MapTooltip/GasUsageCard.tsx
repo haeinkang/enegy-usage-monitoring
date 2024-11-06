@@ -1,6 +1,6 @@
 import React from 'react';
 import { getColorClassName, getTopPercent } from '../../../utils'
-import { findIndex, maxBy } from 'lodash';
+import { maxBy } from 'lodash';
 import styled from 'styled-components';
 import { GasUsageByLclgv } from '../../../types'
 import { Container, Subtitle2, H5, Body2 } from './stlye';

@@ -5,7 +5,7 @@ import _, { map, includes, sortBy, find } from 'lodash'
 import { getGasUsageColor } from '../../utils'
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../state/store';
-import { selectGasUsage } from '../../state/gasUsageSlice';
+import { click } from '../../state/gasUsageSlice';
 import { selectLclgvNm } from '../../state/airQualSlice';
 import { GasUsageByLclgv } from '../../types'
 
@@ -37,7 +37,7 @@ function GasUsageRank() {
 
   const onClickListItem = (selected: GasUsageByLclgv) => {
     dispatch(selectLclgvNm(selected.lclgvNm))
-    dispatch(selectGasUsage(selected.lclgvNm))
+    dispatch(click(selected))
   }
 
 
