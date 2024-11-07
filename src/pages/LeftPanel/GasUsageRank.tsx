@@ -9,6 +9,7 @@ import { click } from '../../state/gasUsageSlice';
 import { selectLclgvNm } from '../../state/airQualSlice';
 import { selectRegions } from '../../state/leftPanelSlice';
 import { GasUsageByLclgv } from '../../types'
+import SliderRange from './SliderRange';
 
 
 
@@ -84,7 +85,7 @@ function GasUsageRank() {
           }
         />
       </Grid>
-      <Grid item flexGrow={1} sx={{ overflow: 'auto'}}>
+      <Grid item flexGrow={1} sx={{ overflow: 'auto', mb: '20px' }}>
         {
           airQualListloaded
           ? (
@@ -142,6 +143,10 @@ function GasUsageRank() {
             </Stack>
           ) 
         }
+      </Grid>
+
+      <Grid item>
+        <SliderRange />
       </Grid>
     </Grid>
   );
