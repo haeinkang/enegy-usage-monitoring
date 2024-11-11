@@ -1,16 +1,21 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Slider from '@mui/material/Slider';
-import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
-import FormatAlignCenterIcon from '@mui/icons-material/FormatAlignCenter';
-import FormatAlignRightIcon from '@mui/icons-material/FormatAlignRight';
-import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { Chip, Grid, Stack } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../state/store';
+import { selectMetric, changeRange } from '../../state/airQualSlice';
+import _, { map, find } from 'lodash'
+import { AirQualMetric } from '../../types';
 
+type Mark = {
+  value: number; 
+  label: string
+}
 
 const Separator = styled('div')(
   ({ theme }) => `
@@ -18,119 +23,121 @@ const Separator = styled('div')(
 `,
 );
 
-const marks = [
-  {
-    value: 0,
-    label: '0',
-  },
-  {
-    value: 20,
-    label: '20',
-  },
-  {
-    value: 37,
-    label: '37',
-  },
-  {
-    value: 100,
-    label: '100',
-  },
-];
-
 function valuetext(value: number) {
   return `${value}`;
 }
 
 export default function SliderRange() {
+  const dispatch = useDispatch<AppDispatch>();
+  const metrics = useSelector((state: RootState) => state.airQual.metrics);
+  const [selected, setSelected] = useState<AirQualMetric | undefined>(undefined)
+  const [marks, setMarks] = useState<Mark[]>([])
+
+  const handleChangeMetric = (
+    event: React.MouseEvent<HTMLElement>,
+    newMetric: string,
+  ) => {
+    dispatch(selectMetric(newMetric))
+  };
+
+  useEffect(() => {
+    const selected = find(metrics, o => o.selected)
+    setSelected(selected)
+
+    if(selected) {
+      setMarks([
+        {
+          value: selected.min,
+          label: `${selected.min}`
+        },
+        {
+          value: selected.max,
+          label: `${selected.max}`
+        },
+      ])
+    }
+
+
+  }, [metrics])
+
+  const handleChangeRange = (
+    event: Event,
+    newValue: number | number[],
+    activeThumb: number,
+  ) => {
+    dispatch(changeRange(newValue))
+
+  }
+
   return (
     <Paper 
       elevation={10} 
       sx={{ width: '100%', p: '.75rem 1rem' }}
     >
-      <Grid container alignItems='center' justifyContent='space-between' sx={{ mb: 2 }}>
-        <Grid item>
-          <Typography variant='subtitle1' fontWeight={900}>
-            {`${'PM10'} data ranges:`}
-          </Typography>
+      {selected &&
+        <Grid container alignItems='center' justifyContent='space-between' sx={{ mb: 2 }}>
+          <Grid item>
+            <Typography variant='subtitle1' fontWeight={900}>
+              {`${selected?.name} data ranges:`}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Stack direction="row" spacing={1}>
+              <Chip 
+                label={`${selected.min}-${selected.range[0]}`} 
+                color="primary" 
+                size="small" 
+                variant="filled" 
+                sx={{ 'span': { fontWeight: 700 }}}
+              />
+              <Chip 
+                label={`${selected.range[1]}-${selected.max}`} 
+                color="primary" 
+                size="small" 
+                variant="filled" 
+                sx={{ 'span': { fontWeight: 700 }}}
+              />
+              <Typography variant='body2'>
+                {`${selected.unit}`}
+              </Typography>
+            </Stack>
+          </Grid>
         </Grid>
-        <Grid item>
-        <Stack direction="row" spacing={1}>
-          <Chip 
-            label="23-10" 
-            color="primary" 
-            size="small" 
-            variant="filled" 
-            sx={{ 'span': { fontWeight: 700 }}}
-          />
-          <Chip 
-            label="5-0" 
-            color="primary" 
-            size="small" 
-            variant="filled" 
-            sx={{ 'span': { fontWeight: 700 }}}
-          />
-          <Typography variant='body2'>
-            {`${'ug/m3'}`}
-          </Typography>
-        </Stack>
-        </Grid>
-      </Grid>
-
+      }
       <ToggleButtonGroup
-        value={'left'}
-        // exclusive
-        // aria-label="text alignment"
+        value={selected?.name}
+        onChange={handleChangeMetric}
+        exclusive
         fullWidth
         size='medium'
       >
-        <ToggleButton value="left" aria-label="left aligned">
-          PM10
-        </ToggleButton>
-        <ToggleButton value="center" aria-label="centered">
-          PM2.5
-        </ToggleButton>
-        <ToggleButton value="right" aria-label="right aligned">
-          CO
-        </ToggleButton>
-        <ToggleButton value="justify" aria-label="justified">
-          NO2
-        </ToggleButton>
-        <ToggleButton value="justify" aria-label="justified">
-          SO2
-        </ToggleButton>
-        <ToggleButton value="justify" aria-label="justified">
-          O3
-        </ToggleButton>
-{/*         
-        <ToggleButton value="left" aria-label="left aligned">
-          미세먼지 (PM10)
-        </ToggleButton>
-        <ToggleButton value="center" aria-label="centered">
-          초미세먼지 (PM2.5)
-        </ToggleButton>
-        <ToggleButton value="right" aria-label="right aligned">
-          일산화탄소 (CO)
-        </ToggleButton>
-        <ToggleButton value="justify" aria-label="justified">
-          이산화질소 (NO2)
-        </ToggleButton>
-        <ToggleButton value="justify" aria-label="justified">
-          아황산가스 (SO2)
-        </ToggleButton>
-        <ToggleButton value="justify" aria-label="justified">
-          오존 지수 (O3)
-        </ToggleButton> */}
+        {map(metrics, (item) => (
+          <ToggleButton value={item.name} key={item.en}>
+            {item.en}
+          </ToggleButton>
+        ))}
       </ToggleButtonGroup>
 
       <Separator />
-      <Slider
-        track="inverted"
-        aria-labelledby="track-inverted-range-slider"
-        getAriaValueText={valuetext}
-        defaultValue={[20, 37]}
-        marks={marks}
-        size='medium'
-      />
+      {selected && 
+        <Slider
+          track="inverted"
+          size='medium'
+          valueLabelDisplay="auto"
+          getAriaValueText={valuetext}
+          step={
+            selected.name !== 'pm10Value' 
+            && selected.name !== 'pm25Value' 
+            ? .01 
+            : 1
+          } 
+          onChange={handleChangeRange}
+          defaultValue={[selected.max, selected.max]}
+          marks={marks}
+          min={selected.min}
+          max={selected.max}
+        />
+      }
       
     </Paper>
   );

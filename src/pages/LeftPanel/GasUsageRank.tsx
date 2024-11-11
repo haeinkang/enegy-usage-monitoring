@@ -2,43 +2,43 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { TextField, Autocomplete, Grid, Typography, List, ListItem, ListItemButton, ListItemText, Chip, Skeleton, Stack } from '@mui/material';
 import _, { map, includes, sortBy, find } from 'lodash'
-import { getGasUsageColor } from '../../utils'
+import { getPaletteNm, getTopPercent } from '../../utils'
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../state/store';
 import { click } from '../../state/gasUsageSlice';
 import { selectLclgvNm } from '../../state/airQualSlice';
 import { selectRegions } from '../../state/leftPanelSlice';
-import { GasUsageByLclgv } from '../../types'
+import { EnergyAndAirData } from '../../types'
 import SliderRange from './SliderRange';
 
 
 
 function GasUsageRank() {
   const dispatch = useDispatch<AppDispatch>();
-  const gasUsage = useSelector((state: RootState) => state.gasUsage.data);
-  const maxGasUsage = useSelector((state: RootState) => state.gasUsage.max);
-  const airQualListloaded = useSelector((state: RootState) => state.airQual.loaded);
+  const {
+    energyAirData,
+    loaded,
+  } = useSelector((state: RootState) => state.gasUsage);
+  const { selectedRegions } = useSelector((state: RootState) => state.leftPanel);
 
-  const selectedRegions = useSelector((state: RootState) => state.leftPanel.selectedRegions);
   const [inputValue, setInputValue] = useState('');
   const [options, setOptions] = useState<string[]>([])
 
   useEffect(() => {
     getOptions();
-  }, [gasUsage])
+  }, [energyAirData])
 
   const getOptions = () => {
-    const lclgvNmList = map(gasUsage, 'lclgvNm')
-    const cityList = _(gasUsage)
-      .map(o => o.lclgvNm.split(' ')[0])
+    const options = _.chain(energyAirData)
+      .flatMap(({ lclgvNm, sidoName }) => [lclgvNm, sidoName])
       .uniq()
+      .sortBy()
       .value();
 
-    setOptions(sortBy([...cityList, ...lclgvNmList]))
+    setOptions(options);
   }
 
-  const onClickListItem = (selected: GasUsageByLclgv) => {
-    dispatch(selectLclgvNm(selected.lclgvNm))
+  const onClickListItem = (selected: EnergyAndAirData) => {
     dispatch(click(selected))
   }
 
@@ -87,39 +87,36 @@ function GasUsageRank() {
       </Grid>
       <Grid item flexGrow={1} sx={{ overflow: 'auto', mb: '20px' }}>
         {
-          airQualListloaded
+          loaded
           ? (
             <List 
               dense 
               disablePadding  
               sx={{ width: '100%', overflow: 'auto' }}>
               {
-                _(gasUsage)
+                _(energyAirData)
                   .filter(o => 
                     selectedRegions.length > 0 
                     ? find(selectedRegions, sel => includes(o.lclgvNm, sel)) !== undefined
                     : true
                   )
-                  .orderBy('pm10Value', 'desc')
                   .map((item, idx) => {
-                    const region = item.lclgvNm.split(' ');
+                    const region = item.lclgvNm.split(' ');       
+                    const topPercent = getTopPercent(energyAirData, item.lclgvNm)
                     return (
-                      <ListItem key={`pm10-${idx}`} disablePadding sx={{ borderRadius: '3px', marginBottom: .5, bgcolor: 'rgba(255, 255, 255, 0.09)' }}> 
+                      <ListItem key={idx} disablePadding sx={{ borderRadius: '3px', marginBottom: .5, bgcolor: 'rgba(255, 255, 255, 0.09)' }}> 
                         <ListItemButton 
                           onClick={() => onClickListItem(item)} 
                           dense
                         >
                           <Grid container gap={1.5} alignItems="center" >
                             <span>{idx + 1}</span>
-                            <Mark 
-                              value={item.avgUseQnt}
-                              max={maxGasUsage?.avgUseQnt || 0} 
-                            />
+                            <Mark palettenm={getPaletteNm(topPercent)} />
                             <ListItemText
                               primary={region[0]}
                               secondary={region[1]}
                             />
-                            <span>{`${item.avgUseQnt} ㎥`}</span>
+                            <span>{`${item.energyUsage.gas} ㎥`}</span>
                           </Grid>
                         </ListItemButton>
                       </ListItem>
@@ -154,9 +151,9 @@ function GasUsageRank() {
 
 export default GasUsageRank;
 
-const Mark = styled.div<{ value: number, max: number }>`
+const Mark = styled.div<{ palettenm: string }>`
   width: 1rem;
   height: 1rem;
   border-radius: .125rem;
-  background: ${(props) => getGasUsageColor(props.max, props.value)};
+  background: ${(props) => `var(${props.palettenm})`};
 `

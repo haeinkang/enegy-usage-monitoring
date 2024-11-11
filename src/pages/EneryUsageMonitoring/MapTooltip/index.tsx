@@ -1,45 +1,37 @@
 import GasUsageCard from './GasUsageCard'
 import KhaiGradeCard from './KhaiGradeCard'
-import { GasUsageByLclgv, AirQualByLclgvNumeric } from '../../../types';
+import { EnergyAndAirData } from '../../../types';
 import { Title, Summary } from './stlye';
 
 interface iProps { 
-  gasUsageList: GasUsageByLclgv[];
-  selectedGasData?: GasUsageByLclgv;
-  selectedAirQualData?: AirQualByLclgvNumeric;
+  hoveredItem?: EnergyAndAirData 
+  energyAirData: EnergyAndAirData[]
 }
 
 function MapTooltip(props: iProps) {
+
   return (
-    !(props.selectedGasData && props.selectedAirQualData) 
-      ? <div>loading..</div> :
+    !props.hoveredItem ? <div>loading..</div> :
       <div>
-        <Title>{props.selectedGasData.lclgvNm}</Title>
+        <Title>{props.hoveredItem.lclgvNm}</Title>
         <Summary>
           <GasUsageCard 
             title={'가스 사용량'}
-            gasUsageList={props.gasUsageList}
-            data={props.selectedGasData}
+            hoveredItem={props.hoveredItem}
+            energyAirData={props.energyAirData}
           />
           <KhaiGradeCard 
             title={'통합대기환경 지수'}
             metric={'khaiGrade'}
-            data={props.selectedAirQualData}
+            hoveredItem={props.hoveredItem}
           />
           <KhaiGradeCard 
             title={'통합대기환경 수치'}
             metric={'khaiValue'}
-            data={props.selectedAirQualData}
+            hoveredItem={props.hoveredItem}
           />
-          {/* <GaugeChart 
-            title={'통합대기환경 수치'}
-            min={0}
-            max={500}
-            data={props.selectedAirQualData}
-          /> */}
         </Summary>
       </div>
-
   );
 }
 

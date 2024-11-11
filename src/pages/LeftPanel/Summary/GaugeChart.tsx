@@ -2,6 +2,8 @@ import { useEffect, useRef } from 'react';
 import * as echarts from 'echarts';
 import { Grid, Typography } from '@mui/material';
 import { getEchartLevelColor } from '../../../utils'
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../state/store';
 
 interface iProps {
   gridXs: number;
@@ -12,8 +14,9 @@ interface iProps {
 }
 
 function GaugeChart(props: iProps) {
+  const clickedItem = useSelector((state: RootState) => state.gasUsage.clickedItem);
   const chartRef = useRef(null);
-  
+
   useEffect(() => {
     if (chartRef.current) {
       // 이미 초기화된 차트 인스턴스가 있는지 확인하고 삭제
@@ -36,7 +39,7 @@ function GaugeChart(props: iProps) {
           {
             data: [
               {
-                value: props.value,
+                value: clickedItem?.airQual?.khaiValue ?? NaN,
               }
             ],
             type: 'gauge',
@@ -48,12 +51,13 @@ function GaugeChart(props: iProps) {
             center: ["50%", "50%"],
             detail: {
               fontSize: 30,
-              offsetCenter: [0, 0]
+              offsetCenter: [0, 0], 
+              formatter: function (value?: any) {
+                return isNaN(value) ? '-' : value;
+              },
             },
             itemStyle: {
-               color: props.value
-                ? getEchartLevelColor('khaiValue', props.value)
-                : '#0d6efd'
+              color: getEchartLevelColor('khaiValue', clickedItem?.airQual?.khaiValue)
             },
             progress: {
               show: true,
@@ -90,7 +94,7 @@ function GaugeChart(props: iProps) {
       chart.setOption(option);
 
     }
-  }, []);
+  }, [clickedItem]);
 
   return (
     <Grid 

@@ -4,50 +4,24 @@ import * as echarts from 'echarts';
 import 'echarts-extension-gmap';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../state/store';
-import { GeoCoord, GeoCoordVal } from '../../types';
-import { getGasUsageColor, calculateDistance } from '../../utils'
-import { map, find, slice } from 'lodash';
+import { GeoCoord, GeoCoordVal, AirQualByLclgvNumeric } from '../../types';
+import { calculateDistance, getTopPercent, getPaletteNm, getColorCode } from '../../utils'
+import _, { map, find, slice, filter, includes } from 'lodash';
 import MapTooltip from './MapTooltip';
 import ReactDOMServer from 'react-dom/server';
 import { selectLclgvNm } from '../../state/airQualSlice';
-import { click } from '../../state/gasUsageSlice';
+import { click, hover } from '../../state/gasUsageSlice';
 import { openLeftPanel } from '../../state/leftPanelSlice';
 
 const MapChart = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const gasDataLoaded = useSelector((state: RootState) => state.gasUsage.loaded);
-  const gasUsageList = useSelector((state: RootState) => state.gasUsage.data);
-  const clickedItem = useSelector((state: RootState) => state.gasUsage.clickedItem);
-  const max = useSelector((state: RootState) => state.gasUsage.max);
-
-  const airDataLoaded = useSelector((state: RootState) => state.airQual.loaded);
-  const airQualList = useSelector((state: RootState) => state.airQual.data);
-  const airSelected = useSelector((state: RootState) => state.airQual.selected);
-  
+  const { loaded, energyAirData, clickedItem, max } = useSelector((state: RootState) => state.gasUsage);
   const leftPanelCollapsed = useSelector((state: RootState) => state.leftPanel.isCollapsed);
 
   const chartRef = useRef<HTMLDivElement | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState<boolean>(false);
   
-
-  /**
-   * 데이터를 Echart에 맞게 변환 
-   */
-  const convertData = () => {
-    const converted = map(gasUsageList, (o) => {
-      const coord: GeoCoord = Array.isArray(o.coord) ? o.coord : [0, 0];
-      return {
-        name: o.lclgvNm,
-        value: [...coord, o.avgUseQnt] as GeoCoordVal,
-      };
-    });  
-    return { 
-      // data: slice(converted, 10, gasUsageList.length), 
-      data: converted, 
-      top10Data: slice(converted, 0, 10)
-    };
-  }
-
+  /** Gmap, Echart 최초 로드 */
   useEffect(() => {
     const initializeMap = async () => {
       try {
@@ -87,17 +61,85 @@ const MapChart = () => {
     };
   }, []);
 
+  /** data를 Echart에 맞게 변환하여 적용 */
   useEffect(() => {
-    if(isMapLoaded && gasDataLoaded && airDataLoaded) {
-      initOrUpdateChart()
+    if (isMapLoaded && loaded && chartRef.current) {
+      const chart = echarts.getInstanceByDom(chartRef.current);
+      if (chart) { // ECharts 인스턴스가 이미 존재하면 option 값 업데이트하고
+        setupEChartOpts();
+      } else { // 없으면 인스턴스 생성 후 option 값 업데이트 함수 실행
+        initChart();
+        setupEChartOpts();
+      }
     }
+
   }, [
     isMapLoaded, 
-    gasDataLoaded, 
-    airDataLoaded,
-    leftPanelCollapsed,
+    loaded, 
+    leftPanelCollapsed, // ??
     // convertData
   ]);
+
+
+  /** 필터링 검색 업트되면 실행되는 useEffect */
+  /**
+  useEffect(() => {
+    const chart = chartRef.current ? echarts.getInstanceByDom(chartRef.current) : null;
+    if(!chart) return;
+
+    try {
+      const option: any = chart.getOption();
+      const filteredAirQualList = _(airQualList)
+        .filter((entry) => {
+          return _.every(airMetrics, (metric) => {
+              const value = entry[metric.name as keyof AirQualByLclgvNumeric] as number;
+              const [rangeMin, rangeMax] = metric.range;
+              return rangeMin >= value || value >= rangeMax;
+          });
+        })
+        .map('lclgvNm')
+        .value();
+      
+      const { data, top10Data } = convertData();
+
+      const newSeries = map(option.series, (series, seriesIdx) => ({
+        ...series, 
+        data: filter(
+          seriesIdx === 0 ? data : top10Data, 
+          (item) => includes(filteredAirQualList, item.name)
+        )
+      }))
+      
+      console.log({filteredAirQualList, newSeries})
+        
+      chart.setOption({
+        series: newSeries, // 변경된 옵션을 차트에 다시 설정
+      });
+    
+    } catch(e) {
+
+    }
+  }, [
+    //?
+  ])
+  */
+
+  /**
+   * 데이터를 Echart에 맞게 변환 
+   */
+  const convertData = () => {
+    const converted = map(energyAirData, (item) => {
+      const coord: GeoCoord = Array.isArray(item.coord) ? item.coord : [0, 0];
+      return {
+        name: item.lclgvNm,
+        value: [...coord, item.energyUsage.gas] as GeoCoordVal,
+      };
+    });  
+    return { 
+      data: converted, 
+      top10Data: slice(converted, 0, 10)
+    };
+  }
 
 
   // 클릭한 지자체가 바뀔 때 마다 좌표 이동 
@@ -158,9 +200,7 @@ const MapChart = () => {
     } catch(e) {
       console.error('지자체 선택이벤트 오류', {
         clickedItem, 
-        gasUsageList,
-        airSelected, 
-        airQualList,
+        energyAirData, 
         e
       })
     }
@@ -193,25 +233,9 @@ const MapChart = () => {
   }
 
   /**
-   * ECharts 인스턴스가 이미 존재하면 option 값 업데이트하고, 
-   * 없으면 인스턴스 생성 후 option 값 업데이트 함수 실행하는 함수 
-   */
-  const initOrUpdateChart = async () => {
-    if (isMapLoaded && chartRef.current) {
-      const chart = echarts.getInstanceByDom(chartRef.current);
-      if (chart) {
-        updateEChartOpts();
-      } else {
-        initChart();
-        updateEChartOpts();
-      }
-    }
-  };
-  
-  /**
    * Echart에 맞게 가공한 데이터 Echart에 업데이트
    */
-  const updateEChartOpts = () => {
+  const setupEChartOpts = () => {
     try {
       if (chartRef.current) {
         const chart = echarts.getInstanceByDom(chartRef.current);
@@ -220,11 +244,15 @@ const MapChart = () => {
   
           // 클릭 이벤트 리스너 추가
           chart.on('click', (params: any) => {
-            const clickedItem = find(gasUsageList, o => o.lclgvNm === params.name)
+            const clickedItem = find(energyAirData, { lclgvNm: params.name })
             dispatch(click(clickedItem))
-            dispatch(selectLclgvNm(params.name))
             dispatch(openLeftPanel())
           });
+
+          chart.on('mouseover', (params: any) => {
+            const hoveredItem = find(energyAirData, { lclgvNm: params.name })
+            dispatch(hover(hoveredItem))
+          })
   
           chart.setOption({
             tooltip: {
@@ -236,20 +264,14 @@ const MapChart = () => {
                 params: any, 
                 ticket: string
               ) => {
-                const gasData = find(gasUsageList, o => o.lclgvNm === params.name)    
-                const airQualData = find(airQualList, o => o.lclgvNm === params.name)    
-    
-                // return ReactDOMServer.renderToString( <div>dddd</div>);
+                const hoveredItem = find(energyAirData, { lclgvNm: params.name })
                 return ReactDOMServer.renderToString(
                   <MapTooltip 
-                    gasUsageList={gasUsageList}
-                    selectedGasData={gasData}
-                    selectedAirQualData={airQualData}
+                    hoveredItem={hoveredItem} 
+                    energyAirData={energyAirData}
                   />
-                );
-    
+                )
               }
-    
             },
             series: [
               {
@@ -268,8 +290,9 @@ const MapChart = () => {
                 },
                 itemStyle: {
                   color: function(item: any) {
-                    return getGasUsageColor(max!.avgUseQnt, item.value[2]);
-                  }
+                    const topPercent = getTopPercent(energyAirData, item.name)
+                    return getColorCode(topPercent);
+                  },
                 },
                 zlevel: 1
               },
@@ -298,12 +321,8 @@ const MapChart = () => {
                 },
                 itemStyle: {
                   color: function(item: any) {
-                    try {
-                      return getGasUsageColor(max!.avgUseQnt, item.value[2]);
-                    } catch(e) {
-                      console.error('색상 레벨 설정하는 과정에서 오류 발생', e, { item, max, top10Data })
-                      return '#dc3545';
-                    }
+                    const topPercent = getTopPercent(energyAirData, item.name)
+                    return getColorCode(topPercent);
                   },
                 },
                 emphasis: {

@@ -13,6 +13,7 @@ export const api = axios.create({
     numOfRows: 300, // 한 페이지 결과 수   
     serviceKey: process.env.REACT_APP_SERVICE_KEY, // Open API 서비스키
     returnType: 'json', // 데이터 타입  
+    rlvtYr: 2021 // 관련 연도
   } 
 });
 

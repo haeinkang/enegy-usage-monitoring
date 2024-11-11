@@ -1,25 +1,22 @@
 import { getLevelColor } from '../../../utils'
-import { AirQualByLclgvNumeric } from '../../../types';
+import { AirQualByLclgv } from '../../../types';
 import styled from 'styled-components';
 import { Container, Subtitle2, H4 } from './stlye';
+import { EnergyAndAirData } from '../../../types';
 
 interface iProps { 
   title: string;
-  metric: string;
-  data: AirQualByLclgvNumeric;
+  metric: keyof AirQualByLclgv;
+  hoveredItem: EnergyAndAirData;
 }
-function KhaiGradeCard(props: iProps) {
-
+function KhaiGradeCard(props: iProps) {  
   return (
     <Container>
-      <Card metric={props.metric} value={props.data.khaiValue}>
+      <Card value={props.hoveredItem.airQual?.khaiValue}>
         <H4>
-          {props.metric === 'khaiValue' 
-            ? props.data.khaiValue
-            : props.data.khaiGrade}
+          {props.hoveredItem.airQual?.[props.metric] ?? '-'}
         </H4>
       </Card>
-
       <Subtitle2>{props.title}</Subtitle2>
     </Container>
   );
@@ -27,7 +24,7 @@ function KhaiGradeCard(props: iProps) {
 
 export default KhaiGradeCard;
 
-const Card = styled.div<{metric: string; value: number}>`
+const Card = styled.div<{value?: number}>`
   display: flex;
   flex-grow: 1;
   flex-direction: column;
@@ -35,6 +32,9 @@ const Card = styled.div<{metric: string; value: number}>`
   justify-content: center;
   width: 100px;
   border-radius: 18px;
-  background: ${(props) => getLevelColor('khaiValue', props.value)};
+  background: ${(props) => props.value !== undefined
+    ? getLevelColor('khaiValue', props.value)
+    : '#D4D9DE' // 해당 데이터 없는 경우
+  };
   color: #fff;
 `

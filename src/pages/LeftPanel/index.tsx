@@ -12,12 +12,12 @@ import { clickCollapseBtn } from '../../state/leftPanelSlice';
 function LeftPanel() {
   const dispatch = useDispatch<AppDispatch>();
   const isCollapsed = useSelector((state: RootState) => state.leftPanel.isCollapsed);
-  const selectedAirQual = useSelector((state: RootState) => state.airQual.selected);
+  const clickedItem = useSelector((state: RootState) => state.gasUsage.clickedItem);
 
   return (
     <GridContainer>
       <Panel square elevation={10} collapsed={`${isCollapsed}`}>
-        { selectedAirQual 
+        { clickedItem 
           ? <DetailedAirQuality />
           : <GasUsageRank />
         }

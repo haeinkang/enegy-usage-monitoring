@@ -10,7 +10,7 @@ import AirQualTable from './AirQualTable'
 
 function DetailedAirQuality() {
   const dispatch = useDispatch<AppDispatch>();
-  const airQual = useSelector((state: RootState) => state.airQual.selected);
+  const clickedItem = useSelector((state: RootState) => state.gasUsage.clickedItem);
 
   const onClickBack = () => {
     dispatch(selectLclgvNm(undefined))
@@ -24,7 +24,7 @@ function DetailedAirQuality() {
           <ArrowBackRoundedIcon />
         </IconButton>
         <Typography variant='h5' fontWeight={700}>
-          {airQual?.lclgvNm}
+          {clickedItem?.lclgvNm}
         </Typography>
       </Grid>
       

@@ -1,22 +1,28 @@
+import React, { useMemo } from 'react';
 import { Grid, Typography } from '@mui/material';
-import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../state/store';
-import { getColorClassName, getTopPercent } from '../../../utils'
+import { getPaletteNm, getTopPercent } from '../../../utils'
 import styled from 'styled-components';
+import _ from 'lodash';
 
 interface iProps { 
   gridXs: number;
   title: string;
 }
 function GasUsageCard(props: iProps) {
-  const gasUsageList = useSelector((state: RootState) => state.gasUsage.data);
-  const clickedItem = useSelector((state: RootState) => state.gasUsage.clickedItem);
-  const max = useSelector((state: RootState) => state.gasUsage.max);
-  const topPercent = clickedItem ? getTopPercent(gasUsageList, clickedItem.lclgvNm) : 100;
+  const {
+    energyAirData, 
+    clickedItem, 
+  } = useSelector((state: RootState) => state.gasUsage);
+
+  const topPercent = useMemo(() => {
+    if(!clickedItem) return -1;
+    return getTopPercent(energyAirData, clickedItem.lclgvNm)
+  }, [clickedItem, energyAirData])
 
   return (
-    clickedItem && max ?
+    clickedItem ?
     <Grid 
       item 
       xs={props.gridXs} 
@@ -34,11 +40,11 @@ function GasUsageCard(props: iProps) {
         flexDirection='column' 
         alignItems='center'
         justifyContent='center'
-        className={getColorClassName(max.avgUseQnt, clickedItem.avgUseQnt)}
+        className={getPaletteNm(topPercent)}
       >
         <Grid item >
           <Typography variant="h5" component="div" gutterBottom align='center' fontWeight={700}>
-            {`${clickedItem.avgUseQnt} ㎥`}
+            {`${clickedItem.energyUsage.gas} ㎥`}
           </Typography>
         </Grid>
         <Grid item>

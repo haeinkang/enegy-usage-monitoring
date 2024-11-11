@@ -1,4 +1,9 @@
-import { ApiResponseHeader, ApiResponseBody, GeoCoord } from ".";
+import { 
+  ApiResponseHeader, 
+  ApiResponseBody, 
+  GeoCoord, 
+  AirQualByLclgv, 
+} from ".";
 
 /** 에너지 사용량 API 응답값 타입 별칭 */
 export type EnerygyUsageApiRes = EnerygyUsageApiResponse<ApiResponseBody<EnerygyUsageApiResItem>>;
@@ -17,6 +22,17 @@ export interface EnerygyUsageApiResItem {
   lclgvNm: string;
   /** 해당 년도 */
   rlvtYr: string;
+}
+
+export interface EnergyUsage { 
+  /** 지자체명 */
+  lclgvNm: string;
+  /** 가스 사용량 */
+  gas: number;
+  /** 전기 사용량 */
+  elec: number;
+  /** 물 사용량 */
+  water: number;
 }
 
 /** 
@@ -43,4 +59,20 @@ export interface LclgvCoords {
  */
 export interface RegionMapping {
   [key: string]: string;
+}
+
+/** ************************************************ */
+
+/**
+ * 에너지 사용량과 대기질 데이터를 합친 정보
+ */
+export interface EnergyAndAirData {
+  /** 시도명 (서울) */
+  sidoName: string; 
+  /** 지자체명 (서울 강남구) */
+  lclgvNm: string;
+  /** 지자체의 [경도, 위도] */
+  coord: GeoCoord;
+  energyUsage: EnergyUsage;
+  airQual?: AirQualByLclgv; 
 }

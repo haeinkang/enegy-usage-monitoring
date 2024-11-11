@@ -1,4 +1,4 @@
-import { AirQualByRegApiRes } from '../types';
+import { AirQualByRegApiRes, AirQualByStation } from '../types';
 import { api } from '.';
 
 /**
@@ -7,7 +7,7 @@ import { api } from '.';
  * 일반 항목과 CAI최종 실시간 측정값과 지수 정보 조회 기능을 
  * 제공하는 시도별 실시간 측정정보 조회
  */
-export const getCtprvnRltmMesureDnsty = async (): Promise<AirQualByRegApiRes> => {
+export const getCtprvnRltmMesureDnsty = async (): Promise<AirQualByStation[]> => {
   try {
     const res = await api.get<AirQualByRegApiRes>('getCtprvnRltmMesureDnsty',
       {
@@ -19,8 +19,7 @@ export const getCtprvnRltmMesureDnsty = async (): Promise<AirQualByRegApiRes> =>
         }
       }
     );
-    
-    return res.data;
+    return res.data.response.body.items;
   } catch(e) {
     console.error("getCtprvnRltmMesureDnsty API 호출 에러:", e);
     throw e;
