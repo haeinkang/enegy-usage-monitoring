@@ -1,4 +1,7 @@
-export { default as Header } from './Header';
-export { default as Footer } from './Footer';
-export { default as Status } from './Status';
-export { default as Counter } from './Counter';
+import Header from "./Header";
+import Footer from "./Footer";
+import Status from "./Status";
+import Counter from "./Counter";
+import Profile from "./Profile";
+
+export { Header, Footer, Status, Counter, Profile };

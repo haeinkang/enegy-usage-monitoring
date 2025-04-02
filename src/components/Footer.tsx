@@ -1,29 +1,37 @@
-import React from 'react';
-import { Grid, Avatar, Link, Typography } from '@mui/material';
-import styled from 'styled-components';
-import GitHubIcon from '@mui/icons-material/GitHub';
-import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
-import EmailIcon from '@mui/icons-material/Email';
-import ProfileImage from '../assets/img/profile.jpg'; 
+import React from "react";
+import { Grid, Avatar, Link, Typography } from "@mui/material";
+import styled from "styled-components";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import PhoneAndroidIcon from "@mui/icons-material/PhoneAndroid";
+import EmailIcon from "@mui/icons-material/Email";
 
 const Footer = () => {
   return (
     <Wrapper>
-      <Grid container justifyContent="center" alignItems='flex-start'>
-
-        <Grid item xs={4} container justifyContent="center" alignItems="center" gap={2}>
-          <Avatar src={ProfileImage} sx={{ width: 70, height: 70 }} />
-          <div className='my-name'>Haein Kang</div>
+      <Grid container justifyContent="center" alignItems="flex-start">
+        <Grid
+          item
+          xs={4}
+          container
+          justifyContent="center"
+          alignItems="center"
+          gap={2}
+        >
+          <Avatar
+            src="/images/profile-360x360.webp"
+            sx={{ width: 70, height: 70 }}
+          />
+          <div className="my-name">Haein Kang</div>
         </Grid>
 
-        <Grid item xs={3} container flexDirection='column' gap={2}>
+        <Grid item xs={3} container flexDirection="column" gap={2}>
           <Typography variant="subtitle1" gutterBottom>
             Career
           </Typography>
 
           <Grid item container flexDirection="column" gap={1}>
             <div>Xiilab (2019.11 - 2023.11) </div>
-            <Typography className='job' variant="caption" gutterBottom>
+            <Typography className="job" variant="caption" gutterBottom>
               저는 AI 머신러닝을 위한 GPU 관리 솔루션을 제공하는 <br />
               (주) 씨이랩에서 프론트엔드 개발자로 근무하며, <br />
               GPU 예약 시스템 최적화와 리소스 모니터링 UI 개선을 <br />
@@ -34,8 +42,8 @@ const Footer = () => {
             </Typography>
           </Grid>
         </Grid>
-        
-        <Grid item xs={2} container flexDirection='column' gap={2}>
+
+        <Grid item xs={2} container flexDirection="column" gap={2}>
           <Typography variant="subtitle1" gutterBottom>
             Skills
           </Typography>
@@ -46,25 +54,29 @@ const Footer = () => {
           <div>CSS</div>
         </Grid>
 
-        <Grid item xs={3} container flexDirection='column' gap={2}>
+        <Grid item xs={3} container flexDirection="column" gap={2}>
           <Typography variant="subtitle1" gutterBottom>
             Contact me
           </Typography>
 
           <Grid item container alignItems="center" gap={1}>
-            <GitHubIcon fontSize='small' />
-            <Link href="https://github.com/haeinkang/carbon-usage-monitoring" color="inherit" underline="hover">
-              {'github.com/haeinkang'}
+            <GitHubIcon fontSize="small" />
+            <Link
+              href="https://github.com/haeinkang/carbon-usage-monitoring"
+              color="inherit"
+              underline="hover"
+            >
+              {"github.com/haeinkang"}
             </Link>
           </Grid>
 
           <Grid item container alignItems="center" gap={1}>
-            <EmailIcon fontSize='small' />
+            <EmailIcon fontSize="small" />
             haein.kang7@gmail.com
           </Grid>
 
           <Grid item container alignItems="center" gap={1}>
-            <PhoneAndroidIcon fontSize='small'/>
+            <PhoneAndroidIcon fontSize="small" />
             010-9282-0794
           </Grid>
         </Grid>
@@ -74,7 +86,6 @@ const Footer = () => {
 };
 
 export default Footer;
-
 
 const Wrapper = styled.div`
   width: 100%;
