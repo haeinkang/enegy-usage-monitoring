@@ -4,7 +4,6 @@ import {
   Typography,
   Toolbar,
   AppBar,
-  Avatar,
   Grid,
   IconButton,
 } from "@mui/material";
@@ -15,6 +14,8 @@ import { AppDispatch } from "../state/store";
 import { clickCollapseBtn } from "../state/rightPanelSlice";
 import packageJson from "../../package.json";
 import { Link } from "react-router-dom";
+import profileImageWebp from "../images/profile-72x72.webp";
+import profileImageJPG from "../images/profile-72x72.jpg";
 
 function Header() {
   const dispatch = useDispatch<AppDispatch>();
@@ -70,18 +71,14 @@ function Header() {
               <IconButton onClick={onClickProfile}>
                 <Profile size={36}>
                   <picture>
-                    <source
-                      srcSet={`${process.env.PUBLIC_URL}/images/profile-72x72.webp`}
-                      type="image/webp"
-                    />
+                    <source srcSet={profileImageWebp} type="image/webp" />
                     <img
-                      src={`${process.env.PUBLIC_URL}/images/profile-72x72.jpg`}
+                      src={profileImageJPG}
                       loading="lazy"
                       alt="Haein Kang"
                     />
                   </picture>
                 </Profile>
-                {/* <Avatar alt="Haein Kang" src={ProfileImageWebp} /> */}
               </IconButton>
               <Typography
                 onClick={onClickProfile}

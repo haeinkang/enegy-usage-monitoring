@@ -4,6 +4,8 @@ import styled from "styled-components";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import EmailIcon from "@mui/icons-material/Email";
 import { Profile } from "../../components";
+import profileImageWebp from "../../images/profile-360x360.webp";
+import profileImageJPG from "../../images/profile-360x360.jpg";
 
 const AboutMe = () => {
   return (
@@ -17,15 +19,8 @@ const AboutMe = () => {
       <ProfileContainer>
         <Profile size={180} style={{ marginBottom: "20px" }}>
           <picture>
-            <source
-              srcSet={`${process.env.PUBLIC_URL}/images/profile-360x360.webp`}
-              type="image/webp"
-            />
-            <img
-              src={`${process.env.PUBLIC_URL}/images/profile-360x360.jpg`}
-              loading="lazy"
-              alt="Haein Kang"
-            />
+            <source srcSet={profileImageWebp} type="image/webp" />
+            <img src={profileImageJPG} loading="lazy" alt="Haein Kang" />
           </picture>
         </Profile>
 

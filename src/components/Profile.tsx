@@ -22,5 +22,7 @@ const Circle = styled.div<{ size: number }>`
   boder: solid 1px var(--joy-palette-neutral-500);
   img {
     width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
   }
 `;
