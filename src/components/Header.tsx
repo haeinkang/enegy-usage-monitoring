@@ -39,7 +39,7 @@ function Header() {
               <IconButton component={Link} to="/">
                 <TroubleshootIcon fontSize="large" sx={{ mr: 1 }} />
               </IconButton>
-              <Typography
+              {/* <Typography
                 variant="h6"
                 noWrap
                 component={Link}
@@ -54,7 +54,7 @@ function Header() {
                 }}
               >
                 Gas Usage and Air Quality
-              </Typography>
+              </Typography> */}
 
               <Typography variant="body2">
                 {`v${packageJson.version}`}
