@@ -10,7 +10,7 @@ import {
 import { map } from "lodash";
 import { GasUsageByLclgv } from "../../types";
 import { useSelector } from "react-redux";
-import { RootState } from "../../state/store";
+import { RootState } from "../../app/store";
 import { getGasUsageColor } from "../../utils";
 
 function GasUsageRank() {

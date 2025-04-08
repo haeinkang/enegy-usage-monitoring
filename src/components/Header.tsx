@@ -10,8 +10,7 @@ import {
 import { Profile } from "../components";
 import TroubleshootIcon from "@mui/icons-material/Troubleshoot";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "../state/store";
-import { clickCollapseBtn } from "../state/rightPanelSlice";
+import { AppDispatch } from "../app/store";
 import packageJson from "../../package.json";
 import { Link } from "react-router-dom";
 import profileImageWebp from "../images/profile-72x72.webp";
@@ -20,9 +19,9 @@ import profileImageJPG from "../images/profile-72x72.jpg";
 function Header() {
   const dispatch = useDispatch<AppDispatch>();
 
-  const onClickProfile = () => {
-    dispatch(clickCollapseBtn());
-  };
+  // const onClickProfile = () => {
+  //   dispatch(clickCollapseBtn());
+  // };
 
   return (
     <AppBar position="static" color="primary">
@@ -68,7 +67,8 @@ function Header() {
               gap={0.5}
               sx={{ width: "fit-content" }}
             >
-              <IconButton onClick={onClickProfile}>
+              {/* <IconButton onClick={onClickProfile}> */}
+              <IconButton onClick={() => {}}>
                 <Profile size={36}>
                   <picture>
                     <source srcSet={profileImageWebp} type="image/webp" />
@@ -81,7 +81,8 @@ function Header() {
                 </Profile>
               </IconButton>
               <Typography
-                onClick={onClickProfile}
+                onClick={() => {}}
+                // onClick={onClickProfile}
                 sx={{
                   cursor: "pointer",
                   ":hover": {

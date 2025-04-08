@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AirQualByLclgvNumeric, AirQualByRegMerics } from "../types";
 import { getCtprvnRltmMesureDnsty } from "../services";
 import _, { find, reduce, meanBy } from "lodash";
-import { RootState } from "../state/store";
+import { RootState } from "../app/store";
 import {
   fetchRegionMapping,
   fetchLclgvCoords,

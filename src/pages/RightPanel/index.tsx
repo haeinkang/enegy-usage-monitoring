@@ -1,27 +1,31 @@
-import React from 'react';
-import styled from 'styled-components';
-import { Button, Paper } from '@mui/material';
-import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../state/store';
-import { clickCollapseBtn } from '../../state/rightPanelSlice';
-import AboutMe from './AboutMe';
+import React from "react";
+import styled from "styled-components";
+import { Button, Paper } from "@mui/material";
+import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  clickCollapseBtn,
+  selectIsCollapsed,
+} from "../../features/right-panel-slice";
+import type { AppDispatch } from "../../app/store";
+
+import AboutMe from "./AboutMe";
 
 function RightPanel() {
   const dispatch = useDispatch<AppDispatch>();
-  const isCollapsed = useSelector((state: RootState) => state.rightPanel.isCollapsed);;
+  const isCollapsed = useSelector(selectIsCollapsed);
 
   return (
     <GridContainer>
-      {!isCollapsed && 
-        <CollapseButton 
+      {!isCollapsed && (
+        <CollapseButton
           collapsed={`${isCollapsed}`}
           onClick={() => dispatch(clickCollapseBtn())}
-          variant="contained" 
+          variant="contained"
         >
           <ArrowForwardIosRoundedIcon />
         </CollapseButton>
-      }
+      )}
       <Panel square elevation={10} collapsed={`${isCollapsed}`}>
         <AboutMe />
       </Panel>
@@ -40,20 +44,21 @@ const GridContainer = styled.div`
   flex-wrap: nowrap;
 `;
 
-const Panel = styled(Paper)<{ collapsed: 'true' | 'false'; }>`
-  background: var( --joy-palette-aboutme-bg);
-  color: var( --joy-palette-aboutme-color) !important;
-  width: ${(props) => (props.collapsed === 'true' ? '0' : 'calc(3vw + 24rem)')};
-  padding: ${(props) => (props.collapsed === 'true' ? '0' : '30px')};
+const Panel = styled(Paper)<{ collapsed: "true" | "false" }>`
+  background: var(--joy-palette-aboutme-bg);
+  color: var(--joy-palette-aboutme-color) !important;
+  width: ${(props) => (props.collapsed === "true" ? "0" : "calc(3vw + 24rem)")};
+  padding: ${(props) => (props.collapsed === "true" ? "0" : "30px")};
   transition: width 0.3s ease, padding 0.3s ease !important;
   * {
-    display: ${(props) => (props.collapsed === 'true' ? 'none !important' : 'block')};
+    display: ${(props) =>
+      props.collapsed === "true" ? "none !important" : "block"};
   }
   overflow: auto;
 `;
 
-const CollapseButton = styled(Button)<{ collapsed: 'true' | 'false'; }>`
-  background: var( --joy-palette-aboutme-bg) !important;
+const CollapseButton = styled(Button)<{ collapsed: "true" | "false" }>`
+  background: var(--joy-palette-aboutme-bg) !important;
   border-radius: 4px 0 0 4px !important;
   min-width: 30px !important;
   width: 30px;

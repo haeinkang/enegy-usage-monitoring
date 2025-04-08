@@ -3,7 +3,7 @@ import { Loader } from "@googlemaps/js-api-loader";
 import * as echarts from "echarts";
 import "echarts-extension-gmap";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../state/store";
+import { AppDispatch, RootState } from "../../app/store";
 import { GeoCoord, GeoCoordVal } from "../../types";
 import { getGasUsageColor, calculateDistance } from "../../utils";
 import { map, find, slice } from "lodash";

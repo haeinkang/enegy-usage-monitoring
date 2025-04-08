@@ -1,34 +1,34 @@
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../state/store';
-import { Grid, IconButton, Typography } from '@mui/material';
-import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
-import { selectLclgvNm } from '../../state/airQualSlice';
-import { click } from '../../state/gasUsageSlice';
-import Summary from './Summary';
-import AirQualTable from './AirQualTable'
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../app/store";
+import { Grid, IconButton, Typography } from "@mui/material";
+import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
+import { selectLclgvNm } from "../../state/airQualSlice";
+import { click } from "../../state/gasUsageSlice";
+// import Summary from './Summary';
+import AirQualTable from "./AirQualTable";
 
 function DetailedAirQuality() {
   const dispatch = useDispatch<AppDispatch>();
   const airQual = useSelector((state: RootState) => state.airQual.selected);
 
   const onClickBack = () => {
-    dispatch(selectLclgvNm(undefined))
-    dispatch(click(undefined))
-   }
+    dispatch(selectLclgvNm(undefined));
+    dispatch(click(undefined));
+  };
 
   return (
     <div>
-      <Grid container alignItems='center'>
+      <Grid container alignItems="center">
         <IconButton onClick={onClickBack}>
           <ArrowBackRoundedIcon />
         </IconButton>
-        <Typography variant='h5' fontWeight={700}>
+        <Typography variant="h5" fontWeight={700}>
           {airQual?.lclgvNm}
         </Typography>
       </Grid>
-      
-      <Summary />
+
+      {/* <Summary /> */}
       <AirQualTable />
     </div>
   );

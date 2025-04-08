@@ -1,7 +1,9 @@
 import { ApiResponseHeader, ApiResponseBody, GeoCoord } from ".";
 
 /** 에너지 사용량 API 응답값 타입 별칭 */
-export type EnerygyUsageApiRes = EnerygyUsageApiResponse<ApiResponseBody<EnerygyUsageApiResItem>>;
+export type EnerygyUsageApiRes = EnerygyUsageApiResponse<
+  ApiResponseBody<EnerygyUsageApiResItem>
+>;
 
 /** 에너지 사용량 API 응답값 */
 export interface EnerygyUsageApiResponse<T> {
@@ -10,20 +12,20 @@ export interface EnerygyUsageApiResponse<T> {
 }
 
 /** 지자체별 평균 사용량 */
-export interface EnerygyUsageApiResItem { 
+export interface EnerygyUsageApiResItem {
   /** 평균 사용량 */
   avgUseQnt: number;
-  /** 지자체명 */
+  /** 지자체명  ex: 경기 시흥시 */
   lclgvNm: string;
   /** 해당 년도 */
   rlvtYr: string;
 }
 
-/** 
- * 좌표값을 추가한 
- * 지자체별 가스 평균 사용량 
+/**
+ * 좌표값을 추가한
+ * 지자체별 가스 평균 사용량
  */
-export interface GasUsageByLclgv  { 
+export interface GasUsageByLclgv {
   /** 지자체명 */
   lclgvNm: string;
   /** 지자체의 [경도, 위도] */
