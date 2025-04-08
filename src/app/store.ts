@@ -1,5 +1,5 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import gasReducer from "../features/gas-slice";
+import gasReducer from "../features/gas-usage-slice";
 import rightPanelReducer from "../features/right-panel-slice";
 import airQualReducer from "../state/airQualSlice";
 import leftPanelReducer from "../state/leftPanelSlice";

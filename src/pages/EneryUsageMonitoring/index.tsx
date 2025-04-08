@@ -5,8 +5,8 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../app/store";
 import { getGasUsage } from "../../state/gasUsageSlice";
 import { getAirQualData } from "../../state/airQualSlice";
-import { fetchGasUsage, selectGasUsageList } from "../../features/gas-slice";
-import KoreaMap from "./KoreaMap";
+import { fetchGasUsage } from "../../features/gas-usage-slice";
+import Map from "./Map";
 import sidoGeoJson from "./SIDO_MAP_2022.json"; // json import
 
 function EneryUsageMonitoring() {
@@ -30,7 +30,7 @@ function EneryUsageMonitoring() {
   return (
     <div style={{ width: "100%", height: "100%" }}>
       {/* <MapChart /> */}
-      <KoreaMap geoJson={sidoGeoJson} />;
+      <Map />;
     </div>
   );
 }

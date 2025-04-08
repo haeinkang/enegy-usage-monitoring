@@ -1,19 +1,3 @@
-/** [위도, 경도] */
-export type GeoCoord = GasUsageItemWithCoord["coord"];
-/**
- * 위도와 경도를 포함한 가스 사용량 데이터 타입
- */
-export type GasUsageItemWithCoord = GasUsageItem & {
-  coord: [latitude: number, longitude: number];
-};
-
-/**
- * 위도와 경도를 포함한 공기질 데이터 타입
- */
-export type AirQualItemWithCoord = AirQualItem & {
-  coord: GeoCoord;
-};
-
 export type GasUsageItem = {
   avgUseQnt: number;
   lclgvNm: string;
