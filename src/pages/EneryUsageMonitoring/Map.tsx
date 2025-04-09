@@ -1,8 +1,10 @@
-import { useRef } from "react";
+import { useRef, useMemo } from "react";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { useAppSelector } from "../../app/hooks";
-import koreaGeoJson from "./SIDO_MAP.json";
+import GeoJson from "./geoJSON.json";
+import mapStyles from "./mapStyles.json";
 import max from "lodash/max";
+
 const containerStyle = {
   width: "100%",
   height: "100%",
@@ -13,13 +15,11 @@ const center = {
   lng: 127.5,
 };
 
-// 색상 계산 함수 (빨강 계열)
 function getColorByUsage(usage: number, maxUsage: number): string {
   const ratio = usage / maxUsage;
   const r = 255;
   const g = Math.round(255 * Math.pow(1 - ratio, 2));
   const b = Math.round(255 * Math.pow(1 - ratio, 2));
-
   return `rgba(${r},${g},${b}, 1)`;
 }
 
@@ -28,50 +28,55 @@ const Map = () => {
   const gasUsage = useAppSelector((state) => state.gas.data);
 
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey:
-      process.env.REACT_APP_GOOGLE_MAPS_API_KEY ??
-      (() => {
-        throw new Error("Missing Google Maps API key");
-      })(),
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY!,
   });
 
-  // 최대값 계산
-  const maxUsage = max(Object.values(gasUsage)) ?? 1; //
+  const maxUsage = useMemo(() => max(Object.values(gasUsage)) ?? 1, [gasUsage]);
+
+  const renderGeoJson = (map: google.maps.Map) => {
+    const geoJsonLayer = new window.google.maps.Data();
+    geoJsonLayer.addGeoJson(GeoJson);
+    geoJsonLayer.setMap(map);
+
+    geoJsonLayer.setStyle((feature) => {
+      const provinceName = feature.getProperty("CTP_KOR_NM");
+
+      if (typeof provinceName === "string") {
+        const usage = gasUsage[provinceName] ?? 0;
+        const fillColor = getColorByUsage(usage, maxUsage);
+
+        return {
+          fillColor,
+          fillOpacity: 1,
+          strokeColor: "#fff",
+          strokeWeight: 1,
+        };
+      }
+
+      // fallback style
+      return {
+        fillColor: "#FFFfff0",
+        fillOpacity: 0,
+        strokeColor: "#ccc",
+        strokeWeight: 1,
+      };
+    });
+  };
+
+  const handleMapLoad = (map: google.maps.Map) => {
+    mapRef.current = map;
+    renderGeoJson(map);
+  };
 
   if (!isLoaded) return <div>지도를 불러오는 중입니다...</div>;
 
   return (
     <GoogleMap
       mapContainerStyle={containerStyle}
+      options={{ styles: mapStyles }}
       center={center}
       zoom={7}
-      onLoad={(mapInstance: google.maps.Map) => {
-        mapRef.current = mapInstance;
-
-        const geoJsonLayer = new google.maps.Data();
-        geoJsonLayer.addGeoJson(koreaGeoJson);
-        geoJsonLayer.setMap(mapInstance);
-
-        geoJsonLayer.setStyle((feature) => {
-          const provinceName = feature.getProperty("CTP_KOR_NM");
-          if (typeof provinceName === "string") {
-            const usage = gasUsage[provinceName];
-            const fillColor = getColorByUsage(usage, maxUsage);
-
-            return {
-              fillColor,
-              fillOpacity: 0.7,
-              strokeColor: "#fff",
-              strokeWeight: 1,
-            };
-          } else {
-            // name이 string이 아닐 경우 처리 (예: 기본값 사용)
-            return {
-              fillColor: "#FFF0",
-            };
-          }
-        });
-      }}
+      onLoad={handleMapLoad}
     />
   );
 };
