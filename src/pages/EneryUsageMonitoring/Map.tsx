@@ -1,8 +1,7 @@
-import React, { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { useAppSelector } from "../../app/hooks";
-import koreaGeoJson from "./SIDO_MAP_2022.json";
-import find from "lodash/find";
+import koreaGeoJson from "./SIDO_MAP.json";
 import max from "lodash/max";
 const containerStyle = {
   width: "100%",
@@ -26,6 +25,7 @@ function getColorByUsage(usage: number, maxUsage: number): string {
 
 const Map = () => {
   const mapRef = useRef<google.maps.Map | null>(null);
+  const gasUsage = useAppSelector((state) => state.gas.data);
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey:
@@ -35,21 +35,8 @@ const Map = () => {
       })(),
   });
 
-  const gasUsage = useAppSelector((state) => state.gas.data);
-  console.log({ gasUsage });
   // 최대값 계산
-  const maxUsage = max(Object.values(gasUsage)) ?? 1; // 0 방지용 1
-  useEffect(() => {
-    if (!mapRef.current || !isLoaded || !gasUsage.length) {
-      console.log(mapRef.current, isLoaded, gasUsage.length);
-      return;
-    }
-
-    const map = mapRef.current;
-    const geoJsonLayer = new google.maps.Data({ map });
-
-    geoJsonLayer.addGeoJson(koreaGeoJson);
-  }, [isLoaded, gasUsage, maxUsage]);
+  const maxUsage = max(Object.values(gasUsage)) ?? 1; //
 
   if (!isLoaded) return <div>지도를 불러오는 중입니다...</div>;
 
@@ -74,7 +61,7 @@ const Map = () => {
             return {
               fillColor,
               fillOpacity: 0.7,
-              strokeColor: "#000",
+              strokeColor: "#fff",
               strokeWeight: 1,
             };
           } else {
