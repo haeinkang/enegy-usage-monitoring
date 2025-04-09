@@ -8,7 +8,7 @@ import {
 } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { Provider } from "react-redux";
-import { store } from "./state/store";
+import { store } from "./app/store";
 import { BrowserRouter } from "react-router-dom";
 
 const root = ReactDOM.createRoot(

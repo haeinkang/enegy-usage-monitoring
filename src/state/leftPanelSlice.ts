@@ -9,10 +9,10 @@ interface LeftPanelState {
 const initialState: LeftPanelState = {
   isCollapsed: false,
   selectedRegions: [],
-}
+};
 
 const leftPanelSlice = createSlice({
-  name: 'leftPanel', 
+  name: "leftPanel",
   initialState,
   reducers: {
     clickCollapseBtn: (state) => {
@@ -28,11 +28,11 @@ const leftPanelSlice = createSlice({
       state.selectedRegions = action.payload;
     },
   },
-})
+});
 
-export const { 
+export const {
   clickCollapseBtn,
-  openLeftPanel, 
+  openLeftPanel,
   closeLeftPanel,
   selectRegions,
 } = leftPanelSlice.actions;

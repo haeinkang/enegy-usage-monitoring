@@ -1,17 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { GasUsageByLclgv, AirQualByLclgvNumeric } from '../types'
-import { RootState } from './store';
+import { GasUsageByLclgv, AirQualByLclgvNumeric } from "../types";
+import { RootState } from "../app/store";
 
 interface MapTooltipState {
-  lclgvNm?: string
+  lclgvNm?: string;
   gasData?: GasUsageByLclgv;
-  airQualData?: AirQualByLclgvNumeric
+  airQualData?: AirQualByLclgvNumeric;
 }
 
-const initialState: MapTooltipState = {}
+const initialState: MapTooltipState = {};
 
 const mapTooltipSlice = createSlice({
-  name: 'mapTooltip', 
+  name: "mapTooltip",
   initialState,
   reducers: {
     setGasData: (state, action) => {
@@ -20,14 +20,10 @@ const mapTooltipSlice = createSlice({
     setAirQualData: (state, action) => {
       state.airQualData = action.payload;
     },
-    
   },
-})
+});
 
-export const { 
-  setGasData, 
-  setAirQualData,
-} = mapTooltipSlice.actions;
+export const { setGasData, setAirQualData } = mapTooltipSlice.actions;
 
 export default mapTooltipSlice.reducer;
 
