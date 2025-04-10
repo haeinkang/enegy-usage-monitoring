@@ -3,7 +3,7 @@ import { Grid, Link, Typography } from "@mui/material";
 import styled from "styled-components";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import EmailIcon from "@mui/icons-material/Email";
-import { Profile } from "../../components";
+import Profile from "../../components/Profile";
 import profileImageWebp from "../../images/profile-360x360.webp";
 import profileImageJPG from "../../images/profile-360x360.jpg";
 

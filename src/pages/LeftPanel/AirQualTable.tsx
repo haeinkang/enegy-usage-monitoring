@@ -15,7 +15,7 @@ import { RootState } from "../../app/store";
 import { map } from "lodash";
 import Banner from "./Banner";
 import styled from "styled-components";
-import { Status } from "../../components";
+import Status from "../../components/Status";
 
 function AirQualTable() {
   const data = useSelector((state: RootState) => state.airQual.selected);
