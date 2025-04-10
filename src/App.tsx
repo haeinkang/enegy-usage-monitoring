@@ -1,9 +1,8 @@
-import React from "react";
-import { Suspense, lazy, useEffect } from "react";
+import { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
-import { EneryUsageMonitoring, NotFound } from "./pages";
-import { Grid } from "@mui/material";
-import Layout from "./Layout";
+const Layout = lazy(() => import("./Layout"));
+const EneryUsageMonitoring = lazy(() => import("./pages/EneryUsageMonitoring"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 function App() {
   return (
