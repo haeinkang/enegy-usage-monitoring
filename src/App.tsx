@@ -1,31 +1,21 @@
 import React from "react";
 import { Header } from "./components";
+import { Suspense, lazy, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
-import { LeftPanel, RightPanel, EneryUsageMonitoring, NotFound } from "./pages";
+import { EneryUsageMonitoring, NotFound } from "./pages";
 import { Grid } from "@mui/material";
+import Layout from "./Layout";
 
 function App() {
   return (
-    <Grid
-      container
-      flexDirection="column"
-      flexWrap="nowrap"
-      sx={{ height: "100%" }}
-    >
-      <Grid item>
-        <Header />
-      </Grid>
-      <Grid item flexGrow={1}>
-        <div style={{ position: "relative", width: "100%", height: "100%" }}>
-          {/* <LeftPanel />
-          <RightPanel /> */}
-          <Routes>
-            <Route path="/" element={<EneryUsageMonitoring />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </div>
-      </Grid>
-    </Grid>
+    <Suspense fallback={<div>로딩중...</div>}>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<EneryUsageMonitoring />} />
+        </Route>
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Suspense>
   );
 }
 

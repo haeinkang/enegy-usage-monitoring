@@ -27,10 +27,8 @@ root.render(
   <React.StrictMode>
     <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Provider store={store}>
-        <MuiThemeProvider theme={darkTheme}>
-          <CssBaseline />
-          <App />
-        </MuiThemeProvider>
+        <CssBaseline />
+        <App />
       </Provider>
     </BrowserRouter>
   </React.StrictMode>
