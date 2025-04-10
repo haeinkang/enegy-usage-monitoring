@@ -4,6 +4,7 @@ import { useAppSelector } from "../../app/hooks";
 import GeoJson from "./geoJSON.json";
 import mapStyles from "./mapStyles.json";
 import max from "lodash/max";
+import LoadingIndicator from "../../components/LoadingIndicator";
 
 const containerStyle = {
   width: "100%",
@@ -68,7 +69,7 @@ const Map = () => {
     renderGeoJson(map);
   };
 
-  if (!isLoaded) return <div>지도를 불러오는 중입니다...</div>;
+  if (!isLoaded) return <LoadingIndicator />;
 
   return (
     <GoogleMap
