@@ -17,7 +17,7 @@ function LeftPanel() {
           border-neutral-200
           transition-all duration-200 ease-in
           sm:rounded-2xl
-          sm:bg-white/80 
+          sm:bg-white/85
           sm:backdrop-blur-md 
           sm:shadow-xl
         `}
