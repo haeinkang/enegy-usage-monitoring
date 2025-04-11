@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../app/store";
 import { fetchGasUsage } from "../../features/gas-usage-slice";
 import Map from "./Map";
+import LeftPanel from "../../components/LeftPanel";
 
 function EneryUsageMonitoring() {
   const dispatch = useDispatch<AppDispatch>();
@@ -12,8 +13,9 @@ function EneryUsageMonitoring() {
   }, []);
 
   return (
-    <div style={{ width: "100%", height: "100%" }}>
+    <div className="h-full w-full relative">
       <Map />
+      <LeftPanel />
     </div>
   );
 }

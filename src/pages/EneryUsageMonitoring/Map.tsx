@@ -62,6 +62,19 @@ const Map = () => {
         strokeWeight: 1,
       };
     });
+
+    // 👉 클릭 이벤트 핸들러 등록
+    geoJsonLayer.addListener("click", (event: google.maps.Data.MouseEvent) => {
+      const feature = event.feature;
+      const provinceName = feature.getProperty("CTP_KOR_NM");
+      if (typeof provinceName === "string") {
+        const usage = gasUsage[provinceName] ?? 0;
+
+        // 여기에 모달 띄우기, 상태 변경 등 추가 로직 가능
+        console.log("Clicked region:", provinceName);
+        console.log("Gas usage:", usage);
+      }
+    });
   };
 
   const handleMapLoad = (map: google.maps.Map) => {
