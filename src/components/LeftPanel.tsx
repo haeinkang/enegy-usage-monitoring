@@ -33,7 +33,7 @@ const LeftPanel = (props: LeftPanelProps) => {
           border-neutral-200
           transition-all duration-300 ease-in
           sm:rounded-2xl
-          sm:bg-white/85
+          sm:bg-white/60
           sm:backdrop-blur-md 
           sm:shadow-xl
         `}
