@@ -5,6 +5,11 @@ import GeoJson from "./geoJSON.json";
 import mapStyles from "./mapStyles.json";
 import max from "lodash/max";
 import LoadingIndicator from "../../components/LoadingIndicator";
+import { SidoFullName, sidoNameMap } from "../../constants/regionNameMap";
+
+interface MapProps {
+  setSido: React.Dispatch<React.SetStateAction<SidoFullName | undefined>>;
+}
 
 const containerStyle = {
   width: "100%",
@@ -24,7 +29,7 @@ function getColorByUsage(usage: number, maxUsage: number): string {
   return `rgba(${r},${g},${b}, 1)`;
 }
 
-const Map = () => {
+const Map = (props: MapProps) => {
   const mapRef = useRef<google.maps.Map | null>(null);
   const gasUsage = useAppSelector((state) => state.gas.data);
 
@@ -66,14 +71,10 @@ const Map = () => {
     // 👉 클릭 이벤트 핸들러 등록
     geoJsonLayer.addListener("click", (event: google.maps.Data.MouseEvent) => {
       const feature = event.feature;
-      const provinceName = feature.getProperty("CTP_KOR_NM");
-      if (typeof provinceName === "string") {
-        const usage = gasUsage[provinceName] ?? 0;
+      const provinceName = feature.getProperty("CTP_KOR_NM") as SidoFullName;
 
-        // 여기에 모달 띄우기, 상태 변경 등 추가 로직 가능
-        console.log("Clicked region:", provinceName);
-        console.log("Gas usage:", usage);
-      }
+      console.log(provinceName);
+      props.setSido(provinceName);
     });
   };
 

@@ -2,7 +2,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { GasUsageItem, ApiResponse } from "../types/types";
-import { regionNameMap } from "../constants/regionNameMap";
+import { sidoNameMap, SidoAbbr } from "../constants/regionNameMap";
 
 interface GasUsageState {
   data: Record<string, number>; // 시도명: 평균 사용량
@@ -36,30 +36,22 @@ export const fetchGasUsage = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await api.get<ApiResponse<GasUsageItem>>("/getGas");
-
-      // 응답에서 오류 코드 확인
-      // const errorCode = response.data?.cmmMsgHeader?.returnReasonCode;
-      // if (errorCode === "30") {
-      //   // SERVICE_KEY_IS_NOT_REGISTERED_ERROR 오류 처리
-      //   return rejectWithValue(
-      //     "서비스 키가 등록되지 않았습니다. 키를 확인해 주세요."
-      //   );
-      // }
-
       const items = response.data.body.items;
       const usageMap: Record<string, number> = {};
 
       items.forEach((item) => {
         const raw = item.lclgvNm.split(" ")[0]; // ex: '충북'
-        const region = regionNameMap[raw]; // ex: '충청북도'
 
-        if (!region) return; // 대응되지 않는 경우 skip
+        if (!(raw in sidoNameMap)) return; // 대응되지 않는 경우 skip
+
+        // region은 "충청북도" 같은 풀네임 문자열
+        const sidoFullName = sidoNameMap[raw as SidoAbbr];
 
         // usageMap 객체에 해당 region 키가 없거나, 해당 키의 값이 0이나 false 등 "falsy" 값일 때
-        if (!usageMap[region]) {
-          usageMap[region] = 0;
+        if (!usageMap[sidoFullName]) {
+          usageMap[sidoFullName] = 0;
         }
-        usageMap[region] += item.avgUseQnt;
+        usageMap[sidoFullName] += item.avgUseQnt;
       });
 
       usageMap["서울특별시"] = 4711;

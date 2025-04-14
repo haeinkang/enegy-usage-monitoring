@@ -1,4 +1,4 @@
-export const regionNameMap: Record<string, string> = {
+export const sidoNameMap = {
   서울: "서울특별시",
   부산: "부산광역시",
   대구: "대구광역시",
@@ -16,4 +16,10 @@ export const regionNameMap: Record<string, string> = {
   경북: "경상북도",
   경남: "경상남도",
   제주: "제주특별자치도",
-};
+} as const;
+
+/** 시도 약어(Abbreviation) */
+export type SidoAbbr = keyof typeof sidoNameMap;
+
+/** 시도 풀네임 */
+export type SidoFullName = (typeof sidoNameMap)[SidoAbbr];

@@ -1,14 +1,30 @@
-function LeftPanel() {
+import { SidoFullName } from "../constants/regionNameMap";
+import ArrowLeftIcon from "../components/icons/ArrowLeftIcon";
+
+interface LeftPanelProps {
+  sido?: SidoFullName;
+  setSido: React.Dispatch<React.SetStateAction<SidoFullName | undefined>>;
+}
+
+const LeftPanel = (props: LeftPanelProps) => {
+  const onClickBack = () => {
+    props.setSido(undefined);
+  };
   return (
     <div
-      className="
+      className={`
         absolute inset-0 z-10
         max-w-[600px]
         lg:w-[45vw]
         md:w-[48vw]
         sm:w-[50vw]
         sm:inset-4
-      "
+        ${
+          props.sido
+            ? "opacity-100 visibility-visible pointer-events-auto"
+            : "opacity-0 visibility-hidden pointer-events-none"
+        }
+      `}
     >
       <div
         className={`
@@ -21,12 +37,17 @@ function LeftPanel() {
           sm:backdrop-blur-md 
           sm:shadow-xl
         `}
-      ></div>
+      >
+        {/* header */}
+        <div className="min-h-[50px] flex w-full items-center gap-2 text-2xl">
+          <button onClick={onClickBack}>
+            <ArrowLeftIcon />
+          </button>
+          <div className="font-semibold">{props.sido}</div>
+        </div>
+      </div>
     </div>
   );
-}
+};
 
 export default LeftPanel;
-
-// sm:inset-3 sm:bottom-[8.5rem]
-// sm:h-auto sm:pt-0
