@@ -55,7 +55,7 @@ const Map = (props: MapProps) => {
           fillColor,
           fillOpacity: 1,
           strokeColor: "#fff",
-          strokeWeight: 1,
+          strokeWeight: 0.3,
         };
       }
 
@@ -64,7 +64,7 @@ const Map = (props: MapProps) => {
         fillColor: "#FFFfff0",
         fillOpacity: 0,
         strokeColor: "#ccc",
-        strokeWeight: 1,
+        strokeWeight: 0.3,
       };
     });
 
@@ -76,6 +76,25 @@ const Map = (props: MapProps) => {
       console.log(provinceName);
       props.setSido(provinceName);
     });
+
+    // 👉 마우스 오버 이벤트 핸들러
+    geoJsonLayer.addListener(
+      "mouseover",
+      (event: google.maps.Data.MouseEvent) => {
+        geoJsonLayer.overrideStyle(event.feature, {
+          fillOpacity: 0.8, // ✅ 연하게
+          strokeColor: "#fff", // 테두리 강조하고 싶으면
+          strokeWeight: 2,
+        });
+      }
+    );
+
+    geoJsonLayer.addListener(
+      "mouseout",
+      (event: google.maps.Data.MouseEvent) => {
+        geoJsonLayer.revertStyle(event.feature); // ✅ 기본 스타일로 복구
+      }
+    );
   };
 
   const handleMapLoad = (map: google.maps.Map) => {
@@ -88,7 +107,7 @@ const Map = (props: MapProps) => {
   return (
     <GoogleMap
       mapContainerStyle={containerStyle}
-      options={{ styles: mapStyles }}
+      options={{ styles: mapStyles, mapTypeControl: false }}
       center={center}
       zoom={7}
       onLoad={handleMapLoad}
