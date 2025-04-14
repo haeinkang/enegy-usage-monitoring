@@ -14,11 +14,11 @@ const LeftPanel = (props: LeftPanelProps) => {
     <div
       className={`
         absolute inset-0 z-10
-        max-w-[600px]
         lg:w-[45vw]
         md:w-[48vw]
         sm:w-[50vw]
         sm:inset-4
+        sm:max-w-[600px]
         ${
           props.sido
             ? "opacity-100 visibility-visible pointer-events-auto"
@@ -29,21 +29,32 @@ const LeftPanel = (props: LeftPanelProps) => {
       <div
         className={`
           w-full h-full
-          bg-white border p-5 pt-10
+          bg-white border p-1 pl-3 pr-3
           border-neutral-200
-          transition-all duration-200 ease-in
+          transition-all duration-300 ease-in
           sm:rounded-2xl
           sm:bg-white/85
           sm:backdrop-blur-md 
           sm:shadow-xl
         `}
       >
-        {/* header */}
-        <div className="min-h-[50px] flex w-full items-center gap-2 text-2xl">
-          <button onClick={onClickBack}>
-            <ArrowLeftIcon />
-          </button>
-          <div className="font-semibold">{props.sido}</div>
+        <div
+          className="
+            translate-y-10
+            transition-all duration-300 ease-in
+            sm:translate-y-0
+          "
+        >
+          {/* header */}
+          <div className="min-h-[50px] flex w-full items-center gap-5 text-2xl">
+            <button onClick={onClickBack}>
+              <ArrowLeftIcon />
+            </button>
+            <div className="font-medium">{props.sido}</div>
+          </div>
+
+          {/* Contents */}
+          <div>Contents</div>
         </div>
       </div>
     </div>
