@@ -7,23 +7,25 @@ import FilterDramaOutlinedIcon from '@mui/icons-material/FilterDramaOutlined';
 import GrainOutlinedIcon from '@mui/icons-material/GrainOutlined';
 import SpokeOutlinedIcon from '@mui/icons-material/SpokeOutlined';
 import LocalFireDepartmentOutlinedIcon from '@mui/icons-material/LocalFireDepartmentOutlined';
+import CloudCircleOutlinedIcon from '@mui/icons-material/CloudCircleOutlined';
 
-function Banner({ name }: { name: string }) {
+function PollutantIcon({ name }: { name: string }) {
   return (
     <Box>
-      {name === 'PM10' ? <GrainOutlinedIcon fontSize='small' />
-        : name === 'PM2.5' ? <BlurOnIcon fontSize='small' />
-        : name === 'CO' ? <LocalFireDepartmentOutlinedIcon fontSize='small' />
-        : name === 'NO2' ? <FilterDramaOutlinedIcon fontSize='small'/>
-        : name === 'SO2' ? <FactoryOutlinedIcon fontSize='small'/>
-        : name === 'O3' ? <SpokeOutlinedIcon fontSize='small'/>
+      {name === 'khai' ? <CloudCircleOutlinedIcon fontSize='small' />
+        : name === 'pm10' ? <GrainOutlinedIcon fontSize='small' />
+        : name === 'pm25' ? <BlurOnIcon fontSize='small' />
+        : name === 'co' ? <LocalFireDepartmentOutlinedIcon fontSize='small' />
+        : name === 'no2' ? <FilterDramaOutlinedIcon fontSize='small'/>
+        : name === 'so2' ? <FactoryOutlinedIcon fontSize='small'/>
+        : name === 'o3' ? <SpokeOutlinedIcon fontSize='small'/>
         : <CoronavirusOutlinedIcon />
       }
     </Box>
   );
 }
 
-export default Banner;
+export default PollutantIcon;
 
 const Box = styled.div`
   width: fit-content;

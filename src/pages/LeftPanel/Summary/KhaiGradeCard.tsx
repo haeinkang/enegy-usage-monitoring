@@ -8,10 +8,9 @@ interface iProps {
   title: string;
 }
 function KhaiGradeCard(props: iProps) {
-  const selected = useSelector((state: RootState) => state.airQual.selected);
+  const clickedItem = useSelector((state: RootState) => state.gasUsage.clickedItem);
 
   return (
-    !selected ? <></> :
     <Grid 
       item 
       xs={props.gridXs} 
@@ -32,12 +31,12 @@ function KhaiGradeCard(props: iProps) {
         sx={{ 
           width: '100px',
           borderRadius: '18px',
-          background: getLevelColor('khaiValue', selected?.khaiValue)
+          background: getLevelColor('khaiValue', clickedItem?.airQual?.khaiValue)
         }}
       >
         <Grid item >
           <Typography variant="h4" component="div" align='center' fontWeight={700}>
-            {selected?.khaiGrade}
+            {clickedItem?.airQual?.khaiGrade ?? '-'}
           </Typography>
         </Grid>
       </Grid>

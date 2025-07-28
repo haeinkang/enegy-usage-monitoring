@@ -1,34 +1,33 @@
-import React from 'react';
-import { getColorClassName, getTopPercent } from '../../../utils'
-import { maxBy } from 'lodash';
+import React, { useMemo } from 'react';
+import { getPaletteNm, getTopPercent } from '../../../utils'
 import styled from 'styled-components';
-import { GasUsageByLclgv } from '../../../types'
 import { Container, Subtitle2, H5, Body2 } from './stlye';
+import { EnergyAndAirData } from '../../../types';
 
 interface iProps { 
   title: string;
-  gasUsageList: GasUsageByLclgv[];
-  data: GasUsageByLclgv
+  hoveredItem: EnergyAndAirData;
+  energyAirData: EnergyAndAirData[];
 }
-function GasUsageCard(props: iProps) {
-  const maxUsage = maxBy(props.gasUsageList, 'avgUseQnt')
-  const topPercent = getTopPercent(props.gasUsageList, props.data.lclgvNm)
+function GasUsageCard({
+  title,
+  hoveredItem, 
+  energyAirData,
+}: iProps) {
+  
+  const topPercent = useMemo(() => {
+    if(!hoveredItem) return -1;
+    return getTopPercent(energyAirData, hoveredItem.lclgvNm)
+  }, [hoveredItem, energyAirData])
     
   return (
     <Container>
-      <Card 
-        className={
-          maxUsage 
-            ? getColorClassName(maxUsage.avgUseQnt, props.data.avgUseQnt)
-            : ''
-        }
-      >
-        <H5>{`${props.data.avgUseQnt} ㎥`}</H5>
+      <Card color={getPaletteNm(topPercent)}>
+        <H5>{`${hoveredItem?.energyUsage?.gas ?? '-'} ㎥`}</H5>
         <Body2>{`상위 ${topPercent} %`}</Body2>
       </Card>
-      
       <Subtitle2>
-        {props.title}
+        {title}
       </Subtitle2>
     </Container>
   );
@@ -44,9 +43,9 @@ const Card = styled.div`
   justify-content: center;
   width: 100px;
   border-radius: 18px;
-  background: ${(props) => `var(${props.className})`} !important; 
+  background: ${(props) => `var(${props.color})`} !important; 
   color: ${(props) => 
-    props.className === '--level-3-yellow' 
+    props.color === '--level-3-yellow' 
       ? '#000' : '#fff' 
   }; 
 `

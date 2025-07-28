@@ -1,5 +1,5 @@
-import { GasUsageByLclgv, GeoCoord } from '../types'
-import { findIndex } from 'lodash'
+import { EnergyAndAirData, GeoCoord } from '../types'
+import { findIndex, map } from 'lodash'
 
 
 /**
@@ -35,46 +35,40 @@ export const calculateDistance = (
  * @returns 백분율
  */
 export const getTopPercent = (
-  list: GasUsageByLclgv[],
+  list: EnergyAndAirData[],
   lclgvNm: string
 ): number => {
-  return Math.floor((
-    findIndex(list, o => o.lclgvNm === lclgvNm)
-  ) / (list.length - 1) * 100)
+  const energyUsageList = map(list, 'energyUsage')
+  const targetIndex = findIndex(energyUsageList, { lclgvNm });
+  return Math.floor((targetIndex + 1) / (energyUsageList.length) * 100);
 }
 
 /**
  * 가스 사용량에 따른 색상 className 정의
- * @param max: number
- * @param val: number
- * @returns 색상코드
+ * @param topPercent: 상위 n % 
+ * @returns 색상 팔레트명 
  */
-export const getColorClassName = (
-  max: number, 
-  val: number
-): string => {
-  if (val <= max * 0.2) return '--level-1-blue'; // 파랑 (매우 좋음)
-  if (val <= max * 0.4) return '--level-2-green'; // 초록색 (좋음)
-  if (val <= max * 0.6) return '--level-3-yellow'; // 노란색 (보통)
-  if (val <= max * 0.8) return '--level-4-orange'; // 주황색 (나쁨)
-  return '--level-5-red'; // 빨간색 (매우 나쁨)
+export const getPaletteNm = (topPercent: number): string => {
+  if (topPercent >= 80) return '--level-1-blue'; // 파랑 (매우 좋음)
+  if (topPercent >= 60) return '--level-2-green'; // 초록색 (좋음)
+  if (topPercent >= 40) return '--level-3-yellow'; // 노란색 (보통)
+  if (topPercent >= 20) return '--level-4-orange'; // 주황색 (나쁨)
+  if (topPercent >= 0) return '--level-5-red'; // 빨간색 (매우 나쁨)
+  return '--no-data-black'; // 회색
 };
 
 /**
- * 가스 사용량 상위 퍼센트에 따른 색상 코드 정의
- * @param max: number
- * @param val: number
- * @returns 색상코드 (파랑 | 초록 | 노랑 | 주황 | 빨강)
+ * 상위 퍼센트에 따른 색상 코드 정의
+ * @param topPercent: 상위 n % 
+ * @returns 색상코드 (파랑 | 초록 | 노랑 | 주황 | 빨강 | 회색)
  */ 
-export const getGasUsageColor = (
-  max: number, 
-  val: number
-): string => {
-  if (val <= max * 0.2) return '#0d6efd'; // 상위 20%
-  if (val <= max * 0.4) return '#198754'; // 상위 40%
-  if (val <= max * 0.6) return '#ffc107'; // 상위 60%
-  if (val <= max * 0.8) return '#ff8f07'; // 상위 80%
-  return '#dc3545'; // 상위 100%
+export const getColorCode = (topPercent: number): string => {
+  if (topPercent >= 80) return '#0d6efd'; // 파랑 (매우 좋음)
+  if (topPercent >= 60) return '#198754'; // 초록색 (좋음)
+  if (topPercent >= 40) return '#ffc107'; // 노란색 (보통)
+  if (topPercent >= 20) return '#ff8f07'; // 주황색 (나쁨)
+  if (topPercent >= 0) return '#dc3545'; // 빨간색 (매우 나쁨)
+  return '#D4D9DE'; // 회색
 };
 
 /**
@@ -96,9 +90,10 @@ export const getPm10Color = (pm10: number): string => {
  * @param value 수치
  * @returns "좋음" | "보통" | "나쁨" | "매우 나쁨"
  */
-export const getPolutionLevel = (metric: string, value: number) => {
-  switch (metric) {
+export const getPolutionLevel = (metric: string, value?: number) => {
+  if(value == null) return '-'
 
+  switch (metric) {
     case "khaiValue":
       if (value <= 50) return "좋음";
       if (value <= 100) return "보통";
@@ -152,9 +147,10 @@ export const getPolutionLevel = (metric: string, value: number) => {
  * @param value 수치
  * @returns 파랑 | 초록 | 주황 | 빨강
  */
-export const getLevelColor = (metric: string, value: number) => {
-  switch (metric) {
+export const getLevelColor = (metric: string, value?: number) => {
+  if (value == null) return 'var(--no-data-black)';
 
+  switch (metric) {
     case "khaiValue":
       if (value <= 50) return 'var(--level-1-blue)';
       if (value <= 100) return 'var(--level-2-green)';
@@ -198,7 +194,7 @@ export const getLevelColor = (metric: string, value: number) => {
       return 'var(--level-5-red)';
 
     default:
-      return '#3d281f'
+      return '#D4D9DE'
   }
 }
 
@@ -208,9 +204,9 @@ export const getLevelColor = (metric: string, value: number) => {
  * @param value 수치
  * @returns 파랑 | 초록 | 주황 | 빨강
  */
-export const getEchartLevelColor = (metric: string, value: number) => {
+export const getEchartLevelColor = (metric: string, value?: number) => {
+  if (value == null) return '#D4D9DE';
   switch (metric) {
-
     case "khaiValue":
       if (value <= 50) return '#0d6efd';
       if (value <= 100) return '#198754';
@@ -254,6 +250,6 @@ export const getEchartLevelColor = (metric: string, value: number) => {
       return '#dc3545';
 
     default:
-      return '#3d281f'
+      return '#D4D9DE'
   }
 }
